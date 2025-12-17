@@ -34,21 +34,6 @@ function colors(level: ActivityPoint['activity_level']) {
   }
 }
 
-function pinHtml(p: ActivityPoint) {
-  const c = colors(p.activity_level);
-  // Simple pin marker (like the reference): colored head + white inner dot.
-  return `
-    <div class="kkn-pin" title="${p.camera_id}">
-      <svg width="20" height="28" viewBox="0 0 26 36" xmlns="http://www.w3.org/2000/svg">
-        <path d="M13 36c6.2-8.7 12-14.1 12-22C25 6.3 19.6 1 13 1S1 6.3 1 14c0 7.9 5.8 13.3 12 22z"
-          fill="${c.fill}" stroke="rgba(0,0,0,0.35)" stroke-width="1"/>
-        <circle cx="13" cy="14" r="5.2" fill="rgba(255,255,255,0.95)"/>
-        <circle cx="13" cy="14" r="3.2" fill="rgba(0,0,0,0.15)"/>
-      </svg>
-    </div>
-  `;
-}
-
 export default function LeafletHeatmap({ points, className, onPointHover }: Props) {
   const elRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -107,15 +92,14 @@ export default function LeafletHeatmap({ points, className, onPointHover }: Prop
       heatRef.current = (L as any).heatLayer(heatData, {
         radius: 36,
         blur: 30,
-        minOpacity: 0.28,
+        minOpacity: 0.32,
         maxZoom: 17,
-        // Classic heat palette (green → yellow → red), like the reference
+        // Reference palette: green → yellow → dark red
         gradient: {
-          0.2: '#22c55e',
-          0.45: '#a3e635',
-          0.65: '#facc15',
-          0.82: '#fb923c',
-          1.0: '#ef4444',
+          0.2: '#22c55e',  // green
+          0.55: '#facc15', // yellow
+          0.8: '#f97316',  // orange
+          1.0: '#7f1d1d',  // dark red
         },
       }).addTo(map);
     } else {
@@ -130,15 +114,15 @@ export default function LeafletHeatmap({ points, className, onPointHover }: Prop
       points.forEach((p) => {
         if (!Number.isFinite(p.latitude) || !Number.isFinite(p.longitude)) return;
 
-        const icon = L.divIcon({
-          className: 'kkn-pin-icon',
-          html: pinHtml(p),
-          iconSize: [20, 28],
-          iconAnchor: [10, 27],
-          popupAnchor: [0, -26],
+        // No visible pins: use an invisible interactive hit-area so hover still shows details.
+        const marker = L.circleMarker([p.latitude, p.longitude], {
+          radius: 14,
+          stroke: false,
+          opacity: 0,
+          fillOpacity: 0,
+          interactive: true,
+          bubblingMouseEvents: false,
         });
-
-        const marker = L.marker([p.latitude, p.longitude], { icon, riseOnHover: true });
 
         const popupHtml = `
           <div class="kkn-popup">
@@ -152,14 +136,10 @@ export default function LeafletHeatmap({ points, className, onPointHover }: Prop
 
         marker.on('mouseover', () => {
           onPointHover?.(p);
-          const el = marker.getElement();
-          if (el) el.classList.add('is-hover');
           marker.openPopup();
         });
         marker.on('mouseout', () => {
           onPointHover?.(null);
-          const el = marker.getElement();
-          if (el) el.classList.remove('is-hover');
           marker.closePopup();
         });
 
