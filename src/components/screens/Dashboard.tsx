@@ -1,7 +1,10 @@
 import { MetricCard } from '../MetricCard';
 import { Camera, CameraOff, AlertTriangle, Car, FileX, AlertCircle, MapPin } from 'lucide-react';
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Bell,ShieldAlert } from "lucide-react";
+import { fetchActivityHeatmapPoints, type ActivityPoint } from '../../api/cohorts';
+import LeafletHeatmap from '../LeafletHeatmap';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -11,6 +14,7 @@ interface DashboardProps {
 }
 
 export function Dashboard({ userRole }: DashboardProps) {
+  const navigate = useNavigate();
   const alerts = [
     { id: 1, type: 'Intrusion', camera: 'CAM-NZ-042', confidence: 94, time: '2 min ago', severity: 'high' },
     { id: 2, type: 'Crowd Detected', camera: 'CAM-SZ-018', confidence: 87, time: '5 min ago', severity: 'medium' },
@@ -36,6 +40,42 @@ export function Dashboard({ userRole }: DashboardProps) {
 
   const [offlineCameras, setOfflineCameras] = useState(0);
 const token = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3Ny1NUVdFRTNHZE5adGlsWU5IYmpsa2dVSkpaWUJWVmN1UmFZdHl5ejFjIn0.eyJleHAiOjE3MjYxODIzMzEsImlhdCI6MTcyNjE0NjMzMSwianRpIjoiOGVlZTU1MDctNGVlOC00NjE1LTg3OWUtNTVkMjViMjQ2MGFmIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLmtleWNsb2FrLnN2Yy5jbHVzdGVyLmxvY2FsOjgwODAvcmVhbG1zL21hc3RlciIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJmNzFmMzU5My1hNjdhLTQwYmMtYTExYS05YTQ0NjY4YjQxMGQiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJIT0xBQ1JBQ1kiLCJzZXNzaW9uX3N0YXRlIjoiYmI1ZjJkMzktYTQ3ZC00MjI0LWFjZGMtZTdmNzQwNDc2OTgwIiwibmFtZSI6ImtzYW14cCBrc2FteHAiLCJnaXZlbl9uYW1lIjoia3NhbXhwIiwiZmFtaWx5X25hbWUiOiJrc2FteHAiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJwYXNzd29yZF90ZW5hbnRfa3NhbXhwQG1vYml1c2R0YWFzLmFpIiwiZW1haWwiOiJwYXNzd29yZF90ZW5hbnRfa3NhbXhwQG1vYml1c2R0YWFzLmFpIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiLyoiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbWFzdGVyIiwib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7IkhPTEFDUkFDWSI6eyJyb2xlcyI6WyJIT0xBQ1JBQ1lfVVNFUiJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwic2lkIjoiYmI1ZjJkMzktYTQ3ZC00MjI0LWFjZGMtZTdmNzQwNDc2OTgwIiwidGVuYW50SWQiOiJmNzFmMzU5My1hNjdhLTQwYmMtYTExYS05YTQ0NjY4YjQxMGQiLCJyZXF1ZXN0ZXJUeXBlIjoiVEVOQU5UIn0=.FXeDyHBhlG9L4_NCeSyHEaNEBVmhFpfSBqlcbhHaPaoydhKcA0BfuyHgxg_32kQk6z5S9IQ7nVKS2ybtOvwo0WyLWwLQchSq7Noa7LooHIMzmeWMQb_bLKtbaOti59zwIdS8CkfGaXut7RUQKISQVWmbUGsVJQa2JkG6Ng_QN0y5hFVksMWPZiXVsofQkJXHXV1CQ3gabhhHKo3BqlJwzpsCKLDfg1-4PmSl1Wqbw03Ef2yolroj5i8FoeHukOQPkwCUHrrNw-ilIp917nqZa89YbCMtDjWyaj8pEH7GJR5vMZPE2WcJPn5dSA1IHVunfatEB1cDAitaFjVNWNnddQ"; 
+
+  // --- GIS Heatmap (from cohorts adhoc query) ---
+  const [heatPoints, setHeatPoints] = useState<ActivityPoint[]>([]);
+  const [heatLoading, setHeatLoading] = useState(false);
+  const [heatError, setHeatError] = useState<string | null>(null);
+  const [heatLastUpdated, setHeatLastUpdated] = useState<Date | null>(null);
+  const [zoneFilter, setZoneFilter] = useState<string>('ALL');
+  const [hoveredPoint, setHoveredPoint] = useState<ActivityPoint | null>(null);
+
+  const loadHeatmap = async () => {
+    setHeatLoading(true);
+    setHeatError(null);
+    try {
+      const res = await fetchActivityHeatmapPoints();
+      setHeatPoints(Array.isArray(res.data) ? res.data : []);
+      setHeatLastUpdated(new Date());
+    } catch (e) {
+      setHeatError(e instanceof Error ? e.message : 'Failed to load heatmap data');
+    } finally {
+      setHeatLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadHeatmap();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const zones = useMemo(() => {
+    const unique = Array.from(new Set(heatPoints.map(p => p.zone).filter(Boolean))).sort();
+    return ['ALL', ...unique];
+  }, [heatPoints]);
+
+  const filteredHeatPoints = useMemo(() => {
+    return zoneFilter === 'ALL' ? heatPoints : heatPoints.filter(p => p.zone === zoneFilter);
+  }, [heatPoints, zoneFilter]);
  useEffect(() => {
     async function fetchOfflineCameras() {
       try {
@@ -374,10 +414,16 @@ useEffect(() => {
             )}
             {userRole === 'admin' && (
               <>
-                <button className="px-4 py-2 bg-blue-500/20 text-blue-400 rounded hover:bg-blue-500/30 text-sm">
+                <button
+                  onClick={() => navigate('/admin/system-health')}
+                  className="px-4 py-2 bg-blue-500/20 text-blue-400 rounded hover:bg-blue-500/30 text-sm"
+                >
                   System Health
                 </button>
-                <button className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded hover:bg-purple-500/30 text-sm">
+                <button
+                  onClick={() => navigate('/admin/users')}
+                  className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded hover:bg-purple-500/30 text-sm"
+                >
                   Manage Users
                 </button>
               </>
@@ -471,72 +517,85 @@ useEffect(() => {
               GIS Heatmap - Live Activity
             </h3>
             <div className="flex items-center gap-2">
-              <button className="px-3 py-1 bg-cyan-500/10 text-cyan-400 rounded text-xs hover:bg-cyan-500/20">
-                Refresh
+              <select
+                value={zoneFilter}
+                onChange={(e) => setZoneFilter(e.target.value)}
+                className="px-2 py-1 bg-[#0a0e1a] border border-[#1f2937] rounded text-xs text-gray-300 outline-none"
+              >
+                {zones.map((z) => (
+                  <option key={z} value={z}>
+                    {z === 'ALL' ? 'All Zones' : z}
+                  </option>
+                ))}
+              </select>
+              <button
+                onClick={loadHeatmap}
+                disabled={heatLoading}
+                className="px-3 py-1 bg-cyan-500/10 text-cyan-400 rounded text-xs hover:bg-cyan-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {heatLoading ? 'Refreshing…' : 'Refresh'}
               </button>
             </div>
           </div>
-          <div className="relative bg-[#0a0e1a] h-[500px] flex items-center justify-center">
-            <div className="absolute inset-0 opacity-30">
-              <svg className="w-full h-full" viewBox="0 0 800 500">
-                {/* Grid lines */}
-                {Array.from({ length: 20 }).map((_, i) => (
-                  <line
-                    key={`v-${i}`}
-                    x1={i * 40}
-                    y1="0"
-                    x2={i * 40}
-                    y2="500"
-                    stroke="#1f2937"
-                    strokeWidth="1"
-                  />
-                ))}
-                {Array.from({ length: 13 }).map((_, i) => (
-                  <line
-                    key={`h-${i}`}
-                    x1="0"
-                    y1={i * 40}
-                    x2="800"
-                    y2={i * 40}
-                    stroke="#1f2937"
-                    strokeWidth="1"
-                  />
-                ))}
-                
-                {/* Heatmap circles representing activity */}
-                <circle cx="200" cy="150" r="40" fill="#ef4444" opacity="0.3" />
-                <circle cx="200" cy="150" r="20" fill="#ef4444" opacity="0.5" />
-                <circle cx="450" cy="300" r="50" fill="#f59e0b" opacity="0.3" />
-                <circle cx="450" cy="300" r="25" fill="#f59e0b" opacity="0.5" />
-                <circle cx="600" cy="200" r="35" fill="#eab308" opacity="0.3" />
-                <circle cx="600" cy="200" r="18" fill="#eab308" opacity="0.5" />
-                <circle cx="350" cy="400" r="45" fill="#ef4444" opacity="0.3" />
-                <circle cx="350" cy="400" r="22" fill="#ef4444" opacity="0.5" />
-                
-                {/* Camera markers */}
-                {[
-                  { x: 100, y: 100 }, { x: 200, y: 150 }, { x: 300, y: 120 },
-                  { x: 400, y: 180 }, { x: 450, y: 300 }, { x: 500, y: 250 },
-                  { x: 600, y: 200 }, { x: 650, y: 350 }, { x: 350, y: 400 },
-                  { x: 250, y: 300 }, { x: 150, y: 350 }, { x: 550, y: 100 }
-                ].map((pos, i) => (
-                  <circle
-                    key={i}
-                    cx={pos.x}
-                    cy={pos.y}
-                    r="4"
-                    fill="#06b6d4"
-                    stroke="#0a0e1a"
-                    strokeWidth="2"
-                  />
-                ))}
-              </svg>
-            </div>
-            <div className="relative z-10 text-center">
-              <MapPin className="w-16 h-16 text-cyan-400 mx-auto mb-4 opacity-50" />
-              <p className="text-gray-500">GIS Map Overlay</p>
-              <p className="text-xs text-gray-600 mt-1">Real-time Activity Heatmap</p>
-            </div>
+          <div className="relative bg-[#0a0e1a] h-[500px]">
+            <LeafletHeatmap
+              points={filteredHeatPoints}
+              onPointHover={(p) => setHoveredPoint(p)}
+              className="absolute inset-0"
+            />
+
+            {/* Loading / error overlay (map stays visible) */}
+            {(heatError || (heatLoading && filteredHeatPoints.length === 0)) && (
+              <div className="absolute inset-0 z-10 flex items-center justify-center bg-[#0a0e1a]/60 backdrop-blur-[2px]">
+                <div className="text-center px-6">
+                  {heatError ? (
+                    <>
+                      <MapPin className="w-14 h-14 text-red-400 mx-auto mb-3 opacity-60" />
+                      <p className="text-red-300 text-sm">Heatmap load failed</p>
+                      <p className="text-xs text-gray-500 mt-1 max-w-md">{heatError}</p>
+                      <p className="text-[11px] text-gray-600 mt-3 max-w-md">
+                        Tip: set <span className="text-gray-400">VITE_COHORTS_TOKEN</span> (and optionally tenant/user headers) in your Vite env.
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <MapPin className="w-16 h-16 text-cyan-400 mx-auto mb-4 opacity-50" />
+                      <p className="text-gray-500">Loading heatmap…</p>
+                      <p className="text-xs text-gray-600 mt-1">Fetching live activity points</p>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Hover tooltip */}
+            {hoveredPoint && !heatError && (
+              <div className="absolute top-4 right-4 z-20 w-72 bg-[#0d1117] border border-[#1f2937] rounded-lg p-3 shadow-xl">
+                <div className="flex items-center justify-between">
+                  <div className="text-sm text-white">{hoveredPoint.camera_id}</div>
+                  <span
+                    className={`text-[10px] px-2 py-0.5 rounded ${
+                      hoveredPoint.activity_level === 'HIGH'
+                        ? 'bg-red-500/20 text-red-300'
+                        : hoveredPoint.activity_level === 'MEDIUM'
+                        ? 'bg-orange-500/20 text-orange-300'
+                        : 'bg-yellow-500/20 text-yellow-200'
+                    }`}
+                  >
+                    {hoveredPoint.activity_level}
+                  </span>
+                </div>
+                <div className="text-xs text-gray-400 mt-2">
+                  <div>Zone: <span className="text-gray-300">{hoveredPoint.zone}</span></div>
+                  <div className="mt-1">
+                    Lat/Lon:{' '}
+                    <span className="text-gray-300">
+                      {hoveredPoint.latitude.toFixed(6)}, {hoveredPoint.longitude.toFixed(6)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
           <div className="p-3 bg-[#0a0e1a] border-t border-[#1f2937] flex items-center justify-between text-xs">
             <div className="flex items-center gap-4">
@@ -549,11 +608,14 @@ useEffect(() => {
                 <span className="text-gray-400">Medium Activity</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <div className="w-3 h-3 rounded-full bg-green-500"></div>
                 <span className="text-gray-400">Low Activity</span>
               </div>
             </div>
-            <span className="text-gray-500">Last updated: Just now</span>
+            <span className="text-gray-500">
+              Last updated:{' '}
+              {heatLastUpdated ? heatLastUpdated.toLocaleTimeString() : '—'}
+            </span>
           </div>
         </div>
 
