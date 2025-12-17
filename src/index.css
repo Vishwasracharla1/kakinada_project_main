@@ -90,17 +90,4 @@
   color: #bbf7d0;
 }
 
-/* Pin markers (like the reference image) */
-.kkn-pin-icon {
-  background: transparent !important;
-  border: none !important;
-}
-.kkn-pin {
-  transform-origin: 50% 85%;
-  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.28));
-  transition: transform 140ms ease, filter 140ms ease;
-}
-.kkn-pin-icon.is-hover .kkn-pin {
-  transform: scale(1.12);
-  filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.38));
-}
+/* (No visible point markers) */
