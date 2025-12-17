@@ -63,7 +63,6 @@ export function TopBar({
       'anpr-approval': 'ANPR Approval',
       'anpr-operator': 'ANPR Operator Queue',
       'anpr-supervisor-queue': 'Supervisor Escalation Queue',
-      alerts: 'Anomaly Alerts',
       sop: 'SOP Compliance',
       'incidents-home': 'Incidents',
       'incidents-list': 'Incident Management',

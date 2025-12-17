@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { LoginPage } from './components/LoginPage';
 import { Sidebar } from './components/Sidebar';
 import { TopBar } from './components/TopBar';
@@ -55,6 +56,81 @@ import { BodycamRegistry } from './components/screens/BodycamRegistry';
 import { SystemHealth } from './components/screens/SystemHealth';
 import { AIModelManager } from './components/screens/AIModelManager';
 
+// Map URL paths to internal screen ids
+const pathToScreen: Record<string, string> = {
+  '/': 'dashboard',
+  '/dashboard': 'dashboard',
+
+  '/surveillance/live-grid': 'surveillance-grid',
+  '/surveillance/cross-camera': 'cross-camera-tracking',
+  '/surveillance/multi-grid': 'multi-grid-viewer',
+
+  '/bodycam': 'bodycam-grid',
+  '/bodycam/detail': 'bodycam-detail',
+
+  '/anpr': 'anpr-home',
+  '/anpr/violations': 'anpr-list',
+  '/anpr/approval': 'anpr-approval',
+  '/anpr/operator': 'anpr-operator',
+  '/anpr/supervisor-queue': 'anpr-supervisor-queue',
+
+  '/alerts': 'alerts-home',
+  '/alerts/operator': 'alerts-operator',
+  '/alerts/supervisor': 'alerts-supervisor',
+  '/alerts/admin': 'alerts-admin',
+  '/alerts/sop': 'sop',
+
+  '/incidents': 'incidents-home',
+  '/incidents/list': 'incidents-list',
+  '/incidents/operator': 'incident-operator',
+  '/incidents/operator/create': 'incident-operator-create',
+  '/incidents/supervisor': 'incident-supervisor',
+  '/incidents/detail': 'incident-detail',
+
+  '/detection/log': 'detection-log',
+  '/detection/bounding-box': 'detection-boundingbox',
+  '/detection/plate-correction': 'plate-correction',
+
+  '/evidence': 'evidence-home',
+  '/evidence/console': 'evidence-console',
+  '/evidence/export': 'evidence-export',
+  '/evidence/footage': 'footage-library',
+  '/evidence/library': 'evidence-library',
+  '/evidence/timeline': 'evidence-timeline',
+  '/evidence/sync': 'evidence-sync',
+
+  '/explainability': 'explainability-home',
+  '/explainability/simplified': 'explainability-simplified',
+  '/explainability/dag': 'explainability-dag',
+  '/explainability/logs': 'explainability-logs',
+
+  '/analytics': 'analytics-home',
+  '/analytics/camera-health': 'analytics-camera-health',
+  '/analytics/violations': 'analytics-violations',
+
+  '/admin/cameras': 'admin-cameras',
+  '/admin/users': 'admin-users',
+  '/admin/system-health': 'admin-system',
+  '/admin/drones': 'admin-drones',
+  '/admin/bodycams': 'admin-bodycams',
+  '/admin/ai-models': 'admin-ai-models',
+
+  '/drone/fleet': 'drone-fleet',
+  '/drone/missions': 'drone-missions',
+  '/drone/alerts': 'drone-alerts',
+
+  '/multi-grid': 'multi-grid-viewer'
+};
+
+// Reverse mapping: screen id → path (used when navigating from inside the app)
+const screenToPath: Record<string, string> = Object.entries(pathToScreen).reduce(
+  (acc, [path, screen]) => {
+    if (!acc[screen]) acc[screen] = path;
+    return acc;
+  },
+  {} as Record<string, string>
+);
+
 // NEW — user type
 interface UserSession {
   id: string;
@@ -64,10 +140,36 @@ interface UserSession {
 }
 
 export default function App() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [user, setUser] = useState<UserSession | null>(null);
-  const [activeScreen, setActiveScreen] = useState('dashboard');
+  const [activeScreen, setActiveScreen] = useState<string>(
+    pathToScreen[location.pathname] ?? 'dashboard'
+  );
   const [gridSize, setGridSize] = useState<'2x2' | '3x3' | '4x4'>('4x4');
   const [selectedCamera, setSelectedCamera] = useState<Camera | null>(null);
+
+  // Keep activeScreen in sync when the URL changes (e.g. direct navigation)
+  useEffect(() => {
+    const screenFromPath = pathToScreen[location.pathname];
+    if (screenFromPath && screenFromPath !== activeScreen) {
+      setActiveScreen(screenFromPath);
+    }
+  }, [location.pathname]); // avoid extra effect runs during activeScreen changes
+
+  const navigateScreen = useCallback(
+    (screen: string) => {
+      // avoid redundant state updates (helps reduce jank)
+      if (screen !== activeScreen) setActiveScreen(screen);
+
+      const path = screenToPath[screen];
+      if (path && path !== location.pathname) {
+        navigate(path);
+      }
+    },
+    [activeScreen, location.pathname, navigate]
+  );
 
   // handle login from LoginPage
   const handleLogin = (userData: { role: string; username: string; name: string }) => {
@@ -87,7 +189,14 @@ export default function App() {
         return <Dashboard userRole={user!.role} />;
 
       case 'surveillance-grid':
-        return <LiveGrid onViewCamera={(camera) => { setSelectedCamera(camera); setActiveScreen('camera-detail'); }} />;
+        return (
+          <LiveGrid
+            onViewCamera={(camera) => {
+              setSelectedCamera(camera);
+              navigateScreen('camera-detail');
+            }}
+          />
+        );
 
       case 'surveillance-multigrid-2x2':
         return <MultiGrid size="2x2" />;
@@ -99,142 +208,195 @@ export default function App() {
         return <MultiGrid size="4x4" />;
 
       case 'camera-detail':
-        return <CameraDetail camera={selectedCamera} onBack={() => setActiveScreen('surveillance-grid')} />;
+        return (
+          <CameraDetail
+            camera={selectedCamera}
+            onBack={() => navigateScreen('surveillance-grid')}
+          />
+        );
 
       case 'bodycam-grid':
-        return <BodycamGrid onViewOfficer={() => setActiveScreen('bodycam-detail')} />;
+        return <BodycamGrid onViewOfficer={() => navigateScreen('bodycam-detail')} />;
 
       case 'bodycam-detail':
-        return <BodycamDetail onBack={() => setActiveScreen('bodycam-grid')} />;
+        return <BodycamDetail onBack={() => navigateScreen('bodycam-grid')} />;
 
       case 'anpr-home':
-        return <ANPRHome onNavigate={setActiveScreen} userRole={user!.role} />;
+        return <ANPRHome onNavigate={navigateScreen} userRole={user!.role} />;
 
       case 'anpr-list':
         return (
           <ANPRList
             userRole={user!.role}
-            onViewDetail={() => setActiveScreen('anpr-detail')}
-            onViewApproval={() => setActiveScreen('anpr-approval')}
+            onViewDetail={() => navigateScreen('anpr-detail')}
+            onViewApproval={() => navigateScreen('anpr-approval')}
           />
         );
 
       case 'anpr-detail':
-        return <ANPRDetail onBack={() => setActiveScreen('anpr-list')} />;
+        return <ANPRDetail onBack={() => navigateScreen('anpr-list')} />;
 
       case 'anpr-approval':
         return (
           <ANPRApproval
-            onBack={() => setActiveScreen('anpr-list')}
-            onNavigate={setActiveScreen}
+            onBack={() => navigateScreen('anpr-list')}
+            onNavigate={navigateScreen}
             userRole={user!.role}
           />
         );
 
       case 'anpr-operator':
-        return <ANPROperator onBack={() => setActiveScreen('anpr-home')} />;
+        return <ANPROperator onBack={() => navigateScreen('anpr-home')} />;
 
       case 'anpr-supervisor-queue':
-        return <ANPRSupervisorQueue onBack={() => setActiveScreen('anpr-home')} />;
+        return <ANPRSupervisorQueue onBack={() => navigateScreen('anpr-home')} />;
 
       case 'alerts':
-        return <Alerts userRole={user!.role} onNavigate={setActiveScreen} />;
+        return <Alerts userRole={user!.role} onNavigate={navigateScreen} />;
 
       case 'alerts-home':
-        return <AlertsHome onNavigate={setActiveScreen} userRole={user!.role} />;
+        return <AlertsHome onNavigate={navigateScreen} userRole={user!.role} />;
 
       case 'alerts-operator':
         return (
           <AlertsOperator
-            onBack={() => setActiveScreen('alerts-home')}
-            onViewCamera={() => setActiveScreen('camera-detail')}
-            onCreateIncident={() => setActiveScreen('incidents-list')}
+            onBack={() => navigateScreen('alerts-home')}
+            onViewCamera={() => navigateScreen('camera-detail')}
+            onCreateIncident={() => navigateScreen('incidents-list')}
           />
         );
 
       case 'alerts-supervisor':
         return (
           <AlertsSupervisor
-            onBack={() => setActiveScreen('alerts-home')}
-            onViewCamera={() => setActiveScreen('camera-detail')}
-            onNavigate={setActiveScreen}
+            onBack={() => navigateScreen('alerts-home')}
+            onViewCamera={() => navigateScreen('camera-detail')}
+            onNavigate={navigateScreen}
           />
         );
 
       case 'alerts-admin':
-        return <AlertsAdmin onBack={() => setActiveScreen('alerts-home')} />;
+        return <AlertsAdmin onBack={() => navigateScreen('alerts-home')} />;
 
       case 'sop':
         return <SOPCompliance />;
 
       case 'incidents-list':
-        return <IncidentsList onViewDetail={() => setActiveScreen('incident-detail')} userRole={user!.role} onNavigate={setActiveScreen} />;
+        return (
+          <IncidentsList
+            onViewDetail={() => navigateScreen('incident-detail')}
+            userRole={user!.role}
+            onNavigate={navigateScreen}
+          />
+        );
 
       case 'incidents-home':
-        return <IncidentsHome onNavigate={setActiveScreen} userRole={user!.role} />;
+        return <IncidentsHome onNavigate={navigateScreen} userRole={user!.role} />;
 
       case 'incident-operator':
-        return <IncidentOperator onBack={() => setActiveScreen('incidents-home')} onNavigate={setActiveScreen} startMode="list" />;
+        return (
+          <IncidentOperator
+            onBack={() => navigateScreen('incidents-home')}
+            onNavigate={navigateScreen}
+            startMode="list"
+          />
+        );
 
       case 'incident-operator-create':
-        return <IncidentOperator onBack={() => setActiveScreen('incidents-home')} onNavigate={setActiveScreen} startMode="create" />;
+        return (
+          <IncidentOperator
+            onBack={() => navigateScreen('incidents-home')}
+            onNavigate={navigateScreen}
+            startMode="create"
+          />
+        );
 
       case 'incident-supervisor':
-        return <IncidentSupervisor onBack={() => setActiveScreen('incidents-home')} onNavigate={setActiveScreen} />;
+        return (
+          <IncidentSupervisor
+            onBack={() => navigateScreen('incidents-home')}
+            onNavigate={navigateScreen}
+          />
+        );
 
       case 'incident-detail':
-        return <IncidentDetail userRole={user!.role} onBack={() => setActiveScreen('incidents-home')} />;
+        return (
+          <IncidentDetail
+            userRole={user!.role}
+            onBack={() => navigateScreen('incidents-home')}
+          />
+        );
 
       case 'detection-log':
-        return <DetectionLog onViewBoundingBox={() => setActiveScreen('detection-boundingbox')} onViewCorrection={() => setActiveScreen('plate-correction')} />;
+        return (
+          <DetectionLog
+            onViewBoundingBox={() => navigateScreen('detection-boundingbox')}
+            onViewCorrection={() => navigateScreen('plate-correction')}
+          />
+        );
 
       case 'detection-boundingbox':
-        return <BoundingBox onBack={() => setActiveScreen('detection-log')} />;
+        return <BoundingBox onBack={() => navigateScreen('detection-log')} />;
 
       case 'plate-correction':
-        return <PlateCorrection onBack={() => setActiveScreen('detection-log')} />;
+        return <PlateCorrection onBack={() => navigateScreen('detection-log')} />;
 
       case 'evidence-home':
-        return <EvidenceHome onNavigate={setActiveScreen} userRole={user!.role} />;
+        return <EvidenceHome onNavigate={navigateScreen} userRole={user!.role} />;
 
       case 'evidence-console':
-        return <EvidenceConsole onBack={() => setActiveScreen('evidence-home')} userRole={user!.role} />;
+        return (
+          <EvidenceConsole
+            onBack={() => navigateScreen('evidence-home')}
+            userRole={user!.role}
+          />
+        );
 
       case 'evidence-export':
-        return <EvidenceExport onNavigate={setActiveScreen} />;
+        return <EvidenceExport onNavigate={navigateScreen} />;
 
       case 'footage-library':
-        return <FootageLibrary onNavigate={setActiveScreen} />;
+        return <FootageLibrary onNavigate={navigateScreen} />;
 
       case 'evidence-library':
-        return <EvidenceLibrary onNavigate={setActiveScreen} />;
+        return <EvidenceLibrary onNavigate={navigateScreen} />;
 
       case 'evidence-timeline':
-        return <EvidenceTimeline onViewSync={() => setActiveScreen('evidence-console')} onNavigate={setActiveScreen} />;
+        return (
+          <EvidenceTimeline
+            onViewSync={() => navigateScreen('evidence-console')}
+            onNavigate={navigateScreen}
+          />
+        );
 
       case 'evidence-sync':
-        return <EvidenceSync onBack={() => setActiveScreen('evidence-timeline')} />;
+        return <EvidenceSync onBack={() => navigateScreen('evidence-timeline')} />;
 
       case 'explainability-home':
-        return <ExplainabilityHome onNavigate={setActiveScreen} />;
+        return <ExplainabilityHome onNavigate={navigateScreen} />;
 
       case 'explainability-simplified':
-        return <ExplainabilitySimplified onBack={() => setActiveScreen('explainability-home')} />;
+        return <ExplainabilitySimplified onBack={() => navigateScreen('explainability-home')} />;
 
       case 'explainability-dag':
-        return <ExplainabilityDAG onNavigate={setActiveScreen} />;
+        return <ExplainabilityDAG onNavigate={navigateScreen} />;
 
       case 'explainability-logs':
-        return <ExplainabilityLogs onNavigate={setActiveScreen} />;
+        return <ExplainabilityLogs onNavigate={navigateScreen} />;
 
       case 'analytics-home':
-        return <AnalyticsHome onViewCameraHealth={() => setActiveScreen('analytics-camera-health')} onViewViolations={() => setActiveScreen('analytics-violations')} />;
+        return (
+          <AnalyticsHome
+            onViewCameraHealth={() => navigateScreen('analytics-camera-health')}
+            onViewViolations={() => navigateScreen('analytics-violations')}
+          />
+        );
 
       case 'analytics-camera-health':
-        return <CameraHealth onBack={() => setActiveScreen('analytics-home')} />;
+        return <CameraHealth onBack={() => navigateScreen('analytics-home')} />;
 
       case 'analytics-violations':
-        return <ViolationTrends onBack={() => setActiveScreen('analytics-home')} />;
+        return <ViolationTrends onBack={() => navigateScreen('analytics-home')} />;
 
       case 'admin-cameras':
         return <CameraRegistry />;
@@ -246,13 +408,13 @@ export default function App() {
         return <CrossCameraTracking />;
 
       case 'drone-fleet':
-        return <DroneFleet onNavigate={setActiveScreen} />;
+        return <DroneFleet onNavigate={navigateScreen} />;
 
       case 'drone-missions':
-        return <DroneMissions onNavigate={setActiveScreen} />;
+        return <DroneMissions onNavigate={navigateScreen} />;
 
       case 'drone-alerts':
-        return <DroneAlerts onNavigate={setActiveScreen} />;
+        return <DroneAlerts onNavigate={navigateScreen} />;
 
       case 'admin-drones':
         return <DroneRegistry />;
@@ -283,7 +445,7 @@ export default function App() {
     <div className="flex h-screen bg-[#0a0e1a] text-white overflow-hidden">
       <Sidebar
         activeScreen={activeScreen}
-        onNavigate={setActiveScreen}
+        onNavigate={navigateScreen}
         userRole={user.role}
       />
 
@@ -292,7 +454,7 @@ export default function App() {
           activeScreen={activeScreen}
           gridSize={gridSize}
           onGridSizeChange={setGridSize}
-          onNavigate={setActiveScreen}
+          onNavigate={navigateScreen}
           userRole={user.role}
           username={user.username}
           name={user.name}
