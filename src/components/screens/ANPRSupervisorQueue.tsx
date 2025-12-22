@@ -1,14 +1,33 @@
-import { ArrowLeft, AlertTriangle, CheckCircle, XCircle, Eye, Clock, Shield } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowLeft, AlertTriangle, CheckCircle, XCircle, Clock, Shield, ImageOff, AlertCircle } from 'lucide-react';
+
+// Import ANPR images
+import anpr1 from '../../assets/anpr_images/anpr_1.jpg';
+import anpr2 from '../../assets/anpr_images/anpr_2.jpg';
+import anpr3 from '../../assets/anpr_images/anpr_3.jpg';
+import anpr4 from '../../assets/anpr_images/anpr_4.jpg';
 
 interface ANPRSupervisorQueueProps {
   onBack: () => void;
+  supervisorName?: string; // Name of the logged-in supervisor
 }
 
-export function ANPRSupervisorQueue({ onBack }: ANPRSupervisorQueueProps) {
+interface ViolationDecision {
+  decision: string;
+  remarks: string;
+  action: 'approved' | 'rejected';
+  processedBy: string;
+  processedAt: string;
+}
+
+export function ANPRSupervisorQueue({ onBack, supervisorName = 'Administrator' }: ANPRSupervisorQueueProps) {
+  const [decisions, setDecisions] = useState<Record<string, ViolationDecision>>({});
+  const [formData, setFormData] = useState<Record<string, { decision: string; remarks: string }>>({});
   const escalatedViolations = [
     {
       id: 'VL-001',
       plate: 'AP39Z9876',
+      image: anpr1,
       confidence: 96,
       time: '10:23:45',
       location: 'NH-16 Junction',
@@ -22,6 +41,7 @@ export function ANPRSupervisorQueue({ onBack }: ANPRSupervisorQueueProps) {
     {
       id: 'VL-008',
       plate: 'KL14RS1357',
+      image: anpr2,
       confidence: 93,
       time: '09:38:42',
       location: 'Highway Entry',
@@ -35,6 +55,7 @@ export function ANPRSupervisorQueue({ onBack }: ANPRSupervisorQueueProps) {
     {
       id: 'VL-012',
       plate: 'AP16ZZ8910',
+      image: anpr3,
       confidence: 88,
       time: '09:15:22',
       location: 'Port Area Gate',
@@ -48,6 +69,7 @@ export function ANPRSupervisorQueue({ onBack }: ANPRSupervisorQueueProps) {
     {
       id: 'VL-015',
       plate: 'TN09AB4567',
+      image: anpr4,
       confidence: 91,
       time: '08:52:18',
       location: 'Beach Road',
@@ -69,6 +91,64 @@ export function ANPRSupervisorQueue({ onBack }: ANPRSupervisorQueueProps) {
       default:
         return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50';
     }
+  };
+
+  const handleDecisionChange = (violationId: string, decision: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [violationId]: {
+        ...prev[violationId],
+        decision,
+        remarks: prev[violationId]?.remarks || ''
+      }
+    }));
+  };
+
+  const handleRemarksChange = (violationId: string, remarks: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [violationId]: {
+        ...prev[violationId],
+        decision: prev[violationId]?.decision || '',
+        remarks
+      }
+    }));
+  };
+
+  const handleApprove = (violationId: string) => {
+    const form = formData[violationId];
+    if (!form || !form.decision || form.decision === 'Select Action' || !form.remarks.trim()) {
+      alert('Please select a decision and enter mandatory remarks before approving.');
+      return;
+    }
+
+    const decision: ViolationDecision = {
+      decision: form.decision,
+      remarks: form.remarks,
+      action: 'approved',
+      processedBy: supervisorName,
+      processedAt: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+    };
+
+    setDecisions(prev => ({ ...prev, [violationId]: decision }));
+  };
+
+  const handleReject = (violationId: string) => {
+    const form = formData[violationId];
+    if (!form || !form.decision || form.decision === 'Select Action' || !form.remarks.trim()) {
+      alert('Please select a decision and enter mandatory remarks before rejecting.');
+      return;
+    }
+
+    const decision: ViolationDecision = {
+      decision: form.decision,
+      remarks: form.remarks,
+      action: 'rejected',
+      processedBy: supervisorName,
+      processedAt: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+    };
+
+    setDecisions(prev => ({ ...prev, [violationId]: decision }));
   };
 
   return (
@@ -110,9 +190,7 @@ export function ANPRSupervisorQueue({ onBack }: ANPRSupervisorQueueProps) {
         {escalatedViolations.map((violation) => (
           <div
             key={violation.id}
-            className={`bg-[#0d1117] border-2 rounded-xl overflow-hidden transition-all ${
-              violation.severity === 'critical' ? 'border-red-500/50 hover:border-red-500' : 'border-orange-500/50 hover:border-orange-500'
-            }`}
+            className="bg-[#0d1117] border border-[#1f2937] rounded-xl overflow-hidden transition-all hover:border-[#2a3441]"
           >
             <div
               className={`p-4 border-b border-[#1f2937] ${
@@ -136,15 +214,35 @@ export function ANPRSupervisorQueue({ onBack }: ANPRSupervisorQueueProps) {
             </div>
 
             <div className="grid grid-cols-3 gap-4 p-4">
-              <div className="space-y-3">
+                <div className="space-y-3">
                 <p className="text-xs text-gray-500 uppercase tracking-wider">Vehicle Snapshot</p>
-                <div className="h-48 bg-[#0a0e1a] border border-[#1f2937] rounded-lg flex items-center justify-center overflow-hidden">
-                  <div className="text-center">
-                    <div className="w-16 h-16 mx-auto mb-2 bg-gray-800 rounded-lg flex items-center justify-center">
-                      <Eye className="w-8 h-8 text-gray-600" />
+                <div className="h-48 bg-[#050816] border border-[#1f2937] rounded-lg overflow-hidden relative">
+                  {(violation as any).image ? (
+                    // Show ANPR image
+                    <img 
+                      src={(violation as any).image} 
+                      alt={`Vehicle ${violation.plate}`}
+                      className="w-full h-full object-contain"
+                    />
+                  ) : (
+                    // Fallback placeholder if no image
+                    <div className="w-full h-full flex items-center justify-center relative">
+                      <div className="absolute inset-0 opacity-10">
+                        <div className="absolute inset-0" style={{
+                          backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(255,255,255,0.05) 8px, rgba(255,255,255,0.05) 16px)'
+                        }}></div>
+                      </div>
+                      <div className="relative z-10 text-center px-4">
+                        <div className="relative inline-block mb-3">
+                          <ImageOff className="w-10 h-10 text-gray-600 mx-auto" />
+                          <AlertCircle className="w-4 h-4 text-orange-400 absolute -top-0.5 -right-0.5" fill="currentColor" />
+                        </div>
+                        <p className="text-gray-400 text-xs font-medium mb-1">Snapshot Unavailable</p>
+                        <p className="text-gray-600 text-[10px] mb-3">Image not available at this time</p>
+                        <p className="text-white font-mono text-lg tracking-wider">{violation.plate}</p>
+                      </div>
                     </div>
-                    <p className="text-white font-mono text-xl tracking-wider">{violation.plate}</p>
-                  </div>
+                  )}
                 </div>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
@@ -186,36 +284,89 @@ export function ANPRSupervisorQueue({ onBack }: ANPRSupervisorQueueProps) {
 
               <div className="space-y-3">
                 <p className="text-xs text-gray-500 uppercase tracking-wider">Supervisor Decision</p>
-                <div className="bg-gradient-to-br from-green-500/5 to-blue-500/5 border border-[#1f2937] rounded-lg p-4 space-y-3">
-                  <div>
-                    <label className="text-xs text-gray-500 block mb-2">Decision</label>
-                    <select className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#1f2937] rounded-lg text-white text-sm">
-                      <option>Select Action</option>
-                      <option>Approve Violation</option>
-                      <option>Reject - False Positive</option>
-                      <option>Escalate to ACP</option>
-                      <option>Request Field Verification</option>
-                    </select>
+                {decisions[violation.id] ? (
+                  // Show decision result
+                  <div className={`border border-[#1f2937] rounded-lg p-4 space-y-3 ${
+                    decisions[violation.id].action === 'approved' 
+                      ? 'bg-green-500/5 border-green-500/30' 
+                      : 'bg-red-500/5 border-red-500/30'
+                  }`}>
+                    <div className="flex items-center gap-2 mb-3">
+                      {decisions[violation.id].action === 'approved' ? (
+                        <CheckCircle className="w-5 h-5 text-green-400" />
+                      ) : (
+                        <XCircle className="w-5 h-5 text-red-400" />
+                      )}
+                      <p className={`text-sm font-semibold ${
+                        decisions[violation.id].action === 'approved' ? 'text-green-400' : 'text-red-400'
+                      }`}>
+                        {decisions[violation.id].action === 'approved' ? 'APPROVED' : 'REJECTED'}
+                      </p>
+                    </div>
+                    <div className="space-y-2 text-sm">
+                      <div>
+                        <p className="text-xs text-gray-500">Processed By</p>
+                        <p className="text-white">{decisions[violation.id].processedBy}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500">Decision</p>
+                        <p className="text-white">{decisions[violation.id].decision}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500">Remarks</p>
+                        <p className="text-gray-300">{decisions[violation.id].remarks}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500">Processed At</p>
+                        <p className="text-white font-mono">{decisions[violation.id].processedAt}</p>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <label className="text-xs text-gray-500 block mb-2">Supervisor Remarks (Mandatory)</label>
-                    <textarea
-                      className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#1f2937] rounded-lg text-white text-sm resize-none"
-                      rows={4}
-                      placeholder="Add your decision rationale and any additional observations..."
-                    />
+                ) : (
+                  // Show decision form
+                  <div className="bg-gradient-to-br from-green-500/5 to-blue-500/5 border border-[#1f2937] rounded-lg p-4 space-y-3">
+                    <div>
+                      <label className="text-xs text-gray-500 block mb-2">Decision</label>
+                      <select 
+                        value={formData[violation.id]?.decision || 'Select Action'}
+                        onChange={(e) => handleDecisionChange(violation.id, e.target.value)}
+                        className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#1f2937] rounded-lg text-white text-sm focus:border-cyan-500 focus:outline-none"
+                      >
+                        <option>Select Action</option>
+                        <option>Approve Violation</option>
+                        <option>Reject - False Positive</option>
+                        <option>Escalate to ACP</option>
+                        <option>Request Field Verification</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-xs text-gray-500 block mb-2">Supervisor Remarks (Mandatory)</label>
+                      <textarea
+                        value={formData[violation.id]?.remarks || ''}
+                        onChange={(e) => handleRemarksChange(violation.id, e.target.value)}
+                        className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#1f2937] rounded-lg text-white text-sm resize-none focus:border-cyan-500 focus:outline-none"
+                        rows={4}
+                        placeholder="Add your decision rationale and any additional observations..."
+                      />
+                    </div>
+                    <div className="pt-3 border-t border-[#1f2937] space-y-2">
+                      <button 
+                        onClick={() => handleApprove(violation.id)}
+                        className="w-full py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center justify-center gap-2 transition-colors"
+                      >
+                        <CheckCircle className="w-4 h-4" />
+                        Approve & Process
+                      </button>
+                      <button 
+                        onClick={() => handleReject(violation.id)}
+                        className="w-full py-2 bg-red-500/20 text-red-400 border border-red-500/50 rounded-lg hover:bg-red-500/30 flex items-center justify-center gap-2 transition-colors"
+                      >
+                        <XCircle className="w-4 h-4" />
+                        Reject Violation
+                      </button>
+                    </div>
                   </div>
-                  <div className="pt-3 border-t border-[#1f2937] space-y-2">
-                    <button className="w-full py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center justify-center gap-2">
-                      <CheckCircle className="w-4 h-4" />
-                      Approve & Process
-                    </button>
-                    <button className="w-full py-2 bg-red-500/20 text-red-400 border border-red-500/50 rounded-lg hover:bg-red-500/30 flex items-center justify-center gap-2">
-                      <XCircle className="w-4 h-4" />
-                      Reject Violation
-                    </button>
-                  </div>
-                </div>
+                )}
               </div>
             </div>
 

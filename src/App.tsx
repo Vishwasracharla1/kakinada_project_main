@@ -249,7 +249,7 @@ export default function App() {
         return <ANPROperator onBack={() => navigateScreen('anpr-home')} />;
 
       case 'anpr-supervisor-queue':
-        return <ANPRSupervisorQueue onBack={() => navigateScreen('anpr-home')} />;
+        return <ANPRSupervisorQueue onBack={() => navigateScreen('anpr-home')} supervisorName={user?.name || 'Administrator'} />;
 
       case 'alerts':
         return <Alerts userRole={user!.role} onNavigate={navigateScreen} />;

@@ -8,13 +8,13 @@ interface ANPRListProps {
 
 export function ANPRList({ onViewDetail, onViewApproval, userRole = 'operator' }: ANPRListProps) {
   const violations = [
-    { id: 'VL-001', plate: 'AP39Z9876', confidence: 96, time: '10:23:45', location: 'NH-16 Junction', status: 'Pending', violation: 'Stolen Vehicle', severity: 'critical' },
-    { id: 'VL-002', plate: 'AP05C1234', confidence: 89, time: '10:18:32', location: 'Gandhi Road', status: 'Validated', violation: 'Speed Limit', severity: 'medium' },
-    { id: 'VL-003', plate: 'TN22AB5678', confidence: 94, time: '10:12:19', location: 'Beach Road', status: 'Pending', violation: 'Red Light', severity: 'medium' },
-    { id: 'VL-004', plate: 'KA51MN9012', confidence: 92, time: '10:05:47', location: 'Port Area', status: 'Approved', violation: 'No Entry', severity: 'high' },
-    { id: 'VL-005', plate: 'AP16XY3456', confidence: 87, time: '09:58:23', location: 'Main Bazaar', status: 'Pending', violation: 'Wrong Way', severity: 'medium' },
-    { id: 'VL-006', plate: 'TS09LM7890', confidence: 91, time: '09:52:11', location: 'Station Road', status: 'Validated', violation: 'Overspeeding', severity: 'low' },
-    { id: 'VL-007', plate: 'AP39PQ2468', confidence: 85, time: '09:45:56', location: 'Canal Road', status: 'Pending', violation: 'Parking Violation', severity: 'low' },
+    { id: 'VL-001', plate: 'MH02EK4399', confidence: 96, time: '10:23:45', location: 'NH-16 Junction', status: 'Pending', violation: 'Stolen Vehicle', severity: 'critical' },
+    { id: 'VL-002', plate: 'RJ27TC0530', confidence: 89, time: '10:18:32', location: 'Gandhi Road', status: 'Validated', violation: 'Speed Limit', severity: 'medium' },
+    { id: 'VL-003', plate: 'MH04DW9020', confidence: 94, time: '10:12:19', location: 'Beach Road', status: 'Pending', violation: 'Red Light', severity: 'medium' },
+    { id: 'VL-004', plate: 'GJ05JH2501', confidence: 92, time: '10:05:47', location: 'Port Area', status: 'Approved', violation: 'No Entry', severity: 'high' },
+    { id: 'VL-005', plate: 'HB06F9209', confidence: 87, time: '09:58:23', location: 'Main Bazaar', status: 'Pending', violation: 'Wrong Way', severity: 'medium' },
+    { id: 'VL-006', plate: 'MH02EP4454', confidence: 91, time: '09:52:11', location: 'Station Road', status: 'Validated', violation: 'Overspeeding', severity: 'low' },
+    { id: 'VL-007', plate: 'MH01DT1', confidence: 85, time: '09:45:56', location: 'Canal Road', status: 'Pending', violation: 'Parking Violation', severity: 'low' },
     { id: 'VL-008', plate: 'KL14RS1357', confidence: 93, time: '09:38:42', location: 'Highway Entry', status: 'Escalated', violation: 'Stolen Vehicle', severity: 'critical' },
   ];
 

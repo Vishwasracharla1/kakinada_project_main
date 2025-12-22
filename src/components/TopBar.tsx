@@ -107,7 +107,7 @@ export function TopBar({
 
   return (
     <>
-      <div className="h-16 bg-[#0d1117] border-b border-[#1f2937] flex items-center justify-between px-6">
+      <div className="h-16 bg-card border-b border-border flex items-center justify-between px-6">
 
         {/* LEFT SECTION - Title */}
         <div className="flex items-center gap-4">
@@ -143,7 +143,7 @@ export function TopBar({
         <div className="flex items-center gap-4">
 
           {/* Search Box */}
-          <div className="flex items-center gap-2 px-4 py-2 bg-[#1a1f2e] rounded-lg">
+          <div className="flex items-center gap-2 px-4 py-2 bg-accent border border-border rounded-lg">
             <Search className="w-4 h-4 text-gray-500" />
             <input
               type="text"
@@ -162,7 +162,7 @@ export function TopBar({
           <div className="relative" ref={menuRef}>
             <div
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="flex items-center gap-2 px-3 py-2 bg-[#1a1f2e] rounded-lg cursor-pointer hover:bg-[#232936]"
+              className="flex items-center gap-2 px-3 py-2 bg-accent border border-border rounded-lg cursor-pointer hover:bg-white/5"
             >
               <User className="w-5 h-5 text-gray-400" />
               <div className="flex flex-col">
@@ -193,6 +193,7 @@ export function TopBar({
         <SessionHistoryModal
           role={getRoleLabel()!}
           userId={userId}
+          username={username}
           onClose={() => setIsHistoryOpen(false)}
         />
       )}

@@ -11,6 +11,19 @@
   --border-color: #1f2937;
 }
 
+html[data-theme='light'] {
+  --app-background: #f3f4f6;
+  --card-background: #ffffff;
+  --secondary-background: #f8fafc;
+  --accent-background: #f1f5f9;
+  --muted-foreground: #4b5563;
+  --border-color: #e5e7eb;
+}
+
+body {
+  background: var(--app-background);
+}
+
 .bg-background { background-color: var(--app-background); }
 .bg-card { background-color: var(--card-background); }
 .bg-secondary { background-color: var(--secondary-background); }
@@ -29,6 +42,52 @@
   background: #eef2f7;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji",
     "Segoe UI Emoji";
+}
+
+/* Light/Dark app-wide overrides for common Tailwind arbitrary colors used in the app */
+html[data-theme='light'] .bg-\[\#0d1117\] { background-color: #ffffff !important; }
+html[data-theme='light'] .bg-\[\#0a0e1a\] { background-color: #f3f4f6 !important; }
+html[data-theme='light'] .border-\[\#1f2937\] { border-color: #e5e7eb !important; }
+html[data-theme='light'] .text-white { color: #111827 !important; }
+html[data-theme='light'] .text-gray-300 { color: #374151 !important; }
+html[data-theme='light'] .text-gray-400 { color: #4b5563 !important; }
+html[data-theme='light'] .text-gray-500 { color: #6b7280 !important; }
+html[data-theme='light'] .text-gray-600 { color: #6b7280 !important; }
+
+/* Theme toggle (sun/moon pill) */
+.kkn-theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(31, 41, 55, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+  color: #9ca3af;
+}
+html[data-theme='light'] .kkn-theme-toggle {
+  border-color: rgba(17, 24, 39, 0.15);
+  background: rgba(255, 255, 255, 0.85);
+  color: #6b7280;
+}
+.kkn-theme-toggle__icon {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  transition: background 160ms ease, color 160ms ease;
+}
+.kkn-theme-toggle__icon.is-active {
+  background: #2563eb;
+  color: #ffffff;
+}
+.kkn-theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+html[data-theme='light'] .kkn-theme-toggle:hover {
+  background: rgba(255, 255, 255, 1);
 }
 
 .leaflet-control-zoom a {
