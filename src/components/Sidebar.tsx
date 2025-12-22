@@ -18,7 +18,9 @@ import {
   Eye,
   TrendingUp,
   Users,
-  Activity
+  Activity,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import {  Clock } from 'lucide-react';
@@ -44,6 +46,16 @@ interface NavSection {
 }
 
 export function Sidebar({ activeScreen, onNavigate, userRole }: SidebarProps) {
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    const saved = localStorage.getItem('kkn_theme');
+    return saved === 'light' ? 'light' : 'dark';
+  });
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem('kkn_theme', theme);
+  }, [theme]);
+
   const navSections: NavSection[] = [
     {
       title: '',
@@ -230,9 +242,31 @@ export function Sidebar({ activeScreen, onNavigate, userRole }: SidebarProps) {
           <p className="text-xs text-gray-500">Logged in as:</p>
           <p className="text-xs text-cyan-400 mt-0.5">{getRoleTitle()}</p>
         </div>
-        <div className="text-[10px] text-gray-600 space-y-1">
-          <div>System Status: <span className="text-green-400">ONLINE</span></div>
-          <div>v2.1.3 • {new Date().toLocaleDateString()}</div>
+        <div className="flex items-center justify-between gap-3">
+          <button
+            type="button"
+            className="flex-1 text-left text-[10px] text-gray-600 border border-[#1f2937] bg-[#0a0e1a] rounded-lg px-3 py-2 hover:bg-white/5 transition-colors"
+          >
+            <div>
+              System Status: <span className="text-green-400">ONLINE</span>
+            </div>
+            <div>v2.1.3 • {new Date().toLocaleDateString()}</div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
+            className="kkn-theme-toggle"
+            aria-label="Toggle theme"
+            title="Toggle theme"
+          >
+            <span className={`kkn-theme-toggle__icon ${theme === 'light' ? 'is-active' : ''}`}>
+              <Sun className="w-4 h-4" />
+            </span>
+            <span className={`kkn-theme-toggle__icon ${theme === 'dark' ? 'is-active' : ''}`}>
+              <Moon className="w-4 h-4" />
+            </span>
+          </button>
         </div>
       </div>
     </div>

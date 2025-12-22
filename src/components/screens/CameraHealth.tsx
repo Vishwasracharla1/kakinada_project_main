@@ -1,5 +1,9 @@
 import { ArrowLeft, Camera, TrendingUp, TrendingDown } from 'lucide-react';
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import ReactECharts from 'echarts-for-react';
+
+function isLightTheme() {
+  return document?.documentElement?.dataset?.theme === 'light';
+}
 
 interface CameraHealthProps {
   onBack: () => void;
@@ -52,6 +56,105 @@ export function CameraHealth({ onBack }: CameraHealthProps) {
     }
   };
 
+  const gridColor = isLightTheme() ? '#e5e7eb' : '#1f2937';
+  const axisText = isLightTheme() ? '#6b7280' : '#9ca3af';
+  const tooltipBg = isLightTheme() ? 'rgba(17,24,39,0.92)' : 'rgba(13,17,23,0.96)';
+
+  const statusOption = {
+    tooltip: {
+      trigger: 'item',
+      backgroundColor: tooltipBg,
+      borderColor: gridColor,
+      textStyle: { color: '#e5e7eb' },
+    },
+    series: [
+      {
+        type: 'pie',
+        radius: ['58%', '82%'],
+        avoidLabelOverlap: true,
+        label: { show: false },
+        labelLine: { show: false },
+        itemStyle: { borderColor: isLightTheme() ? '#ffffff' : '#0d1117', borderWidth: 2 },
+        data: statusData.map((s) => ({ name: s.name, value: s.value, itemStyle: { color: s.color } })),
+      },
+    ],
+  };
+
+  const uptimeOption = {
+    grid: { left: 46, right: 16, top: 18, bottom: 30 },
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: tooltipBg,
+      borderColor: gridColor,
+      textStyle: { color: '#e5e7eb' },
+    },
+    xAxis: {
+      type: 'category',
+      data: uptimeTrend.map((d) => d.week),
+      axisLine: { lineStyle: { color: gridColor } },
+      axisLabel: { color: axisText },
+    },
+    yAxis: {
+      type: 'value',
+      min: 97,
+      max: 100,
+      axisLine: { lineStyle: { color: gridColor } },
+      splitLine: { lineStyle: { color: gridColor, type: 'dashed', opacity: 0.8 } },
+      axisLabel: { color: axisText },
+    },
+    series: [
+      {
+        type: 'line',
+        data: uptimeTrend.map((d) => d.uptime),
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 9,
+        lineStyle: { width: 3, color: '#06b6d4' },
+        itemStyle: { color: '#06b6d4' },
+        areaStyle: { color: 'rgba(6,182,212,0.10)' },
+      },
+    ],
+  };
+
+  const offlineOption = {
+    grid: { left: 58, right: 16, top: 18, bottom: 40 },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'shadow' },
+      backgroundColor: tooltipBg,
+      borderColor: gridColor,
+      textStyle: { color: '#e5e7eb' },
+      formatter: (params: any) => {
+        const p = Array.isArray(params) ? params[0] : params;
+        const name = p?.axisValue ?? '';
+        const val = p?.data ?? 0;
+        return `${name}<br/>hours : <b>${val}</b>`;
+      },
+    },
+    xAxis: {
+      type: 'category',
+      data: offlineDuration.map((d) => d.camera),
+      axisLine: { lineStyle: { color: gridColor } },
+      axisLabel: { color: axisText, interval: 0, rotate: 22 },
+    },
+    yAxis: {
+      type: 'value',
+      name: 'Hours',
+      nameTextStyle: { color: axisText },
+      axisLine: { lineStyle: { color: gridColor } },
+      splitLine: { lineStyle: { color: gridColor, type: 'dashed', opacity: 0.8 } },
+      axisLabel: { color: axisText },
+    },
+    series: [
+      {
+        type: 'bar',
+        data: offlineDuration.map((d) => d.hours),
+        itemStyle: { color: '#ef4444', borderRadius: [8, 8, 2, 2] },
+        barWidth: 30,
+      },
+    ],
+  };
+
   return (
     <div className="p-6">
       <div className="flex items-center gap-4 mb-6">
@@ -68,24 +171,7 @@ export function CameraHealth({ onBack }: CameraHealthProps) {
             <h3 className="text-white">Camera Status</h3>
           </div>
           <div className="p-6 flex items-center justify-center">
-            <ResponsiveContainer width="100%" height={200}>
-              <PieChart>
-                <Pie
-                  data={statusData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={50}
-                  outerRadius={80}
-                  paddingAngle={2}
-                  dataKey="value"
-                >
-                  {statusData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip contentStyle={{ backgroundColor: '#0d1117', border: '1px solid #1f2937', borderRadius: '8px' }} />
-              </PieChart>
-            </ResponsiveContainer>
+            <ReactECharts option={statusOption} style={{ width: '100%', height: 200 }} />
           </div>
           <div className="p-4 space-y-2 border-t border-[#1f2937]">
             {statusData.map((item) => (
@@ -106,15 +192,7 @@ export function CameraHealth({ onBack }: CameraHealthProps) {
             <h3 className="text-white">Uptime Trend (4 Weeks)</h3>
           </div>
           <div className="p-6">
-            <ResponsiveContainer width="100%" height={200}>
-              <LineChart data={uptimeTrend}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-                <XAxis dataKey="week" stroke="#6b7280" />
-                <YAxis stroke="#6b7280" domain={[97, 100]} />
-                <Tooltip contentStyle={{ backgroundColor: '#0d1117', border: '1px solid #1f2937', borderRadius: '8px' }} />
-                <Line type="monotone" dataKey="uptime" stroke="#06b6d4" strokeWidth={3} dot={{ fill: '#06b6d4', r: 6 }} />
-              </LineChart>
-            </ResponsiveContainer>
+            <ReactECharts option={uptimeOption} style={{ width: '100%', height: 200 }} />
           </div>
         </div>
       </div>
@@ -125,15 +203,7 @@ export function CameraHealth({ onBack }: CameraHealthProps) {
           <h3 className="text-white">Offline Duration (Last 30 Days)</h3>
         </div>
         <div className="p-6">
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart data={offlineDuration}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-              <XAxis dataKey="camera" stroke="#6b7280" />
-              <YAxis stroke="#6b7280" label={{ value: 'Hours', angle: -90, position: 'insideLeft', fill: '#6b7280' }} />
-              <Tooltip contentStyle={{ backgroundColor: '#0d1117', border: '1px solid #1f2937', borderRadius: '8px' }} />
-              <Bar dataKey="hours" fill="#ef4444" />
-            </BarChart>
-          </ResponsiveContainer>
+          <ReactECharts option={offlineOption} style={{ width: '100%', height: 250 }} />
         </div>
       </div>
 

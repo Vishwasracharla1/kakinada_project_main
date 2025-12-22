@@ -1,5 +1,9 @@
 import { ArrowLeft, MapPin, TrendingUp, TrendingDown } from 'lucide-react';
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import ReactECharts from 'echarts-for-react';
+
+function isLightTheme() {
+  return document?.documentElement?.dataset?.theme === 'light';
+}
 
 interface ViolationTrendsProps {
   onBack: () => void;
@@ -34,6 +38,77 @@ export function ViolationTrends({ onBack }: ViolationTrendsProps) {
     { location: 'Station Road', violations: 43, trend: 3, type: 'up' },
   ];
 
+  const gridColor = isLightTheme() ? '#e5e7eb' : '#1f2937';
+  const axisText = isLightTheme() ? '#6b7280' : '#9ca3af';
+  const tooltipBg = isLightTheme() ? 'rgba(17,24,39,0.92)' : 'rgba(13,17,23,0.96)';
+
+  const dailyOption = {
+    grid: { left: 44, right: 16, top: 22, bottom: 44 },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'shadow' },
+      backgroundColor: tooltipBg,
+      borderColor: gridColor,
+      textStyle: { color: '#e5e7eb' },
+    },
+    legend: {
+      bottom: 6,
+      textStyle: { color: axisText },
+    },
+    xAxis: {
+      type: 'category',
+      data: dailyData.map((d) => d.date),
+      axisLine: { lineStyle: { color: gridColor } },
+      axisLabel: { color: axisText },
+    },
+    yAxis: {
+      type: 'value',
+      axisLine: { lineStyle: { color: gridColor } },
+      splitLine: { lineStyle: { color: gridColor, type: 'dashed', opacity: 0.8 } },
+      axisLabel: { color: axisText },
+    },
+    series: [
+      { name: 'Speeding', type: 'bar', stack: 'total', data: dailyData.map((d) => d.speeding), itemStyle: { color: '#06b6d4' } },
+      { name: 'Red Light', type: 'bar', stack: 'total', data: dailyData.map((d) => d.redLight), itemStyle: { color: '#8b5cf6' } },
+      { name: 'Parking', type: 'bar', stack: 'total', data: dailyData.map((d) => d.parking), itemStyle: { color: '#f59e0b' } },
+      { name: 'Other', type: 'bar', stack: 'total', data: dailyData.map((d) => d.other), itemStyle: { color: '#10b981' } },
+    ],
+  };
+
+  const monthlyOption = {
+    grid: { left: 44, right: 16, top: 22, bottom: 36 },
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: tooltipBg,
+      borderColor: gridColor,
+      textStyle: { color: '#e5e7eb' },
+    },
+    xAxis: {
+      type: 'category',
+      data: monthlyTrend.map((d) => d.month),
+      axisLine: { lineStyle: { color: gridColor } },
+      axisLabel: { color: axisText },
+    },
+    yAxis: {
+      type: 'value',
+      axisLine: { lineStyle: { color: gridColor } },
+      splitLine: { lineStyle: { color: gridColor, type: 'dashed', opacity: 0.8 } },
+      axisLabel: { color: axisText },
+    },
+    series: [
+      {
+        type: 'line',
+        data: monthlyTrend.map((d) => d.total),
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 9,
+        lineStyle: { width: 3, color: '#06b6d4' },
+        itemStyle: { color: '#06b6d4' },
+        areaStyle: { color: 'rgba(6,182,212,0.10)' },
+      },
+    ],
+  };
+
   return (
     <div className="p-6">
       <div className="flex items-center gap-4 mb-6">
@@ -50,19 +125,7 @@ export function ViolationTrends({ onBack }: ViolationTrendsProps) {
             <h3 className="text-white">Daily Violations (Last 7 Days)</h3>
           </div>
           <div className="p-6">
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={dailyData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-                <XAxis dataKey="date" stroke="#6b7280" />
-                <YAxis stroke="#6b7280" />
-                <Tooltip contentStyle={{ backgroundColor: '#0d1117', border: '1px solid #1f2937', borderRadius: '8px' }} />
-                <Legend />
-                <Bar dataKey="speeding" stackId="a" fill="#06b6d4" name="Speeding" />
-                <Bar dataKey="redLight" stackId="a" fill="#8b5cf6" name="Red Light" />
-                <Bar dataKey="parking" stackId="a" fill="#f59e0b" name="Parking" />
-                <Bar dataKey="other" stackId="a" fill="#10b981" name="Other" />
-              </BarChart>
-            </ResponsiveContainer>
+            <ReactECharts option={dailyOption} style={{ height: 300, width: '100%' }} />
           </div>
         </div>
 
@@ -72,15 +135,7 @@ export function ViolationTrends({ onBack }: ViolationTrendsProps) {
             <h3 className="text-white">Monthly Trend (6 Months)</h3>
           </div>
           <div className="p-6">
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={monthlyTrend}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-                <XAxis dataKey="month" stroke="#6b7280" />
-                <YAxis stroke="#6b7280" />
-                <Tooltip contentStyle={{ backgroundColor: '#0d1117', border: '1px solid #1f2937', borderRadius: '8px' }} />
-                <Line type="monotone" dataKey="total" stroke="#06b6d4" strokeWidth={3} dot={{ fill: '#06b6d4', r: 6 }} />
-              </LineChart>
-            </ResponsiveContainer>
+            <ReactECharts option={monthlyOption} style={{ height: 300, width: '100%' }} />
           </div>
         </div>
       </div>

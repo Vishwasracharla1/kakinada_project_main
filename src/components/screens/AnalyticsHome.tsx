@@ -1,5 +1,9 @@
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { TrendingUp, Camera, AlertTriangle, Clock } from 'lucide-react';
+import ReactECharts from 'echarts-for-react';
+
+function isLightTheme() {
+  return document?.documentElement?.dataset?.theme === 'light';
+}
 
 interface AnalyticsHomeProps {
   onViewCameraHealth: () => void;
@@ -44,6 +48,137 @@ export function AnalyticsHome({ onViewCameraHealth, onViewViolations }: Analytic
   ];
 
   const COLORS = ['#06b6d4', '#8b5cf6', '#f59e0b', '#10b981', '#ef4444'];
+
+  const gridColor = isLightTheme() ? '#e5e7eb' : '#1f2937';
+  const axisText = isLightTheme() ? '#6b7280' : '#9ca3af';
+  const tooltipBg = isLightTheme() ? 'rgba(17,24,39,0.92)' : 'rgba(13,17,23,0.96)';
+
+  const uptimeOption = {
+    grid: { left: 40, right: 16, top: 18, bottom: 28 },
+    xAxis: {
+      type: 'category',
+      data: uptimeData.map((d) => d.day),
+      axisLine: { lineStyle: { color: gridColor } },
+      axisLabel: { color: axisText },
+    },
+    yAxis: {
+      type: 'value',
+      min: 98,
+      max: 100,
+      axisLine: { lineStyle: { color: gridColor } },
+      splitLine: { lineStyle: { color: gridColor, type: 'dashed', opacity: 0.8 } },
+      axisLabel: { color: axisText },
+    },
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: tooltipBg,
+      borderColor: gridColor,
+      textStyle: { color: '#e5e7eb' },
+    },
+    series: [
+      {
+        type: 'line',
+        data: uptimeData.map((d) => d.uptime),
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 8,
+        lineStyle: { width: 3, color: '#06b6d4' },
+        itemStyle: { color: '#06b6d4' },
+        areaStyle: { color: 'rgba(6,182,212,0.12)' },
+      },
+    ],
+  };
+
+  const incidentOption = {
+    grid: { left: 40, right: 16, top: 18, bottom: 28 },
+    xAxis: {
+      type: 'category',
+      data: incidentData.map((d) => d.month),
+      axisLine: { lineStyle: { color: gridColor } },
+      axisLabel: { color: axisText },
+    },
+    yAxis: {
+      type: 'value',
+      axisLine: { lineStyle: { color: gridColor } },
+      splitLine: { lineStyle: { color: gridColor, type: 'dashed', opacity: 0.8 } },
+      axisLabel: { color: axisText },
+    },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'shadow' },
+      backgroundColor: tooltipBg,
+      borderColor: gridColor,
+      textStyle: { color: '#e5e7eb' },
+    },
+    series: [
+      {
+        type: 'bar',
+        data: incidentData.map((d) => d.incidents),
+        itemStyle: { color: '#8b5cf6', borderRadius: [8, 8, 2, 2] },
+        barWidth: 34,
+      },
+    ],
+  };
+
+  const violationOption = {
+    tooltip: {
+      trigger: 'item',
+      backgroundColor: tooltipBg,
+      borderColor: gridColor,
+      textStyle: { color: '#e5e7eb' },
+    },
+    series: [
+      {
+        type: 'pie',
+        radius: ['58%', '82%'],
+        avoidLabelOverlap: true,
+        itemStyle: { borderColor: isLightTheme() ? '#ffffff' : '#0d1117', borderWidth: 2 },
+        label: { show: false },
+        emphasis: { scale: true, scaleSize: 6 },
+        data: violationData.map((v, idx) => ({
+          name: v.type,
+          value: v.value,
+          itemStyle: { color: COLORS[idx % COLORS.length] },
+        })),
+      },
+    ],
+  };
+
+  const responseOption = {
+    grid: { left: 46, right: 16, top: 18, bottom: 28 },
+    xAxis: {
+      type: 'category',
+      data: responseData.map((d) => d.hour),
+      axisLine: { lineStyle: { color: gridColor } },
+      axisLabel: { color: axisText },
+    },
+    yAxis: {
+      type: 'value',
+      name: 'Minutes',
+      nameTextStyle: { color: axisText, padding: [0, 0, 0, 10] },
+      axisLine: { lineStyle: { color: gridColor } },
+      splitLine: { lineStyle: { color: gridColor, type: 'dashed', opacity: 0.8 } },
+      axisLabel: { color: axisText },
+    },
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: tooltipBg,
+      borderColor: gridColor,
+      textStyle: { color: '#e5e7eb' },
+    },
+    series: [
+      {
+        type: 'line',
+        data: responseData.map((d) => d.time),
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 7,
+        lineStyle: { width: 3, color: '#10b981' },
+        itemStyle: { color: '#10b981' },
+        areaStyle: { color: 'rgba(16,185,129,0.10)' },
+      },
+    ],
+  };
 
   return (
     <div className="p-6 space-y-6 bg-background">
@@ -156,15 +291,7 @@ export function AnalyticsHome({ onViewCameraHealth, onViewViolations }: Analytic
             </button>
           </div>
           <div className="p-6">
-            <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={uptimeData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-                <XAxis dataKey="day" stroke="#6b7280" />
-                <YAxis stroke="#6b7280" domain={[98, 100]} />
-                <Tooltip contentStyle={{ backgroundColor: '#0d1117', border: '1px solid #1f2937', borderRadius: '8px' }} />
-                <Line type="monotone" dataKey="uptime" stroke="#06b6d4" strokeWidth={2} dot={{ fill: '#06b6d4' }} />
-              </LineChart>
-            </ResponsiveContainer>
+            <ReactECharts option={uptimeOption} style={{ height: 250, width: '100%' }} />
           </div>
         </div>
 
@@ -174,15 +301,7 @@ export function AnalyticsHome({ onViewCameraHealth, onViewViolations }: Analytic
             <h3 className="text-white">Incident Trends (6 Months)</h3>
           </div>
           <div className="p-6">
-            <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={incidentData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-                <XAxis dataKey="month" stroke="#6b7280" />
-                <YAxis stroke="#6b7280" />
-                <Tooltip contentStyle={{ backgroundColor: '#0d1117', border: '1px solid #1f2937', borderRadius: '8px' }} />
-                <Bar dataKey="incidents" fill="#8b5cf6" />
-              </BarChart>
-            </ResponsiveContainer>
+            <ReactECharts option={incidentOption} style={{ height: 250, width: '100%' }} />
           </div>
         </div>
 
@@ -195,24 +314,9 @@ export function AnalyticsHome({ onViewCameraHealth, onViewViolations }: Analytic
             </button>
           </div>
           <div className="p-6 flex items-center">
-            <ResponsiveContainer width="50%" height={250}>
-              <PieChart>
-                <Pie
-                  data={violationData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={90}
-                  paddingAngle={2}
-                  dataKey="value"
-                >
-                  {violationData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip contentStyle={{ backgroundColor: '#0d1117', border: '1px solid #1f2937', borderRadius: '8px' }} />
-              </PieChart>
-            </ResponsiveContainer>
+            <div className="w-1/2">
+              <ReactECharts option={violationOption} style={{ height: 250, width: '100%' }} />
+            </div>
             <div className="flex-1 space-y-2">
               {violationData.map((item, idx) => (
                 <div key={idx} className="flex items-center justify-between text-sm">
@@ -233,15 +337,7 @@ export function AnalyticsHome({ onViewCameraHealth, onViewViolations }: Analytic
             <h3 className="text-white">Response Times (24h)</h3>
           </div>
           <div className="p-6">
-            <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={responseData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-                <XAxis dataKey="hour" stroke="#6b7280" />
-                <YAxis stroke="#6b7280" label={{ value: 'Minutes', angle: -90, position: 'insideLeft', fill: '#6b7280' }} />
-                <Tooltip contentStyle={{ backgroundColor: '#0d1117', border: '1px solid #1f2937', borderRadius: '8px' }} />
-                <Line type="monotone" dataKey="time" stroke="#10b981" strokeWidth={2} dot={{ fill: '#10b981' }} />
-              </LineChart>
-            </ResponsiveContainer>
+            <ReactECharts option={responseOption} style={{ height: 250, width: '100%' }} />
           </div>
         </div>
       </div>
