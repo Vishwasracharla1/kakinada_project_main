@@ -63,10 +63,7 @@ const token = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3Ny1NUVdFRTNHZ
     }
   };
 
-  useEffect(() => {
-    loadHeatmap();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // Removed automatic load on mount - heatmap will only load when Refresh button is clicked
 
   const zones = useMemo(() => {
     const unique = Array.from(new Set(heatPoints.map(p => p.zone).filter(Boolean))).sort();

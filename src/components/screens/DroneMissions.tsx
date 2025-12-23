@@ -1,5 +1,6 @@
 import { Plane, MapPin, Gauge, Wind, Radio, Camera, Thermometer, Eye } from 'lucide-react';
 import { useRef, useEffect } from 'react';
+import DroneMap from '../DroneMap';
 
 // Import drone videos
 import droneVideo1 from '../../assets/videos/29594-376565656.mp4';
@@ -153,9 +154,14 @@ function MissionCard({ mission, videoSource, getStatusColor, getBatteryColor }: 
         {/* Right: Map & AI Detections */}
         <div className="col-span-1 space-y-3">
           {/* GPS Map */}
-          <div className="bg-black aspect-square rounded border border-[#2a3441] flex items-center justify-center relative">
-            <MapPin className="w-12 h-12 text-cyan-400" />
-            <div className="absolute top-2 left-2 text-xs text-white bg-black/70 px-2 py-1 rounded">
+          <div className="bg-black aspect-square rounded border border-[#2a3441] relative overflow-hidden">
+            <DroneMap 
+              lat={mission.gps.lat} 
+              lng={mission.gps.lng} 
+              radius={600}
+              className="absolute inset-0"
+            />
+            <div className="absolute top-2 left-2 z-[1000] text-xs text-white bg-black/70 px-2 py-1 rounded">
               GPS: {mission.gps.lat.toFixed(4)}, {mission.gps.lng.toFixed(4)}
             </div>
           </div>
@@ -201,7 +207,7 @@ const mockMissions = [
     speed: 28,
     heading: 'NE',
     battery: 87,
-    gps: { lat: 16.9891, lng: 82.2475 },
+    gps: { lat: 16.9891, lng: 82.2475 }, // Kakinada city center
     cameraMode: 'RGB',
     detections: ['Vehicle Congestion', 'Crowd Density: Medium'],
     duration: '00:18:42'
@@ -216,7 +222,7 @@ const mockMissions = [
     speed: 22,
     heading: 'E',
     battery: 92,
-    gps: { lat: 16.9850, lng: 82.2520 },
+    gps: { lat: 16.9850, lng: 82.2520 }, // Beach area near Kakinada
     cameraMode: 'Thermal',
     detections: ['Human Cluster Detected'],
     duration: '00:12:15'
@@ -225,13 +231,13 @@ const mockMissions = [
     id: 'M-2024-003',
     droneId: 'D-006',
     operator: 'Pilot Suresh Babu',
-    mission: 'Traffic Hotspot Monitoring',
+    mission: 'Coastal Patrol',
     status: 'Active',
     altitude: 135,
     speed: 25,
     heading: 'SW',
     battery: 78,
-    gps: { lat: 16.9920, lng: 82.2440 },
+    gps: { lat: 16.9800, lng: 82.2500 }, // Kakinada Port - centered
     cameraMode: 'Zoom',
     detections: ['Traffic Jam', 'Vehicle Count: 47'],
     duration: '00:25:30'

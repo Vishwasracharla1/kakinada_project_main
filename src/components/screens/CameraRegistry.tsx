@@ -1,6 +1,9 @@
 import { Camera, Edit, Activity, Plus, Download } from 'lucide-react';
+import { useState, useMemo } from 'react';
 
 export function CameraRegistry() {
+  const [selectedFilter, setSelectedFilter] = useState<'all' | 'online' | 'offline' | 'degraded'>('all');
+
   const cameras = [
     { id: 'CAM-NZ-042', zone: 'North Zone', type: 'PTZ', ip: '192.168.1.42', health: 85, status: 'online', location: 'Main Entrance' },
     { id: 'CAM-SZ-018', zone: 'South Zone', type: 'Fixed', ip: '192.168.1.18', health: 95, status: 'online', location: 'Beach Road' },
@@ -27,20 +30,65 @@ export function CameraRegistry() {
     }
   };
 
+  // Filter cameras based on selected filter
+  const filteredCameras = useMemo(() => {
+    if (selectedFilter === 'all') {
+      return cameras;
+    }
+    return cameras.filter(camera => camera.status === selectedFilter);
+  }, [selectedFilter]);
+
+  // Calculate summary statistics
+  const summaryStats = useMemo(() => {
+    const total = cameras.length;
+    const online = cameras.filter(c => c.status === 'online').length;
+    const degraded = cameras.filter(c => c.status === 'degraded').length;
+    const offline = cameras.filter(c => c.status === 'offline').length;
+    return { total, online, degraded, offline };
+  }, []);
+
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
-          <button className="px-4 py-2 bg-cyan-500/10 text-cyan-400 rounded-lg hover:bg-cyan-500/20">
+          <button 
+            onClick={() => setSelectedFilter('all')}
+            className={`px-4 py-2 rounded-lg transition-colors ${
+              selectedFilter === 'all' 
+                ? 'bg-cyan-500/10 text-cyan-400' 
+                : 'text-gray-400 hover:bg-white/5'
+            }`}
+          >
             All Cameras
           </button>
-          <button className="px-4 py-2 text-gray-400 hover:bg-white/5 rounded-lg">
+          <button 
+            onClick={() => setSelectedFilter('online')}
+            className={`px-4 py-2 rounded-lg transition-colors ${
+              selectedFilter === 'online' 
+                ? 'bg-cyan-500/10 text-cyan-400' 
+                : 'text-gray-400 hover:bg-white/5'
+            }`}
+          >
             Online
           </button>
-          <button className="px-4 py-2 text-gray-400 hover:bg-white/5 rounded-lg">
+          <button 
+            onClick={() => setSelectedFilter('offline')}
+            className={`px-4 py-2 rounded-lg transition-colors ${
+              selectedFilter === 'offline' 
+                ? 'bg-cyan-500/10 text-cyan-400' 
+                : 'text-gray-400 hover:bg-white/5'
+            }`}
+          >
             Offline
           </button>
-          <button className="px-4 py-2 text-gray-400 hover:bg-white/5 rounded-lg">
+          <button 
+            onClick={() => setSelectedFilter('degraded')}
+            className={`px-4 py-2 rounded-lg transition-colors ${
+              selectedFilter === 'degraded' 
+                ? 'bg-cyan-500/10 text-cyan-400' 
+                : 'text-gray-400 hover:bg-white/5'
+            }`}
+          >
             Degraded
           </button>
         </div>
@@ -71,7 +119,7 @@ export function CameraRegistry() {
             </tr>
           </thead>
           <tbody>
-            {cameras.map((camera) => (
+            {filteredCameras.map((camera) => (
               <tr key={camera.id} className="border-b border-[#1f2937] hover:bg-white/5 transition-colors">
                 <td className="p-4">
                   <div className="flex items-center gap-2">
@@ -119,22 +167,22 @@ export function CameraRegistry() {
       <div className="grid grid-cols-4 gap-4 mt-6">
         <div className="bg-[#0d1117] border border-[#1f2937] rounded-lg p-4">
           <p className="text-xs text-gray-500 mb-2">Total Cameras</p>
-          <p className="text-2xl text-white">218</p>
+          <p className="text-2xl text-white">{summaryStats.total}</p>
         </div>
         <div className="bg-[#0d1117] border border-[#1f2937] rounded-lg p-4">
           <p className="text-xs text-gray-500 mb-2">Online</p>
-          <p className="text-2xl text-green-400">208</p>
-          <p className="text-xs text-gray-500 mt-1">95.4%</p>
+          <p className="text-2xl text-green-400">{summaryStats.online}</p>
+          <p className="text-xs text-gray-500 mt-1">{((summaryStats.online / summaryStats.total) * 100).toFixed(1)}%</p>
         </div>
         <div className="bg-[#0d1117] border border-[#1f2937] rounded-lg p-4">
           <p className="text-xs text-gray-500 mb-2">Degraded</p>
-          <p className="text-2xl text-yellow-400">4</p>
-          <p className="text-xs text-gray-500 mt-1">1.8%</p>
+          <p className="text-2xl text-yellow-400">{summaryStats.degraded}</p>
+          <p className="text-xs text-gray-500 mt-1">{((summaryStats.degraded / summaryStats.total) * 100).toFixed(1)}%</p>
         </div>
         <div className="bg-[#0d1117] border border-[#1f2937] rounded-lg p-4">
           <p className="text-xs text-gray-500 mb-2">Offline</p>
-          <p className="text-2xl text-red-400">6</p>
-          <p className="text-xs text-gray-500 mt-1">2.8%</p>
+          <p className="text-2xl text-red-400">{summaryStats.offline}</p>
+          <p className="text-xs text-gray-500 mt-1">{((summaryStats.offline / summaryStats.total) * 100).toFixed(1)}%</p>
         </div>
       </div>
     </div>
