@@ -49,6 +49,24 @@ const token = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3Ny1NUVdFRTNHZ
   const [zoneFilter, setZoneFilter] = useState<string>('ALL');
   const [hoveredPoint, setHoveredPoint] = useState<ActivityPoint | null>(null);
 
+  // Load heatmap automatically on mount (page load/login) to ensure it displays correctly
+  useEffect(() => {
+    async function loadHeatmap() {
+      setHeatLoading(true);
+      setHeatError(null);
+      try {
+        const res = await fetchActivityHeatmapPoints();
+        setHeatPoints(Array.isArray(res.data) ? res.data : []);
+        setHeatLastUpdated(new Date());
+      } catch (e) {
+        setHeatError(e instanceof Error ? e.message : 'Failed to load heatmap data');
+      } finally {
+        setHeatLoading(false);
+      }
+    }
+    loadHeatmap();
+  }, []);
+
   const loadHeatmap = async () => {
     setHeatLoading(true);
     setHeatError(null);
@@ -62,8 +80,6 @@ const token = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3Ny1NUVdFRTNHZ
       setHeatLoading(false);
     }
   };
-
-  // Removed automatic load on mount - heatmap will only load when Refresh button is clicked
 
   const zones = useMemo(() => {
     const unique = Array.from(new Set(heatPoints.map(p => p.zone).filter(Boolean))).sort();
