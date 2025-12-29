@@ -71,6 +71,14 @@ export default function LeafletHeatmap({ points, className, onPointHover }: Prop
 
     mapRef.current = map;
 
+    // Invalidate size after initial render to ensure map displays correctly
+    // This fixes the blank map issue
+    setTimeout(() => {
+      if (mapRef.current) {
+        mapRef.current.invalidateSize();
+      }
+    }, 200);
+
     return () => {
       map.remove();
       mapRef.current = null;
@@ -82,6 +90,12 @@ export default function LeafletHeatmap({ points, className, onPointHover }: Prop
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
+
+    // Invalidate map size to ensure it renders correctly
+    // This fixes issues where the map appears blank
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 100);
 
     // Heat data: [lat, lng, intensity]
     const heatData = points
@@ -147,8 +161,18 @@ export default function LeafletHeatmap({ points, className, onPointHover }: Prop
       });
     }
 
+    // Update bounds and invalidate size after data loads
     if (bounds && bounds.isValid()) {
-      map.fitBounds(bounds.pad(0.18), { animate: false, maxZoom: 15.5 });
+      setTimeout(() => {
+        map.invalidateSize();
+        map.fitBounds(bounds.pad(0.18), { animate: false, maxZoom: 15.5 });
+        map.invalidateSize(); // Invalidate again after fitBounds
+      }, 150);
+    } else {
+      // Even without bounds, invalidate size to ensure map renders
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 150);
     }
   }, [points, bounds, onPointHover]);
 

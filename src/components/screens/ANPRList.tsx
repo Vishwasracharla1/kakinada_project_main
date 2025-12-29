@@ -1,3 +1,4 @@
+import { useState, useMemo } from 'react';
 import { Car, MapPin, Clock, CheckCircle, XCircle, AlertTriangle, Eye } from 'lucide-react';
 
 interface ANPRListProps {
@@ -7,6 +8,8 @@ interface ANPRListProps {
 }
 
 export function ANPRList({ onViewDetail, onViewApproval, userRole = 'operator' }: ANPRListProps) {
+  const [selectedFilter, setSelectedFilter] = useState<'all' | 'pending' | 'validated'>('all');
+  
   const violations = [
     { id: 'VL-001', plate: 'MH02EK4399', confidence: 96, time: '10:23:45', location: 'NH-16 Junction', status: 'Pending', violation: 'Stolen Vehicle', severity: 'critical' },
     { id: 'VL-002', plate: 'RJ27TC0530', confidence: 89, time: '10:18:32', location: 'Gandhi Road', status: 'Validated', violation: 'Speed Limit', severity: 'medium' },
@@ -51,13 +54,56 @@ export function ANPRList({ onViewDetail, onViewApproval, userRole = 'operator' }
     }
   };
 
+  // Filter violations based on selected filter
+  const filteredViolations = useMemo(() => {
+    if (selectedFilter === 'all') {
+      return violations;
+    } else if (selectedFilter === 'pending') {
+      // Filter for pending status (Pending, Approved statuses that need review)
+      return violations.filter(v => 
+        v.status === 'Pending' || v.status === 'Approved' || v.status === 'Escalated'
+      );
+    } else if (selectedFilter === 'validated') {
+      // Filter for validated status
+      return violations.filter(v => v.status === 'Validated');
+    }
+    return violations;
+  }, [selectedFilter, violations]);
+
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
-          <button className="px-4 py-2 bg-cyan-500/10 text-cyan-400 rounded-lg hover:bg-cyan-500/20">All Violations</button>
-          <button className="px-4 py-2 text-gray-400 hover:bg-white/5 rounded-lg">Pending Review</button>
-          <button className="px-4 py-2 text-gray-400 hover:bg-white/5 rounded-lg">Validated</button>
+          <button 
+            onClick={() => setSelectedFilter('all')}
+            className={`px-4 py-2 rounded-lg transition-colors ${
+              selectedFilter === 'all'
+                ? 'bg-cyan-500/10 text-cyan-400'
+                : 'text-gray-400 hover:bg-white/5'
+            }`}
+          >
+            All Violations
+          </button>
+          <button 
+            onClick={() => setSelectedFilter('pending')}
+            className={`px-4 py-2 rounded-lg transition-colors ${
+              selectedFilter === 'pending'
+                ? 'bg-cyan-500/10 text-cyan-400'
+                : 'text-gray-400 hover:bg-white/5'
+            }`}
+          >
+            Pending Review
+          </button>
+          <button 
+            onClick={() => setSelectedFilter('validated')}
+            className={`px-4 py-2 rounded-lg transition-colors ${
+              selectedFilter === 'validated'
+                ? 'bg-cyan-500/10 text-cyan-400'
+                : 'text-gray-400 hover:bg-white/5'
+            }`}
+          >
+            Validated
+          </button>
         </div>
 
         {(userRole === 'supervisor' || userRole === 'admin') && (
@@ -89,7 +135,14 @@ export function ANPRList({ onViewDetail, onViewApproval, userRole = 'operator' }
             </tr>
           </thead>
           <tbody>
-            {violations.map((violation) => {
+            {filteredViolations.length === 0 ? (
+              <tr>
+                <td colSpan={9} className="p-8 text-center text-gray-400">
+                  No violations found
+                </td>
+              </tr>
+            ) : (
+              filteredViolations.map((violation) => {
               const StatusIcon = getStatusIcon(violation.status);
               return (
                 <tr
@@ -151,7 +204,8 @@ export function ANPRList({ onViewDetail, onViewApproval, userRole = 'operator' }
                   </td>
                 </tr>
               );
-            })}
+            })
+            )}
           </tbody>
         </table>
       </div>
