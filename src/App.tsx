@@ -396,6 +396,7 @@ export default function App() {
       case 'analytics-home':
         return (
           <AnalyticsHome
+            userRole={user!.role}
             onViewCameraHealth={() => navigateScreen('analytics-camera-health')}
             onViewViolations={() => navigateScreen('analytics-violations')}
           />

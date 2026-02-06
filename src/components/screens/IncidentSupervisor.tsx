@@ -116,7 +116,7 @@ export function IncidentSupervisor({ onBack, onNavigate }: IncidentSupervisorPro
           </div>
           <button
             onClick={() => onNavigate('evidence-console')}
-            className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-900 flex items-center gap-2 text-sm"
+            className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-100 flex items-center gap-2 text-sm"
           >
             <Eye className="w-4 h-4" />
             Evidence Console

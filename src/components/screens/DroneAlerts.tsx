@@ -1,8 +1,11 @@
 import { AlertTriangle, Users, Car, Flame, MapPin, Clock, Eye } from 'lucide-react';
+import { useState, useMemo } from 'react';
 
 interface DroneAlertsProps {
   onNavigate: (screen: string, data?: any) => void;
 }
+
+
 
 const mockAlerts = [
   {
@@ -80,6 +83,26 @@ const mockAlerts = [
 ];
 
 export function DroneAlerts({ onNavigate }: DroneAlertsProps) {
+  const [severityFilter, setSeverityFilter] = useState<string>('All Severities');
+  const [typeFilter, setTypeFilter] = useState<string>('All Types');
+  const [statusFilter, setStatusFilter] = useState<string>('All Status');
+
+  // Filter alerts based on selected filters
+  const filteredAlerts = useMemo(() => {
+    return mockAlerts.filter(alert => {
+      const matchesSeverity = severityFilter === 'All Severities' || alert.severity === severityFilter;
+      const matchesType = typeFilter === 'All Types' || alert.type === typeFilter;
+      const matchesStatus = statusFilter === 'All Status' || alert.status === statusFilter;
+      
+      return matchesSeverity && matchesType && matchesStatus;
+    });
+  }, [severityFilter, typeFilter, statusFilter]);
+
+  // Calculate stats based on filtered alerts
+  const criticalCount = useMemo(() => filteredAlerts.filter(a => a.severity === 'Critical').length, [filteredAlerts]);
+  const highCount = useMemo(() => filteredAlerts.filter(a => a.severity === 'High').length, [filteredAlerts]);
+  const activeCount = useMemo(() => filteredAlerts.filter(a => a.status === 'Active').length, [filteredAlerts]);
+
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'Critical': return 'text-red-400 bg-red-400/10 border-red-400';
@@ -111,17 +134,13 @@ export function DroneAlerts({ onNavigate }: DroneAlertsProps) {
     }
   };
 
-  const criticalCount = mockAlerts.filter(a => a.severity === 'Critical').length;
-  const highCount = mockAlerts.filter(a => a.severity === 'High').length;
-  const activeCount = mockAlerts.filter(a => a.status === 'Active').length;
-
   return (
     <div className="p-6 space-y-6">
       {/* Header Stats */}
       <div className="grid grid-cols-4 gap-4">
         <div className="bg-card border border-gray-200 p-4 rounded-xl shadow-sm">
           <div className="text-xs uppercase tracking-wider mb-1 text-black/60">Total Alerts</div>
-          <div className="text-2xl font-semibold text-black">{mockAlerts.length}</div>
+          <div className="text-2xl font-semibold text-black">{filteredAlerts.length}</div>
         </div>
         <div className="bg-card border border-gray-200 p-4 rounded-xl shadow-sm">
           <div className="text-xs uppercase tracking-wider mb-1 text-black/60">Critical</div>
@@ -139,14 +158,22 @@ export function DroneAlerts({ onNavigate }: DroneAlertsProps) {
 
       {/* Filter Controls */}
       <div className="flex gap-4">
-        <select className="px-4 py-2 bg-white border border-gray-200 text-sm text-black rounded-lg">
+        <select 
+          value={severityFilter}
+          onChange={(e) => setSeverityFilter(e.target.value)}
+          className="px-4 py-2 bg-white border border-gray-200 text-sm text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300"
+        >
           <option>All Severities</option>
           <option>Critical</option>
           <option>High</option>
           <option>Medium</option>
           <option>Low</option>
         </select>
-        <select className="px-4 py-2 bg-white border border-gray-200 text-sm text-black rounded-lg">
+        <select 
+          value={typeFilter}
+          onChange={(e) => setTypeFilter(e.target.value)}
+          className="px-4 py-2 bg-white border border-gray-200 text-sm text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300"
+        >
           <option>All Types</option>
           <option>Crowd Surge</option>
           <option>Vehicle Congestion</option>
@@ -154,7 +181,11 @@ export function DroneAlerts({ onNavigate }: DroneAlertsProps) {
           <option>Human Clustering</option>
           <option>Perimeter Intrusion</option>
         </select>
-        <select className="px-4 py-2 bg-white border border-gray-200 text-sm text-black rounded-lg">
+        <select 
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="px-4 py-2 bg-white border border-gray-200 text-sm text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300"
+        >
           <option>All Status</option>
           <option>Active</option>
           <option>Escalated</option>
@@ -165,7 +196,23 @@ export function DroneAlerts({ onNavigate }: DroneAlertsProps) {
 
       {/* Alerts List */}
       <div className="space-y-3">
-        {mockAlerts.map((alert) => {
+        {filteredAlerts.length === 0 ? (
+          <div className="bg-card border border-gray-200 rounded-xl p-8 text-center">
+            <AlertTriangle className="w-12 h-12 text-black/30 mx-auto mb-3" />
+            <p className="text-black/60">No alerts match the selected filters</p>
+            <button
+              onClick={() => {
+                setSeverityFilter('All Severities');
+                setTypeFilter('All Types');
+                setStatusFilter('All Status');
+              }}
+              className="mt-4 px-4 py-2 bg-white text-black border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors text-sm"
+            >
+              Clear Filters
+            </button>
+          </div>
+        ) : (
+          filteredAlerts.map((alert) => {
           const TypeIcon = getTypeIcon(alert.type);
           return (
             <div
@@ -237,7 +284,8 @@ export function DroneAlerts({ onNavigate }: DroneAlertsProps) {
               </div>
             </div>
           );
-        })}
+        })
+        )}
       </div>
     </div>
   );

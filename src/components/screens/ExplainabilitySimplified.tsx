@@ -163,8 +163,8 @@ export function ExplainabilitySimplified({ onBack }: ExplainabilitySimplifiedPro
 
       {activeTab === 'ai' && (
         <div className="space-y-4">
-          <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 mb-4">
-            <p className="text-sm text-blue-400">
+          <div className="bg-gray-500/10 border border-gray-500/30 rounded-lg p-4 mb-4">
+            <p className="text-sm text-black-400">
               🤖 AI Decision Trail shows how the AI arrived at each detection decision, including inputs, key signals, and confidence breakdown.
             </p>
           </div>
@@ -277,8 +277,8 @@ export function ExplainabilitySimplified({ onBack }: ExplainabilitySimplifiedPro
 
       {activeTab === 'human' && (
         <div className="space-y-4">
-          <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4 mb-4">
-            <p className="text-sm text-green-400">
+          <div className="bg-gray-500/10 border border-gray-500/30 rounded-lg p-4 mb-4">
+            <p className="text-sm text-black-400">
               👤 Human Audit Trail shows who viewed, validated, or overrode AI decisions, with timestamps and rationale.
             </p>
           </div>
@@ -293,13 +293,13 @@ export function ExplainabilitySimplified({ onBack }: ExplainabilitySimplifiedPro
               <div className={`p-5 ${entry.humanOverride ? 'bg-orange-500/5' : ''}`}>
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-lg ${entry.role === 'Supervisor' ? 'bg-green-500/20' : 'bg-cyan-500/20'}`}>
-                      <User className={`w-5 h-5 ${entry.role === 'Supervisor' ? 'text-green-400' : 'text-cyan-400'}`} />
+                    <div className={`p-2 rounded-lg ${entry.role === 'Supervisor' ? 'bg-gray-500/20' : 'bg-gray-500/20'}`}>
+                      <User className={`w-5 h-5 ${entry.role === 'Supervisor' ? 'text-black-400' : 'text-cyan-400'}`} />
                     </div>
                     <div>
                       <p className="text-white font-medium">{entry.user}</p>
                       <div className="flex items-center gap-2 mt-1">
-                        <span className={`px-2 py-0.5 rounded text-xs ${entry.role === 'Supervisor' ? 'bg-green-500/20 text-green-400' : 'bg-cyan-500/20 text-cyan-400'}`}>
+                        <span className={`px-2 py-0.5 rounded text-xs ${entry.role === 'Supervisor' ? 'bg-green-500/20 text-black-400' : 'bg-cyan-500/20 text-black-400'}`}>
                           {entry.role}
                         </span>
                         <span className="text-xs text-gray-500">• {entry.ipAddress}</span>

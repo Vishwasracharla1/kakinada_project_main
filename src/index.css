@@ -127,6 +127,17 @@ html[data-theme='light'] .hover\:text-white:hover {
   color: #111827 !important;
 }
 
+/* Dropdown hover states in light theme */
+html[data-theme='light'] .hover\:bg-white\/5:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  color: #111827 !important;
+}
+
+html[data-theme='light'] .hover\:bg-red-500\/10:hover {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+  color: #dc2626 !important;
+}
+
 /* Default text color in light theme – dark, but allow components to override if needed */
 html[data-theme='light'] body {
   color: #111827;

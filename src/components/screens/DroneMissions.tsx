@@ -62,23 +62,23 @@ function MissionCard({ mission, videoSource, getStatusColor, getBatteryColor }: 
               <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
               LIVE
             </div>
-            <div className="absolute top-2 right-2 text-xs bg-black/70 text-white px-2 py-1 rounded z-10">
+            <div className="absolute top-2 right-2 text-xs bg-white/70 text-white px-2 py-1 rounded z-10">
               {mission.cameraMode}
             </div>
-            <div className="absolute bottom-2 left-2 text-xs text-white bg-black/70 px-2 py-1 rounded z-10">
+            <div className="absolute bottom-2 left-2 text-xs text-black bg-white/70 px-2 py-1 rounded z-10">
               {mission.droneId} • {mission.duration}
             </div>
           </div>
 
           {/* Camera Controls */}
           <div className="mt-2 flex gap-2">
-            <button className="flex-1 px-3 py-2 bg-gray-100 text-black rounded text-xs hover:bg-gray-200 transition-colors">
+            <button className="flex-1 px-3 py-2 bg-white border border-gray-300 text-black rounded text-xs hover:bg-gray-100 transition-colors">
               RGB
             </button>
-            <button className="flex-1 px-3 py-2 bg-gray-100 text-black rounded text-xs hover:bg-gray-200 transition-colors">
+            <button className="flex-1 px-3 py-2 bg-white border border-gray-300 text-black rounded text-xs hover:bg-gray-100 transition-colors">
               Zoom
             </button>
-            <button className="flex-1 px-3 py-2 bg-gray-100 text-black rounded text-xs hover:bg-gray-200 transition-colors">
+            <button className="flex-1 px-3 py-2 bg-white border border-gray-300 text-black rounded text-xs hover:bg-gray-100 transition-colors">
               Thermal
             </button>
           </div>
@@ -161,7 +161,7 @@ function MissionCard({ mission, videoSource, getStatusColor, getBatteryColor }: 
               radius={600}
               className="absolute inset-0"
             />
-            <div className="absolute top-2 left-2 z-[1000] text-xs text-white bg-black/70 px-2 py-1 rounded">
+            <div className="absolute top-2 left-2 z-[1000] text-xs text-white bg-white/90 px-2 py-1 rounded font-medium">
               GPS: {mission.gps.lat.toFixed(4)}, {mission.gps.lng.toFixed(4)}
             </div>
           </div>
@@ -186,7 +186,7 @@ function MissionCard({ mission, videoSource, getStatusColor, getBatteryColor }: 
             <button className="w-full px-3 py-2 bg-white text-black border border-gray-300 rounded hover:bg-gray-100 transition-colors text-sm">
               Return to Home
             </button>
-            <button className="w-full px-3 py-2 bg-black text-white rounded hover:bg-gray-900 transition-colors text-sm">
+            <button className="w-full px-3 py-2 bg-black text-white rounded hover:bg-gray-100 transition-colors text-sm">
               Capture Snapshot
             </button>
           </div>
@@ -268,7 +268,7 @@ export function DroneMissions({ onNavigate }: DroneMissionsProps) {
           <h2 className="text-xl font-semibold text-black">Live Drone Missions</h2>
           <p className="text-sm text-black/60 mt-1">{mockMissions.length} active mission(s)</p>
         </div>
-        <button className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-900 transition-colors text-sm">
+        <button className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-100 transition-colors text-sm">
           Launch New Mission
         </button>
       </div>

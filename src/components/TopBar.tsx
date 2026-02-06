@@ -143,12 +143,12 @@ export function TopBar({
         <div className="flex items-center gap-4">
 
           {/* Search Box */}
-          <div className="flex items-center gap-2 px-4 py-2 bg-accent border border-border rounded-lg">
+          <div className="flex items-center gap-2 px-4 py-2 bg-grey border border-border rounded-lg">
             <Search className="w-4 h-4 text-gray-500" />
             <input
               type="text"
               placeholder="Search cameras, incidents..."
-              className="bg-transparent text-sm text-white placeholder-gray-500 outline-none w-64"
+              className="bg-transparent text-sm text-white placeholder-gray-900 outline-none w-64"
             />
           </div>
 
@@ -162,7 +162,7 @@ export function TopBar({
           <div className="relative" ref={menuRef}>
             <div
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="flex items-center gap-2 px-3 py-2 bg-accent border border-border rounded-lg cursor-pointer hover:bg-white/5"
+              className="flex items-center gap-2 px-3 py-2 bg-grey border border-border rounded-lg cursor-pointer hover:bg-white/5"
             >
               <User className="w-5 h-5 text-gray-400" />
               <div className="flex flex-col">
