@@ -85,22 +85,22 @@ export function AlertsAdmin({ onBack }: AlertsAdminProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'operational':
-        return 'bg-green-500/20 text-green-400 border-green-500/50';
+        return 'bg-emerald-100 border border-emerald-200';
       case 'warning':
-        return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50';
+        return 'bg-amber-100 border border-amber-200';
       case 'critical':
-        return 'bg-red-500/20 text-red-400 border-red-500/50';
+        return 'bg-red-100 border border-red-200';
       default:
-        return 'bg-gray-500/20 text-gray-400 border-gray-500/50';
+        return 'bg-gray-100 border border-gray-200';
     }
   };
 
   const getTrendIcon = (trend: string) => (trend === 'increasing' ? TrendingUp : TrendingDown);
 
   const getTrendColor = (trend: string, impact: string) => {
-    if (trend === 'increasing' && impact === 'high') return 'text-red-400';
-    if (trend === 'decreasing') return 'text-green-400';
-    return 'text-yellow-400';
+    if (trend === 'increasing' && impact === 'high') return 'text-red-600';
+    if (trend === 'decreasing') return 'text-green-700';
+    return 'text-gray-600';
   };
 
   const rangeLabel = () => {
@@ -115,18 +115,18 @@ export function AlertsAdmin({ onBack }: AlertsAdminProps) {
         <div>
           <button
             onClick={onBack}
-            className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-3"
+            className="flex items-center gap-2 text-black/60 hover:text-black transition-colors mb-3"
           >
             <AlertTriangle className="w-5 h-5" />
             Back to Dashboard
           </button>
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-purple-500/10 border border-purple-500/30 rounded-lg">
-              <Activity className="w-6 h-6 text-purple-400" />
+            <div className="p-3 bg-purple-100 border border-purple-200 rounded-lg">
+              <Activity className="w-6 h-6 text-black/70" />
             </div>
             <div>
-              <h1 className="text-white text-2xl">Alert Analytics – AI Performance Dashboard</h1>
-              <p className="text-gray-400 text-sm">
+              <h1 className="text-2xl font-semibold text-black">Alert Analytics – AI Performance Dashboard</h1>
+              <p className="text-sm text-black/60">
                 AI reasoning patterns, engine health, and performance metrics • Admin & AI Team Only
               </p>
             </div>
@@ -137,7 +137,7 @@ export function AlertsAdmin({ onBack }: AlertsAdminProps) {
           <select
             value={dateRange}
             onChange={(e) => setDateRange(e.target.value)}
-            className="px-4 py-2 bg-[#0d1117] border border-[#1f2937] rounded-lg text-white text-sm"
+            className="px-4 py-2 bg-white border border-border/60 rounded-lg text-sm text-black focus:border-blue-400 focus:outline-none"
           >
             <option value="24h">Last 24 Hours</option>
             <option value="7days">Last 7 Days</option>
@@ -147,70 +147,70 @@ export function AlertsAdmin({ onBack }: AlertsAdminProps) {
         </div>
       </div>
 
-      <div className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-500/30 rounded-xl p-4 mb-4">
-        <h3 className="text-white mb-4 flex items-center gap-2">
-          <BarChart3 className="w-5 h-5 text-purple-400" />
+      <div className="bg-gradient-to-r from-gray-50 to-white border border-gray-200 rounded-xl p-4 mb-4">
+        <h3 className="mb-4 flex items-center gap-2 text-black">
+          <BarChart3 className="w-5 h-5 text-black" />
           Overall AI Alert Performance (Last {rangeLabel()})
         </h3>
 
         <div className="grid grid-cols-4 gap-4">
           <div>
-            <p className="text-xs text-gray-500 mb-1">Accuracy</p>
-            <p className="text-2xl text-white font-bold mb-1">{aiMetrics.accuracy}%</p>
-            <div className="flex items-center gap-1 text-sm text-green-400">
+            <p className="text-xs text-black/60 mb-1">Accuracy</p>
+            <p className="text-2xl text-black font-bold mb-1">{aiMetrics.accuracy}%</p>
+            <div className="flex items-center gap-1 text-sm text-green-700">
               <TrendingUp className="w-4 h-4" />
               <span>+2.1% vs previous period</span>
             </div>
           </div>
 
           <div>
-            <p className="text-xs text-gray-500 mb-1">Precision</p>
-            <p className="text-2xl text-white font-bold mb-1">{aiMetrics.precision}%</p>
-            <div className="flex items-center gap-1 text-sm text-green-400">
+            <p className="text-xs text-black/60 mb-1">Precision</p>
+            <p className="text-2xl text-black font-bold mb-1">{aiMetrics.precision}%</p>
+            <div className="flex items-center gap-1 text-sm text-green-700">
               <TrendingUp className="w-4 h-4" />
               <span>+1.4% vs previous period</span>
             </div>
           </div>
 
           <div>
-            <p className="text-xs text-gray-500 mb-1">Recall</p>
-            <p className="text-2xl text-white font-bold mb-1">{aiMetrics.recall}%</p>
-            <div className="flex items-center gap-1 text-sm text-red-400">
+            <p className="text-xs text-black/60 mb-1">Recall</p>
+            <p className="text-2xl text-black font-bold mb-1">{aiMetrics.recall}%</p>
+            <div className="flex items-center gap-1 text-sm text-red-600">
               <TrendingDown className="w-4 h-4" />
               <span>-0.3% vs previous period</span>
             </div>
           </div>
 
           <div>
-            <p className="text-xs text-gray-500 mb-1">Avg Confidence</p>
-            <p className="text-2xl text-white font-bold mb-1">{aiMetrics.avgConfidence}%</p>
-            <p className="text-xs text-gray-400">Across all engines</p>
+            <p className="text-xs text-black/60 mb-1">Avg Confidence</p>
+            <p className="text-2xl text-black font-bold mb-1">{aiMetrics.avgConfidence}%</p>
+            <p className="text-xs text-black/50">Across all engines</p>
           </div>
         </div>
 
         <div className="grid grid-cols-4 gap-4 mt-4 pt-4 border-t border-purple-500/30">
           <div className="text-center">
-            <p className="text-xs text-gray-500 mb-1">Total Alerts</p>
-            <p className="text-xl text-white font-bold">{aiMetrics.totalAlerts}</p>
+            <p className="text-xs text-black/60 mb-1">Total Alerts</p>
+            <p className="text-xl text-black font-bold">{aiMetrics.totalAlerts}</p>
           </div>
           <div className="text-center">
-            <p className="text-xs text-gray-500 mb-1">True Positives</p>
-            <p className="text-xl text-green-400 font-bold">{aiMetrics.truePositives}</p>
+            <p className="text-xs text-black/60 mb-1">True Positives</p>
+            <p className="text-xl text-emerald-600 font-bold">{aiMetrics.truePositives}</p>
           </div>
           <div className="text-center">
-            <p className="text-xs text-gray-500 mb-1">False Positives</p>
-            <p className="text-xl text-red-400 font-bold">{aiMetrics.falsePositives}</p>
+            <p className="text-xs text-black/60 mb-1">False Positives</p>
+            <p className="text-xl text-red-600 font-bold">{aiMetrics.falsePositives}</p>
           </div>
           <div className="text-center">
-            <p className="text-xs text-gray-500 mb-1">False Negatives</p>
-            <p className="text-xl text-orange-400 font-bold">{aiMetrics.falseNegatives}</p>
+            <p className="text-xs text-black/60 mb-1">False Negatives</p>
+            <p className="text-xl text-amber-600 font-bold">{aiMetrics.falseNegatives}</p>
           </div>
         </div>
       </div>
 
       <div className="mb-6">
-        <h3 className="text-white mb-4 flex items-center gap-2">
-          <PieChart className="w-5 h-5 text-cyan-400" />
+        <h3 className="mb-4 flex items-center gap-2 text-black">
+          <PieChart className="w-5 h-5 text-black" />
           Detected Anomaly Patterns
         </h3>
 
@@ -220,18 +220,12 @@ export function AlertsAdmin({ onBack }: AlertsAdminProps) {
             return (
               <div
                 key={idx}
-                className={`bg-[#0d1117] border rounded-lg p-4 ${
-                  pattern.impact === 'high'
-                    ? 'border-red-500/30'
-                    : pattern.impact === 'medium'
-                    ? 'border-yellow-500/30'
-                    : 'border-green-500/30'
-                }`}
+                className="bg-card border border-gray-200 rounded-lg p-4 shadow-sm"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <h4 className="text-white font-medium text-sm">{pattern.pattern}</h4>
+                      <h4 className="font-medium text-sm text-black">{pattern.pattern}</h4>
                       <div className={`flex items-center gap-1 ${getTrendColor(pattern.trend, pattern.impact)}`}>
                         <TrendIcon className="w-4 h-4" />
                         <span className="text-xs uppercase">{pattern.trend}</span>
@@ -240,26 +234,26 @@ export function AlertsAdmin({ onBack }: AlertsAdminProps) {
 
                     <div className="grid grid-cols-4 gap-3 mb-2 text-xs">
                       <div>
-                        <p className="text-xs text-gray-500">AI Engine</p>
-                        <p className="text-purple-400 text-sm">{pattern.engine}</p>
+                        <p className="text-xs text-black/50">AI Engine</p>
+                        <p className="text-sm text-black">{pattern.engine}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500">Affected Type</p>
-                        <p className="text-white text-sm">{pattern.affectedType}</p>
+                        <p className="text-xs text-black/50">Affected Type</p>
+                        <p className="text-sm text-black">{pattern.affectedType}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500">Occurrences</p>
-                        <p className="text-white text-sm font-bold">{pattern.occurrences} times</p>
+                        <p className="text-xs text-black/50">Occurrences</p>
+                        <p className="text-sm font-bold text-black">{pattern.occurrences} times</p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500">Impact</p>
+                        <p className="text-xs text-black/50">Impact</p>
                         <span
-                          className={`px-2 py-1 rounded text-xs font-bold ${
+                          className={`px-2 py-1 rounded text-xs font-semibold text-black ${
                             pattern.impact === 'high'
-                              ? 'bg-red-500/20 text-red-400'
+                              ? 'bg-red-100 border border-red-200'
                               : pattern.impact === 'medium'
-                              ? 'bg-yellow-500/20 text-yellow-400'
-                              : 'bg-green-500/20 text-green-400'
+                              ? 'bg-amber-100 border border-amber-200'
+                              : 'bg-emerald-100 border border-emerald-200'
                           }`}
                         >
                           {pattern.impact.toUpperCase()}
@@ -267,9 +261,9 @@ export function AlertsAdmin({ onBack }: AlertsAdminProps) {
                       </div>
                     </div>
 
-                    <div className="bg-blue-500/10 border border-blue-500/30 rounded p-3">
-                      <p className="text-xs text-blue-400 mb-1">Recommendation:</p>
-                      <p className="text-white text-sm">{pattern.recommendation}</p>
+                    <div className="bg-blue-50 border border-blue-100 rounded p-3">
+                      <p className="text-xs text-black/60 mb-1">Recommendation:</p>
+                      <p className="text-sm text-black">{pattern.recommendation}</p>
                     </div>
                   </div>
                 </div>
@@ -280,8 +274,8 @@ export function AlertsAdmin({ onBack }: AlertsAdminProps) {
       </div>
 
       <div>
-        <h3 className="text-white mb-4 flex items-center gap-2">
-          <Cpu className="w-5 h-5 text-green-400" />
+        <h3 className="mb-4 flex items-center gap-2 text-black">
+          <Cpu className="w-5 h-5 text-black" />
           AI Engine Health Metrics
         </h3>
 
@@ -289,21 +283,21 @@ export function AlertsAdmin({ onBack }: AlertsAdminProps) {
           {engineHealth.map((engine) => (
             <div
               key={engine.name}
-              className="bg-[#0d1117] border-2 border-[#1f2937] rounded-xl overflow-hidden hover:border-purple-500/50 transition-all"
+              className="bg-card border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-all"
             >
-              <div className="p-5 border-b border-[#1f2937] bg-gradient-to-r from-purple-500/5 to-blue-500/5">
+              <div className="p-5 border-b border-border/60 bg-gradient-to-r from-gray-50 to-white">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="p-3 bg-purple-500/20 rounded-lg">
-                      <Cpu className="w-6 h-6 text-purple-400" />
+                    <div className="p-3 bg-white rounded-lg shadow-sm">
+                      <Cpu className="w-6 h-6 text-black/70" />
                     </div>
                     <div>
-                      <h4 className="text-white text-lg font-medium">{engine.name}</h4>
-                      <p className="text-xs text-gray-500">Version {engine.version}</p>
+                      <h4 className="text-lg font-medium text-black">{engine.name}</h4>
+                      <p className="text-xs text-black/50">Version {engine.version}</p>
                     </div>
                   </div>
-                  <div className={`px-4 py-2 border rounded-lg ${getStatusColor(engine.status)}`}>
-                    <p className="text-xs uppercase font-bold">{engine.status}</p>
+                  <div className={`px-4 py-2 rounded-lg text-xs font-semibold uppercase text-black ${getStatusColor(engine.status)}`}>
+                    <p>{engine.status}</p>
                   </div>
                 </div>
               </div>
@@ -311,36 +305,36 @@ export function AlertsAdmin({ onBack }: AlertsAdminProps) {
               <div className="p-5">
                 <div className="grid grid-cols-6 gap-6">
                   <div>
-                    <p className="text-xs text-gray-500 mb-1">Uptime</p>
-                    <p className="text-white text-xl font-bold">{engine.uptime}%</p>
+                    <p className="text-xs text-black/50 mb-1">Uptime</p>
+                    <p className="text-xl font-bold text-black">{engine.uptime}%</p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 mb-1">Processing Time</p>
-                    <p className="text-white text-xl font-bold">
+                    <p className="text-xs text-black/50 mb-1">Processing Time</p>
+                    <p className="text-xl font-bold text-black">
                       {engine.avgProcessingTime}
-                      <span className="text-sm text-gray-400">ms</span>
+                      <span className="text-sm text-black/50">ms</span>
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 mb-1">Alerts Today</p>
-                    <p className="text-cyan-400 text-xl font-bold">{engine.alertsToday}</p>
+                    <p className="text-xs text-black/50 mb-1">Alerts Today</p>
+                    <p className="text-xl font-bold text-black">{engine.alertsToday}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 mb-1">False Positive Rate</p>
+                    <p className="text-xs text-black/50 mb-1">False Positive Rate</p>
                     <p
                       className={`text-xl font-bold ${
-                        engine.falsePositiveRate > 10 ? 'text-red-400' : engine.falsePositiveRate > 8 ? 'text-yellow-400' : 'text-green-400'
+                        engine.falsePositiveRate > 10 ? 'text-red-600' : engine.falsePositiveRate > 8 ? 'text-amber-600' : 'text-emerald-600'
                       }`}
                     >
                       {engine.falsePositiveRate}%
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 mb-1">Last Retrained</p>
-                    <p className="text-white text-sm">{engine.lastRetrained}</p>
+                    <p className="text-xs text-black/50 mb-1">Last Retrained</p>
+                    <p className="text-sm text-black">{engine.lastRetrained}</p>
                   </div>
                   <div>
-                    <button className="px-4 py-2 bg-purple-500/20 text-purple-400 border border-purple-500/50 rounded-lg hover:bg-purple-500/30 text-sm">
+                    <button className="px-4 py-2 bg-white text-black border border-gray-300 rounded-lg hover:bg-gray-100 text-sm">
                       View Logs
                     </button>
                   </div>
@@ -351,29 +345,29 @@ export function AlertsAdmin({ onBack }: AlertsAdminProps) {
         </div>
       </div>
 
-      <div className="mt-6 bg-purple-500/10 border border-purple-500/30 rounded-lg p-5">
-        <h4 className="text-white mb-3">Admin/AI Team Analytics Dashboard</h4>
-        <div className="grid grid-cols-2 gap-6 text-sm text-gray-400">
+      <div className="mt-6 bg-gray-50 border border-gray-200 rounded-lg p-5">
+        <h4 className="mb-3 text-black font-semibold">Admin/AI Team Analytics Dashboard</h4>
+        <div className="grid grid-cols-2 gap-6 text-sm text-black/70">
           <div>
-            <p className="text-purple-400 mb-2">📊 Available Analytics:</p>
-            <ul className="text-xs space-y-1">
-              <li>• AI engine performance trends over time</li>
-              <li>• Pattern detection and anomaly identification</li>
-              <li>• False positive/negative analysis</li>
-              <li>• Processing time and uptime monitoring</li>
-              <li>• Model drift detection</li>
-              <li>• Retraining recommendations</li>
+            <p className="mb-2 font-medium text-black">📊 Available Analytics</p>
+            <ul className="text-xs space-y-1 list-disc list-inside">
+              <li>AI engine performance trends over time</li>
+              <li>Pattern detection and anomaly identification</li>
+              <li>False positive/negative analysis</li>
+              <li>Processing time and uptime monitoring</li>
+              <li>Model drift detection</li>
+              <li>Retraining recommendations</li>
             </ul>
           </div>
           <div>
-            <p className="text-cyan-400 mb-2">🔍 Use Cases:</p>
-            <ul className="text-xs space-y-1">
-              <li>• Identify underperforming AI models</li>
-              <li>• Track improvement after retraining</li>
-              <li>• Optimize detection thresholds</li>
-              <li>• Monitor supervisor override patterns</li>
-              <li>• Generate compliance reports</li>
-              <li>• Schedule preventive maintenance</li>
+            <p className="mb-2 font-medium text-black">🔍 Use Cases</p>
+            <ul className="text-xs space-y-1 list-disc list-inside">
+              <li>Identify underperforming AI models</li>
+              <li>Track improvement after retraining</li>
+              <li>Optimize detection thresholds</li>
+              <li>Monitor supervisor override patterns</li>
+              <li>Generate compliance reports</li>
+              <li>Schedule preventive maintenance</li>
             </ul>
           </div>
         </div>

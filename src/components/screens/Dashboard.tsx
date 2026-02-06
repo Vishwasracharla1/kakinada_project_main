@@ -1,7 +1,7 @@
 import { MetricCard } from '../MetricCard';
 import { Camera, CameraOff, AlertTriangle, Car, FileX, AlertCircle, MapPin } from 'lucide-react';
 import { useEffect, useMemo, useState } from "react";
-import { Bell,ShieldAlert } from "lucide-react";
+import { Bell, ShieldAlert } from "lucide-react";
 import { fetchActivityHeatmapPoints, type ActivityPoint } from '../../api/cohorts';
 import LeafletHeatmap from '../LeafletHeatmap';
 import { useNavigate } from 'react-router-dom';
@@ -39,7 +39,7 @@ export function Dashboard({ userRole }: DashboardProps) {
   // ];
 
   const [offlineCameras, setOfflineCameras] = useState(0);
-const token = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3Ny1NUVdFRTNHZE5adGlsWU5IYmpsa2dVSkpaWUJWVmN1UmFZdHl5ejFjIn0.eyJleHAiOjE3MjYxODIzMzEsImlhdCI6MTcyNjE0NjMzMSwianRpIjoiOGVlZTU1MDctNGVlOC00NjE1LTg3OWUtNTVkMjViMjQ2MGFmIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLmtleWNsb2FrLnN2Yy5jbHVzdGVyLmxvY2FsOjgwODAvcmVhbG1zL21hc3RlciIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJmNzFmMzU5My1hNjdhLTQwYmMtYTExYS05YTQ0NjY4YjQxMGQiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJIT0xBQ1JBQ1kiLCJzZXNzaW9uX3N0YXRlIjoiYmI1ZjJkMzktYTQ3ZC00MjI0LWFjZGMtZTdmNzQwNDc2OTgwIiwibmFtZSI6ImtzYW14cCBrc2FteHAiLCJnaXZlbl9uYW1lIjoia3NhbXhwIiwiZmFtaWx5X25hbWUiOiJrc2FteHAiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJwYXNzd29yZF90ZW5hbnRfa3NhbXhwQG1vYml1c2R0YWFzLmFpIiwiZW1haWwiOiJwYXNzd29yZF90ZW5hbnRfa3NhbXhwQG1vYml1c2R0YWFzLmFpIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiLyoiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbWFzdGVyIiwib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7IkhPTEFDUkFDWSI6eyJyb2xlcyI6WyJIT0xBQ1JBQ1lfVVNFUiJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwic2lkIjoiYmI1ZjJkMzktYTQ3ZC00MjI0LWFjZGMtZTdmNzQwNDc2OTgwIiwidGVuYW50SWQiOiJmNzFmMzU5My1hNjdhLTQwYmMtYTExYS05YTQ0NjY4YjQxMGQiLCJyZXF1ZXN0ZXJUeXBlIjoiVEVOQU5UIn0=.FXeDyHBhlG9L4_NCeSyHEaNEBVmhFpfSBqlcbhHaPaoydhKcA0BfuyHgxg_32kQk6z5S9IQ7nVKS2ybtOvwo0WyLWwLQchSq7Noa7LooHIMzmeWMQb_bLKtbaOti59zwIdS8CkfGaXut7RUQKISQVWmbUGsVJQa2JkG6Ng_QN0y5hFVksMWPZiXVsofQkJXHXV1CQ3gabhhHKo3BqlJwzpsCKLDfg1-4PmSl1Wqbw03Ef2yolroj5i8FoeHukOQPkwCUHrrNw-ilIp917nqZa89YbCMtDjWyaj8pEH7GJR5vMZPE2WcJPn5dSA1IHVunfatEB1cDAitaFjVNWNnddQ"; 
+  const token = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3Ny1NUVdFRTNHZE5adGlsWU5IYmpsa2dVSkpaWUJWVmN1UmFZdHl5ejFjIn0.eyJleHAiOjE3MjYxODIzMzEsImlhdCI6MTcyNjE0NjMzMSwianRpIjoiOGVlZTU1MDctNGVlOC00NjE1LTg3OWUtNTVkMjViMjQ2MGFmIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLmtleWNsb2FrLnN2Yy5jbHVzdGVyLmxvY2FsOjgwODAvcmVhbG1zL21hc3RlciIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJmNzFmMzU5My1hNjdhLTQwYmMtYTExYS05YTQ0NjY4YjQxMGQiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJIT0xBQ1JBQ1kiLCJzZXNzaW9uX3N0YXRlIjoiYmI1ZjJkMzktYTQ3ZC00MjI0LWFjZGMtZTdmNzQwNDc2OTgwIiwibmFtZSI6ImtzYW14cCBrc2FteHAiLCJnaXZlbl9uYW1lIjoia3NhbXhwIiwiZmFtaWx5X25hbWUiOiJrc2FteHAiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJwYXNzd29yZF90ZW5hbnRfa3NhbXhwQG1vYml1c2R0YWFzLmFpIiwiZW1haWwiOiJwYXNzd29yZF90ZW5hbnRfa3NhbXhwQG1vYml1c2R0YWFzLmFpIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiLyoiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbWFzdGVyIiwib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7IkhPTEFDUkFDWSI6eyJyb2xlcyI6WyJIT0xBQ1JBQ1lfVVNFUiJdfSwiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwic2lkIjoiYmI1ZjJkMzktYTQ3ZC00MjI0LWFjZGMtZTdmNzQwNDc2OTgwIiwidGVuYW50SWQiOiJmNzFmMzU5My1hNjdhLTQwYmMtYTExYS05YTQ0NjY4YjQxMGQiLCJyZXF1ZXN0ZXJUeXBlIjoiVEVOQU5UIn0=.FXeDyHBhlG9L4_NCeSyHEaNEBVmhFpfSBqlcbhHaPaoydhKcA0BfuyHgxg_32kQk6z5S9IQ7nVKS2ybtOvwo0WyLWwLQchSq7Noa7LooHIMzmeWMQb_bLKtbaOti59zwIdS8CkfGaXut7RUQKISQVWmbUGsVJQa2JkG6Ng_QN0y5hFVksMWPZiXVsofQkJXHXV1CQ3gabhhHKo3BqlJwzpsCKLDfg1-4PmSl1Wqbw03Ef2yolroj5i8FoeHukOQPkwCUHrrNw-ilIp917nqZa89YbCMtDjWyaj8pEH7GJR5vMZPE2WcJPn5dSA1IHVunfatEB1cDAitaFjVNWNnddQ";
 
   // --- GIS Heatmap (from cohorts adhoc query) ---
   const [heatPoints, setHeatPoints] = useState<ActivityPoint[]>([]);
@@ -89,7 +89,7 @@ const token = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3Ny1NUVdFRTNHZ
   const filteredHeatPoints = useMemo(() => {
     return zoneFilter === 'ALL' ? heatPoints : heatPoints.filter(p => p.zone === zoneFilter);
   }, [heatPoints, zoneFilter]);
- useEffect(() => {
+  useEffect(() => {
     async function fetchOfflineCameras() {
       try {
         const payload = {
@@ -117,8 +117,8 @@ const token = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3Ny1NUVdFRTNHZ
         }
 
         const data = await response.json();
-     const count = data?.data?.[0]?.offline_cameras || 0;
-     setOfflineCameras(count);
+        const count = data?.data?.[0]?.offline_cameras || 0;
+        setOfflineCameras(count);
 
 
       } catch (err) {
@@ -131,257 +131,257 @@ const token = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI3Ny1NUVdFRTNHZ
 
 
   const [activeCameras, setActiveCameras] = useState(0);
-useEffect(() => {
-  async function fetchActiveCameras() {
-    try {
-      const response = await fetch(
-        "https://ig.gov-cloud.ai/pi-cohorts-service-dbaas/v1.0/cohorts/adhoc?size=2000",
-        {
-          method: "POST",  // <-- POST because you are sending a payload
-          headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            type: "TIDB",
-            definition: "SELECT COUNT(*) AS active_cameras FROM t_69293dd7fd9c66658f22d6a7_t WHERE status = 'ONLINE';"
-          })
-        }
-      );
+  useEffect(() => {
+    async function fetchActiveCameras() {
+      try {
+        const response = await fetch(
+          "https://ig.gov-cloud.ai/pi-cohorts-service-dbaas/v1.0/cohorts/adhoc?size=2000",
+          {
+            method: "POST",  // <-- POST because you are sending a payload
+            headers: {
+              "Authorization": `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              type: "TIDB",
+              definition: "SELECT COUNT(*) AS active_cameras FROM t_69293dd7fd9c66658f22d6a7_t WHERE status = 'ONLINE';"
+            })
+          }
+        );
 
-      const data = await response.json();
-      const count = data?.data?.[0]?.active_cameras || 0;
-      setActiveCameras(count);
+        const data = await response.json();
+        const count = data?.data?.[0]?.active_cameras || 0;
+        setActiveCameras(count);
 
-    } catch (err) {
-      console.error("API Error:", err);
+      } catch (err) {
+        console.error("API Error:", err);
+      }
     }
-  }
 
-  fetchActiveCameras();
-}, []);
+    fetchActiveCameras();
+  }, []);
 
 
-const [activeAlerts, setActiveAlerts] = useState(0);
-useEffect(() => {
-  async function fetchActiveAlerts() {
-    try {
-      const response = await fetch(
-        "https://ig.gov-cloud.ai/pi-cohorts-service-dbaas/v1.0/cohorts/adhoc?size=2000",
-        {
-          method: "POST", // POST because you are sending a payload
-          headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            type: "TIDB",
-            definition: "SELECT COUNT(*) AS active_alerts FROM t_6928433fb9bad705b353b2db_t WHERE violation_type <> 'No Violation';"
-          })
-        }
-      );
+  const [activeAlerts, setActiveAlerts] = useState(0);
+  useEffect(() => {
+    async function fetchActiveAlerts() {
+      try {
+        const response = await fetch(
+          "https://ig.gov-cloud.ai/pi-cohorts-service-dbaas/v1.0/cohorts/adhoc?size=2000",
+          {
+            method: "POST", // POST because you are sending a payload
+            headers: {
+              "Authorization": `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              type: "TIDB",
+              definition: "SELECT COUNT(*) AS active_alerts FROM t_6928433fb9bad705b353b2db_t WHERE violation_type <> 'No Violation';"
+            })
+          }
+        );
 
-      const data = await response.json();
-      const count = data?.data?.[0]?.active_alerts || 0;
-      setActiveAlerts(count);
+        const data = await response.json();
+        const count = data?.data?.[0]?.active_alerts || 0;
+        setActiveAlerts(count);
 
-    } catch (err) {
-      console.error("API Error (Active Alerts):", err);
+      } catch (err) {
+        console.error("API Error (Active Alerts):", err);
+      }
     }
-  }
 
-  fetchActiveAlerts();
-}, []);
+    fetchActiveAlerts();
+  }, []);
 
 
-const [anprViolations, setAnprViolations] = useState(0);
-useEffect(() => {
-  async function fetchAnprViolations() {
-    try {
-      const response = await fetch(
-        "https://ig.gov-cloud.ai/pi-cohorts-service-dbaas/v1.0/cohorts/adhoc?size=2000",
-        {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            type: "TIDB",
-            definition: "SELECT COUNT(*) AS anpr_violations FROM t_6928433fb9bad705b353b2db_t WHERE anpr_confidence > 80 AND violation_type <> 'No Violation';"
-          })
-        }
-      );
+  const [anprViolations, setAnprViolations] = useState(0);
+  useEffect(() => {
+    async function fetchAnprViolations() {
+      try {
+        const response = await fetch(
+          "https://ig.gov-cloud.ai/pi-cohorts-service-dbaas/v1.0/cohorts/adhoc?size=2000",
+          {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              type: "TIDB",
+              definition: "SELECT COUNT(*) AS anpr_violations FROM t_6928433fb9bad705b353b2db_t WHERE anpr_confidence > 80 AND violation_type <> 'No Violation';"
+            })
+          }
+        );
 
-      const data = await response.json();
-      const count = data?.data?.[0]?.anpr_violations || 0;
-      setAnprViolations(count);
+        const data = await response.json();
+        const count = data?.data?.[0]?.anpr_violations || 0;
+        setAnprViolations(count);
 
-    } catch (err) {
-      console.error("API Error (ANPR Violations):", err);
+      } catch (err) {
+        console.error("API Error (ANPR Violations):", err);
+      }
     }
-  }
 
-  fetchAnprViolations();
-}, []);
+    fetchAnprViolations();
+  }, []);
 
 
-const [recentEvents, setRecentEvents] = useState([]);
-useEffect(() => {
-  async function fetchRecentEvents() {
-    try {
-      const response = await fetch(
-        "https://ig.gov-cloud.ai/pi-cohorts-service-dbaas/v1.0/cohorts/adhoc?size=2000",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            type: "TIDB",
-            definition:
-              "SELECT incident_id AS event_id, camera_id, violation_type AS event_type, timestamp FROM t_6928433fb9bad705b353b2db_t UNION ALL SELECT incident_id AS event_id, camera_id, violation_type AS event_type, timestamp FROM t_69284385b9bad705b353b2de_t ORDER BY timestamp DESC LIMIT 50;",
-          }),
-        }
-      );
+  const [recentEvents, setRecentEvents] = useState([]);
+  useEffect(() => {
+    async function fetchRecentEvents() {
+      try {
+        const response = await fetch(
+          "https://ig.gov-cloud.ai/pi-cohorts-service-dbaas/v1.0/cohorts/adhoc?size=2000",
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              type: "TIDB",
+              definition:
+                "SELECT incident_id AS event_id, camera_id, violation_type AS event_type, timestamp FROM t_6928433fb9bad705b353b2db_t UNION ALL SELECT incident_id AS event_id, camera_id, violation_type AS event_type, timestamp FROM t_69284385b9bad705b353b2de_t ORDER BY timestamp DESC LIMIT 50;",
+            }),
+          }
+        );
 
-      const data = await response.json();
-      const list = data?.data || [];
+        const data = await response.json();
+        const list = data?.data || [];
 
-      const formatted = list.map((item) => ({
-        id: item.event_id,
-        type: item.event_type,
-        desc: `Camera ID: ${item.camera_id}`,
-        time: new Date(item.timestamp).toLocaleString(),
-        icon: Bell, // CHANGE THIS IF YOU WANT DIFFERENT ICONS
-      }));
+        const formatted = list.map((item) => ({
+          id: item.event_id,
+          type: item.event_type,
+          desc: `Camera ID: ${item.camera_id}`,
+          time: new Date(item.timestamp).toLocaleString(),
+          icon: Bell, // CHANGE THIS IF YOU WANT DIFFERENT ICONS
+        }));
 
-      setRecentEvents(formatted);
+        setRecentEvents(formatted);
 
-    } catch (err) {
-      console.error("API Error (Recent Events):", err);
+      } catch (err) {
+        console.error("API Error (Recent Events):", err);
+      }
     }
-  }
 
-  fetchRecentEvents();
-}, []);
-
+    fetchRecentEvents();
+  }, []);
 
 
-const [cameraStatus, setCameraStatus] = useState([]);
 
-useEffect(() => {
-  async function fetchCameraStatus() {
-    try {
-      const response = await fetch(
-        "https://ig.gov-cloud.ai/pi-cohorts-service-dbaas/v1.0/cohorts/adhoc",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            type: "TIDB",
-            definition:
-              "SELECT zone, SUM(status = 'ONLINE') AS online_count, SUM(status = 'OFFLINE') AS offline_count, SUM(status = 'DEGRADED') AS degraded_count FROM t_69293dd7fd9c66658f22d6a7_t GROUP BY zone;",
-          }),
-        }
-      );
+  const [cameraStatus, setCameraStatus] = useState([]);
 
-      const data = await response.json();
-      console.log("📌 FULL Camera Status Response:", data);
+  useEffect(() => {
+    async function fetchCameraStatus() {
+      try {
+        const response = await fetch(
+          "https://ig.gov-cloud.ai/pi-cohorts-service-dbaas/v1.0/cohorts/adhoc",
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              type: "TIDB",
+              definition:
+                "SELECT zone, SUM(status = 'ONLINE') AS online_count, SUM(status = 'OFFLINE') AS offline_count, SUM(status = 'DEGRADED') AS degraded_count FROM t_69293dd7fd9c66658f22d6a7_t GROUP BY zone;",
+            }),
+          }
+        );
 
-      setCameraStatus(data.data || []);
-    } catch (err) {
-      console.error("Camera Status API Error:", err);
+        const data = await response.json();
+        console.log("📌 FULL Camera Status Response:", data);
+
+        setCameraStatus(data.data || []);
+      } catch (err) {
+        console.error("Camera Status API Error:", err);
+      }
     }
-  }
 
-  fetchCameraStatus();
-}, [token]);
+    fetchCameraStatus();
+  }, [token]);
 
 
-const [weaponAlerts, setWeaponAlerts] = useState(0);
-useEffect(() => {
-  async function fetchWeaponAlerts() {
-    try {
-      const response = await fetch(
-        "https://ig.gov-cloud.ai/pi-cohorts-service-dbaas/v1.0/cohorts/adhoc?size=2000",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            type: "TIDB",
-            definition:
-              "SELECT COUNT(*) AS weapon_alerts FROM t_69284385b9bad705b353b2de_t WHERE weapon_detected = true OR fight_detected = true;"
-          }),
-        }
-      );
+  const [weaponAlerts, setWeaponAlerts] = useState(0);
+  useEffect(() => {
+    async function fetchWeaponAlerts() {
+      try {
+        const response = await fetch(
+          "https://ig.gov-cloud.ai/pi-cohorts-service-dbaas/v1.0/cohorts/adhoc?size=2000",
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              type: "TIDB",
+              definition:
+                "SELECT COUNT(*) AS weapon_alerts FROM t_69284385b9bad705b353b2de_t WHERE weapon_detected = true OR fight_detected = true;"
+            }),
+          }
+        );
 
-      const data = await response.json();
-      const count = data?.data?.[0]?.weapon_alerts || 0;
-      setWeaponAlerts(count);
+        const data = await response.json();
+        const count = data?.data?.[0]?.weapon_alerts || 0;
+        setWeaponAlerts(count);
 
-    } catch (err) {
-      console.error("API Error (Weapon Alerts):", err);
+      } catch (err) {
+        console.error("API Error (Weapon Alerts):", err);
+      }
     }
-  }
 
-  fetchWeaponAlerts();
-}, []);
+    fetchWeaponAlerts();
+  }, []);
 
 
-const [Alerts, setAlerts] = useState([]);
-useEffect(() => {
-  async function fetchAnomalyAlerts() {
-    try {
-      const response = await fetch(
-        "https://ig.gov-cloud.ai/pi-cohorts-service-dbaas/v1.0/cohorts/adhoc?size=2000",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            type: "TIDB",
-            definition:
-              "(SELECT t.incident_id AS event_id,t.camera_id,t.violation_type AS anomaly_type,t.timestamp,cs.zone,t.anpr_confidence AS confidence FROM t_6928433fb9bad705b353b2db_t t LEFT JOIN t_69293dd7fd9c66658f22d6a7_t cs ON t.camera_id=cs.camera_id WHERE t.overspeed=TRUE OR t.wrong_way=TRUE OR t.helmet_violation=TRUE) UNION ALL (SELECT w.incident_id AS event_id,w.camera_id,w.violation_type AS anomaly_type,w.timestamp,cs.zone,JSON_EXTRACT(w.meta,'$.confidence') AS confidence FROM t_69284385b9bad705b353b2de_t w LEFT JOIN t_69293dd7fd9c66658f22d6a7_t cs ON w.camera_id=cs.camera_id WHERE w.weapon_detected=TRUE OR w.fight_detected=TRUE) UNION ALL (SELECT c.incident_id AS event_id,c.camera_id,'Crowd Detected' AS anomaly_type,c.timestamp,cs.zone,c.confidence FROM t_69294a59fd9c66658f22d6af_t c LEFT JOIN t_69293dd7fd9c66658f22d6a7_t cs ON c.camera_id=cs.camera_id) UNION ALL (SELECT CONCAT('CAM_EVT_',cs.camera_id) AS event_id,cs.camera_id,CASE WHEN cs.status='OFFLINE' THEN 'Camera Offline' WHEN cs.status='DEGRADED' THEN 'Camera Degraded' END AS anomaly_type,cs.last_heartbeat AS timestamp,cs.zone,NULL AS confidence FROM t_69293dd7fd9c66658f22d6a7_t cs WHERE cs.status IN ('OFFLINE','DEGRADED')) ORDER BY timestamp DESC LIMIT 20;"
-          }),
-        }
-      );
+  const [Alerts, setAlerts] = useState([]);
+  useEffect(() => {
+    async function fetchAnomalyAlerts() {
+      try {
+        const response = await fetch(
+          "https://ig.gov-cloud.ai/pi-cohorts-service-dbaas/v1.0/cohorts/adhoc?size=2000",
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              type: "TIDB",
+              definition:
+                "(SELECT t.incident_id AS event_id,t.camera_id,t.violation_type AS anomaly_type,t.timestamp,cs.zone,t.anpr_confidence AS confidence FROM t_6928433fb9bad705b353b2db_t t LEFT JOIN t_69293dd7fd9c66658f22d6a7_t cs ON t.camera_id=cs.camera_id WHERE t.overspeed=TRUE OR t.wrong_way=TRUE OR t.helmet_violation=TRUE) UNION ALL (SELECT w.incident_id AS event_id,w.camera_id,w.violation_type AS anomaly_type,w.timestamp,cs.zone,JSON_EXTRACT(w.meta,'$.confidence') AS confidence FROM t_69284385b9bad705b353b2de_t w LEFT JOIN t_69293dd7fd9c66658f22d6a7_t cs ON w.camera_id=cs.camera_id WHERE w.weapon_detected=TRUE OR w.fight_detected=TRUE) UNION ALL (SELECT c.incident_id AS event_id,c.camera_id,'Crowd Detected' AS anomaly_type,c.timestamp,cs.zone,c.confidence FROM t_69294a59fd9c66658f22d6af_t c LEFT JOIN t_69293dd7fd9c66658f22d6a7_t cs ON c.camera_id=cs.camera_id) UNION ALL (SELECT CONCAT('CAM_EVT_',cs.camera_id) AS event_id,cs.camera_id,CASE WHEN cs.status='OFFLINE' THEN 'Camera Offline' WHEN cs.status='DEGRADED' THEN 'Camera Degraded' END AS anomaly_type,cs.last_heartbeat AS timestamp,cs.zone,NULL AS confidence FROM t_69293dd7fd9c66658f22d6a7_t cs WHERE cs.status IN ('OFFLINE','DEGRADED')) ORDER BY timestamp DESC LIMIT 20;"
+            }),
+          }
+        );
 
-      const data = await response.json();
-      const raw = data?.data || [];
+        const data = await response.json();
+        const raw = data?.data || [];
 
-      const formatted = raw.map((item) => ({
-        id: item.event_id,
-        type: item.anomaly_type,
-        severity:
-          item.anomaly_type === "Camera Offline" ||
-          item.anomaly_type === "Weapon Detected" ||
-          item.anomaly_type === "Fight Detected"
-            ? "high"
-            : "medium",
-        camera: `Camera ${item.camera_id} • ${item.zone || "Unknown Zone"}`,
-        time: new Date(item.timestamp).toLocaleString(),
-        confidence: item.confidence ? Number(item.confidence) : 0,
-      }));
+        const formatted = raw.map((item) => ({
+          id: item.event_id,
+          type: item.anomaly_type,
+          severity:
+            item.anomaly_type === "Camera Offline" ||
+              item.anomaly_type === "Weapon Detected" ||
+              item.anomaly_type === "Fight Detected"
+              ? "high"
+              : "medium",
+          camera: `Camera ${item.camera_id} • ${item.zone || "Unknown Zone"}`,
+          time: new Date(item.timestamp).toLocaleString(),
+          confidence: item.confidence ? Number(item.confidence) : 0,
+        }));
 
-      setAlerts(formatted);
+        setAlerts(formatted);
 
-    } catch (err) {
-      console.error("API Error (Anomaly Alerts):", err);
+      } catch (err) {
+        console.error("API Error (Anomaly Alerts):", err);
+      }
     }
-  }
 
-  fetchAnomalyAlerts();
-}, []);
+    fetchAnomalyAlerts();
+  }, []);
 
 
 
@@ -407,7 +407,10 @@ useEffect(() => {
           <div className="flex items-center gap-2">
             {userRole === 'operator' && (
               <>
-                <button className="px-4 py-2 bg-cyan-500/20 text-cyan-400 rounded hover:bg-cyan-500/30 text-sm">
+                <button
+                  onClick={() => navigate('/surveillance/live-grid')}
+                  className="px-4 py-2 bg-cyan-500/20 text-cyan-400 rounded hover:bg-cyan-500/30 text-sm"
+                >
                   View Camera Grid
                 </button>
                 <button className="px-4 py-2 bg-orange-500/20 text-orange-400 rounded hover:bg-orange-500/30 text-sm">
@@ -417,10 +420,16 @@ useEffect(() => {
             )}
             {userRole === 'supervisor' && (
               <>
-                <button className="px-4 py-2 bg-green-500/20 text-green-400 rounded hover:bg-green-500/30 text-sm">
+                <button
+                  onClick={() => navigate('/anpr/supervisor-queue')}
+                  className="px-4 py-2 bg-green-500/20 text-green-400 rounded hover:bg-green-500/30 text-sm"
+                >
                   Approval Queue
                 </button>
-                <button className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded hover:bg-purple-500/30 text-sm">
+                <button
+                  onClick={() => navigate('/evidence')}
+                  className="px-4 py-2 bg-purple-500/20 text-purple-400 rounded hover:bg-purple-500/30 text-sm"
+                >
                   Evidence Console
                 </button>
               </>
@@ -455,13 +464,13 @@ useEffect(() => {
           trend={{ value: '98.2%', positive: true }}
         /> */}
 
-<MetricCard
-  label="Active Cameras"
-  value={activeCameras.toString()}
-  icon={Camera}
-  status="success"
-  trend={{ value: '98.2%', positive: true }}
-/>
+        <MetricCard
+          label="Active Cameras"
+          value={activeCameras.toString()}
+          icon={Camera}
+          status="success"
+          trend={{ value: '98.2%', positive: true }}
+        />
 
 
         {/* <MetricCard
@@ -471,12 +480,12 @@ useEffect(() => {
           status="warning"
         /> */}
 
-       <MetricCard
-      label="Offline Cameras"
-      value={offlineCameras.toString()}
-      icon={CameraOff}
-      status="warning"
-    />
+        <MetricCard
+          label="Offline Cameras"
+          value={offlineCameras.toString()}
+          icon={CameraOff}
+          status="warning"
+        />
 
         {/* <MetricCard
           label="Active Alerts"
@@ -484,13 +493,19 @@ useEffect(() => {
           icon={AlertTriangle}
           status="danger"
         /> */}
+         <MetricCard
+          label="Traffic Violations"
+          value={anprViolations.toString()}
+          icon={Car}
+          status="warning"
+        />
 
         <MetricCard
-  label="Active Alerts"
-  value={activeAlerts.toString()}
-  icon={AlertTriangle}
-  status="warning"
-/>
+          label="Active Alerts"
+          value={activeAlerts.toString()}
+          icon={AlertTriangle}
+          status="warning"
+        />
 
         {/* <MetricCard
           label="ANPR Violations"
@@ -498,18 +513,13 @@ useEffect(() => {
           icon={Car}
           status="warning"
         /> */}
+       
         <MetricCard
-  label="ANPR Violations"
-  value={anprViolations.toString()}
-  icon={Car}
-  status="warning"
-/>
-<MetricCard
-  label="Weapon Alerts"
-  value={weaponAlerts.toString()}
-  icon={ShieldAlert}   // better icon for weapon/fight alerts
-  status="warning"
-/>
+          label="Weapon Alerts"
+          value={weaponAlerts.toString()}
+          icon={ShieldAlert}   // better icon for weapon/fight alerts
+          status="warning"
+        />
 
 
         <MetricCard
@@ -523,7 +533,7 @@ useEffect(() => {
       {/* Main Content Grid */}
       <div className="grid grid-cols-3 gap-6">
         {/* GIS Heatmap */}
-        <div className="col-span-2 bg-[#0d1117] border border-[#1f2937] rounded-lg overflow-hidden">
+        <div className="col-span-2 bg-card border border-border rounded-lg overflow-hidden card-shadow">
           <div className="p-4 border-b border-[#1f2937] flex items-center justify-between">
             <h3 className="text-white flex items-center gap-2">
               <MapPin className="w-5 h-5 text-cyan-400" />
@@ -587,13 +597,12 @@ useEffect(() => {
                 <div className="flex items-center justify-between">
                   <div className="text-sm text-white">{hoveredPoint.camera_id}</div>
                   <span
-                    className={`text-[10px] px-2 py-0.5 rounded ${
-                      hoveredPoint.activity_level === 'HIGH'
-                        ? 'bg-red-500/20 text-red-300'
-                        : hoveredPoint.activity_level === 'MEDIUM'
+                    className={`text-[10px] px-2 py-0.5 rounded ${hoveredPoint.activity_level === 'HIGH'
+                      ? 'bg-red-500/20 text-red-300'
+                      : hoveredPoint.activity_level === 'MEDIUM'
                         ? 'bg-orange-500/20 text-orange-300'
                         : 'bg-yellow-500/20 text-yellow-200'
-                    }`}
+                      }`}
                   >
                     {hoveredPoint.activity_level}
                   </span>
@@ -637,7 +646,7 @@ useEffect(() => {
           <div className="p-4 border-b border-[#1f2937]">
             <h3 className="text-white flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-red-400" />
-              Anomaly Alerts
+              Traffic Violations
             </h3>
           </div>
           <div className="overflow-y-auto max-h-[500px]">
@@ -647,16 +656,14 @@ useEffect(() => {
                 className="p-4 border-b border-[#1f2937] hover:bg-white/5 cursor-pointer transition-colors"
               >
                 <div className="flex items-start justify-between mb-2">
-                  <span className={`text-sm ${
-                    alert.severity === 'high' ? 'text-red-400' : 'text-orange-400'
-                  }`}>
+                  <span className={`text-sm ${alert.severity === 'high' ? 'text-red-400' : 'text-orange-400'
+                    }`}>
                     {alert.type}
                   </span>
-                  <span className={`px-2 py-0.5 rounded text-[10px] ${
-                    alert.severity === 'high'
-                      ? 'bg-red-500/20 text-red-400'
-                      : 'bg-orange-500/20 text-orange-400'
-                  }`}>
+                  <span className={`px-2 py-0.5 rounded text-[10px] ${alert.severity === 'high'
+                    ? 'bg-red-500/20 text-red-400'
+                    : 'bg-orange-500/20 text-orange-400'
+                    }`}>
                     {alert.severity.toUpperCase()}
                   </span>
                 </div>
@@ -676,7 +683,7 @@ useEffect(() => {
         {/* Events Overview */}
         <div className="bg-[#0d1117] border border-[#1f2937] rounded-lg overflow-hidden flex flex-col">
           <div className="p-4 border-b border-[#1f2937] flex-shrink-0">
-            <h3 className="text-white">Recent Events</h3>
+            <h3 className="text-white">Incident Report</h3>
           </div>
           <div className="p-4 space-y-3 overflow-y-auto max-h-[400px] flex-1">
             {recentEvents.map((event) => {
@@ -703,44 +710,44 @@ useEffect(() => {
         </div>
 
         {/* Camera Status Summary */}
-       <div className="bg-[#0d1117] border border-[#1f2937] rounded-lg overflow-hidden">
-  <div className="p-4 border-b border-[#1f2937]">
-    <h3 className="text-white">Camera Status by Zone</h3>
-  </div>
+        <div className="bg-[#0d1117] border border-[#1f2937] rounded-lg overflow-hidden">
+          <div className="p-4 border-b border-[#1f2937]">
+            <h3 className="text-white">Camera Status by Zone</h3>
+          </div>
 
-  <div className="p-4">
-    <table className="w-full text-sm">
-      <thead>
-        <tr className="text-xs text-gray-500 border-b border-[#1f2937]">
-          <th className="text-left pb-3">Zone</th>
-          <th className="text-center pb-3">Total</th>
-          <th className="text-center pb-3">Online</th>
-          <th className="text-center pb-3">Offline</th>
-          <th className="text-center pb-3">Degraded</th>
-        </tr>
-      </thead>
+          <div className="p-4">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-xs text-gray-500 border-b border-[#1f2937]">
+                  <th className="text-left pb-3">Zone</th>
+                  <th className="text-center pb-3">Total</th>
+                  <th className="text-center pb-3">Online</th>
+                  <th className="text-center pb-3">Offline</th>
+                  <th className="text-center pb-3">Degraded</th>
+                </tr>
+              </thead>
 
-      <tbody>
-  {cameraStatus.map((zone) => (
-    <tr key={zone.zone} className="border-b border-[#1f2937]/50">
-      <td className="py-3 text-gray-300">{zone.zone}</td>
+              <tbody>
+                {cameraStatus.map((zone) => (
+                  <tr key={zone.zone} className="border-b border-[#1f2937]/50">
+                    <td className="py-3 text-gray-300">{zone.zone}</td>
 
-      <td className="text-center text-gray-400">
-        {(zone.online_count || 0) +
-          (zone.offline_count || 0) +
-          (zone.degraded_count || 0)}
-      </td>
+                    <td className="text-center text-gray-400">
+                      {(zone.online_count || 0) +
+                        (zone.offline_count || 0) +
+                        (zone.degraded_count || 0)}
+                    </td>
 
-      <td className="text-center text-green-400">{zone.online_count}</td>
-      <td className="text-center text-red-400">{zone.offline_count}</td>
-      <td className="text-center text-yellow-400">{zone.degraded_count}</td>
-    </tr>
-  ))}
-</tbody>
+                    <td className="text-center text-green-400">{zone.online_count}</td>
+                    <td className="text-center text-red-400">{zone.offline_count}</td>
+                    <td className="text-center text-yellow-400">{zone.degraded_count}</td>
+                  </tr>
+                ))}
+              </tbody>
 
-    </table>
-  </div>
-</div>
+            </table>
+          </div>
+        </div>
 
       </div>
     </div>

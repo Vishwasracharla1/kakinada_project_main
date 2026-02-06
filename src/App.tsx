@@ -149,6 +149,7 @@ export default function App() {
   );
   const [gridSize, setGridSize] = useState<'2x2' | '3x3' | '4x4'>('4x4');
   const [selectedCamera, setSelectedCamera] = useState<Camera | null>(null);
+  const [selectedViolation, setSelectedViolation] = useState<any | null>(null);
 
   // Keep activeScreen in sync when the URL changes (e.g. direct navigation)
   useEffect(() => {
@@ -228,13 +229,21 @@ export default function App() {
         return (
           <ANPRList
             userRole={user!.role}
-            onViewDetail={() => navigateScreen('anpr-detail')}
+            onViewDetail={(violation) => {
+              setSelectedViolation(violation);
+              navigateScreen('anpr-detail');
+            }}
             onViewApproval={() => navigateScreen('anpr-approval')}
           />
         );
 
       case 'anpr-detail':
-        return <ANPRDetail onBack={() => navigateScreen('anpr-list')} />;
+        return (
+          <ANPRDetail
+            onBack={() => navigateScreen('anpr-list')}
+            violation={selectedViolation}
+          />
+        );
 
       case 'anpr-approval':
         return (
@@ -442,7 +451,7 @@ export default function App() {
   }
 
   return (
-    <div className="flex h-screen bg-[#0a0e1a] text-white overflow-hidden">
+    <div className="flex h-screen bg-background text-white overflow-hidden">
       <Sidebar
         activeScreen={activeScreen}
         onNavigate={navigateScreen}

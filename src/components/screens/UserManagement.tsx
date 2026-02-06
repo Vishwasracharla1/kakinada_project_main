@@ -97,19 +97,19 @@ export function UserManagement() {
 
   const getRoleColor = (role: string) => {
     const roleLower = role.toLowerCase();
-    if (roleLower === 'administrator' || roleLower.includes('admin')) return 'bg-red-500/20 text-red-400';
-    if (roleLower === 'supervisor' || roleLower.includes('supervisor')) return 'bg-purple-500/20 text-purple-400';
-    if (roleLower === 'operator' || roleLower.includes('operator')) return 'bg-cyan-500/20 text-cyan-400';
-    if (roleLower.includes('analyst')) return 'bg-green-500/20 text-green-400';
-    if (roleLower.includes('technical') || roleLower.includes('tech')) return 'bg-yellow-500/20 text-yellow-400';
-    return 'bg-gray-500/20 text-gray-400';
+    if (roleLower === 'administrator' || roleLower.includes('admin')) return 'bg-red-100 border border-red-200';
+    if (roleLower === 'supervisor' || roleLower.includes('supervisor')) return 'bg-indigo-100 border border-indigo-200';
+    if (roleLower === 'operator' || roleLower.includes('operator')) return 'bg-blue-100 border border-blue-200';
+    if (roleLower.includes('analyst')) return 'bg-green-100 border border-green-200';
+    if (roleLower.includes('technical') || roleLower.includes('tech')) return 'bg-yellow-100 border border-yellow-200';
+    return 'bg-gray-100 border border-gray-200';
   };
 
   const getStatusColor = (status: string) => {
     const statusLower = status.toLowerCase();
     return statusLower === 'active' || statusLower === 'online'
-      ? 'bg-green-500/20 text-green-400'
-      : 'bg-red-500/20 text-red-400';
+      ? 'bg-green-100 border border-green-200'
+      : 'bg-red-100 border border-red-200';
   };
 
   // Filter users based on selected filter
@@ -395,8 +395,8 @@ export function UserManagement() {
   if (error) {
     return (
       <div className="p-6">
-        <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-4">
-          <p className="text-red-400">Error loading users: {error}</p>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <p className="text-sm text-black">Error loading users: {error}</p>
         </div>
       </div>
     );
@@ -408,40 +408,40 @@ export function UserManagement() {
         <div className="flex items-center gap-4">
           <button 
             onClick={() => setSelectedFilter('all')}
-            className={`px-4 py-2 rounded-lg transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm border transition-colors ${
               selectedFilter === 'all' 
-                ? 'bg-cyan-500/10 text-cyan-400' 
-                : 'text-gray-400 hover:bg-white/5'
+                ? 'bg-white border-gray-300 text-black shadow-sm' 
+                : 'bg-transparent border-transparent text-black/60 hover:bg-white hover:shadow-sm'
             }`}
           >
             All Users
           </button>
           <button 
             onClick={() => setSelectedFilter('administrators')}
-            className={`px-4 py-2 rounded-lg transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm border transition-colors ${
               selectedFilter === 'administrators' 
-                ? 'bg-cyan-500/10 text-cyan-400' 
-                : 'text-gray-400 hover:bg-white/5'
+                ? 'bg-white border-gray-300 text-black shadow-sm' 
+                : 'bg-transparent border-transparent text-black/60 hover:bg-white hover:shadow-sm'
             }`}
           >
             Administrators
           </button>
           <button 
             onClick={() => setSelectedFilter('operators')}
-            className={`px-4 py-2 rounded-lg transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm border transition-colors ${
               selectedFilter === 'operators' 
-                ? 'bg-cyan-500/10 text-cyan-400' 
-                : 'text-gray-400 hover:bg-white/5'
+                ? 'bg-white border-gray-300 text-black shadow-sm' 
+                : 'bg-transparent border-transparent text-black/60 hover:bg-white hover:shadow-sm'
             }`}
           >
             Operators
           </button>
           <button 
             onClick={() => setSelectedFilter('active')}
-            className={`px-4 py-2 rounded-lg transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm border transition-colors ${
               selectedFilter === 'active' 
-                ? 'bg-cyan-500/10 text-cyan-400' 
-                : 'text-gray-400 hover:bg-white/5'
+                ? 'bg-white border-gray-300 text-black shadow-sm' 
+                : 'bg-transparent border-transparent text-black/60 hover:bg-white hover:shadow-sm'
             }`}
           >
             Active Only
@@ -449,37 +449,37 @@ export function UserManagement() {
         </div>
         <button 
           onClick={handleAddClick}
-          className="px-4 py-2 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 flex items-center gap-2"
+          className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-900 flex items-center gap-2 text-sm"
         >
           <Plus className="w-4 h-4" />
           Add User
         </button>
       </div>
 
-      <div className="bg-[#0d1117] border border-[#1f2937] rounded-lg overflow-hidden">
+      <div className="bg-card border border-gray-200 rounded-lg overflow-hidden shadow-sm">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-[#1f2937]">
-              <th className="text-left p-4 text-xs text-gray-500 uppercase">User</th>
-              <th className="text-left p-4 text-xs text-gray-500 uppercase">Email</th>
-              <th className="text-center p-4 text-xs text-gray-500 uppercase">Role</th>
-              <th className="text-center p-4 text-xs text-gray-500 uppercase">Status</th>
-              <th className="text-center p-4 text-xs text-gray-500 uppercase">Actions</th>
+            <tr className="border-b border-gray-200 bg-gray-50">
+              <th className="text-left p-4 text-xs text-black/60 uppercase">User</th>
+              <th className="text-left p-4 text-xs text-black/60 uppercase">Email</th>
+              <th className="text-center p-4 text-xs text-black/60 uppercase">Role</th>
+              <th className="text-center p-4 text-xs text-black/60 uppercase">Status</th>
+              <th className="text-center p-4 text-xs text-black/60 uppercase">Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredUsers.length === 0 ? (
               <tr>
-                <td colSpan={5} className="p-8 text-center text-gray-400">
+                <td colSpan={5} className="p-8 text-center text-black/50">
                   No users found
                 </td>
               </tr>
             ) : (
               filteredUsers.map((user) => (
-                <tr key={user.id} className="border-b border-[#1f2937] hover:bg-white/5 transition-colors">
+                <tr key={user.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                   <td className="p-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
+                      <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-white text-sm font-medium">
                         {user.name
                           .split(/[\s_-]/)
                           .map(n => n[0])
@@ -487,19 +487,21 @@ export function UserManagement() {
                           .substring(0, 2)
                           .toUpperCase()}
                       </div>
-                      <span className="text-white">{user.name.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}</span>
+                      <span className="text-sm font-medium text-black">
+                        {user.name.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
+                      </span>
                     </div>
                   </td>
                   <td className="p-4">
-                    <span className="text-gray-400 text-sm">{user.email}</span>
+                    <span className="text-sm text-black/70">{user.email}</span>
                   </td>
                   <td className="p-4 text-center">
-                    <span className={`px-3 py-1 rounded text-xs ${getRoleColor(user.role)}`}>
+                    <span className={`px-3 py-1 rounded-full text-xs text-black ${getRoleColor(user.role)}`}>
                       {user.role}
                     </span>
                   </td>
                   <td className="p-4 text-center">
-                    <span className={`px-3 py-1 rounded text-xs uppercase ${getStatusColor(user.status)}`}>
+                    <span className={`px-3 py-1 rounded-full text-xs uppercase text-black ${getStatusColor(user.status)}`}>
                       {user.status}
                     </span>
                   </td>
@@ -507,16 +509,16 @@ export function UserManagement() {
                     <div className="flex items-center justify-center gap-2">
                       <button 
                         onClick={() => handleEditClick(user)}
-                        className="p-2 text-cyan-400 hover:bg-cyan-500/10 rounded transition-colors"
+                        className="p-2 text-black hover:bg-gray-100 rounded transition-colors"
                       >
                         <Edit className="w-4 h-4" />
                       </button>
-                      <button className="p-2 text-purple-400 hover:bg-purple-500/10 rounded transition-colors">
+                      <button className="p-2 text-black/60 hover:bg-gray-100 rounded transition-colors">
                         <Eye className="w-4 h-4" />
                       </button>
                       <button 
                         onClick={() => handleDeleteClick(user)}
-                        className="p-2 text-red-400 hover:bg-red-500/10 rounded transition-colors"
+                        className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -533,15 +535,15 @@ export function UserManagement() {
       {isAddModalOpen && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50" onClick={handleAddCancel}>
           <div 
-            className="bg-[#0d1117] border border-[#1f2937] rounded-lg w-full max-w-md mx-4 transform transition-all"
+            className="bg-white border border-gray-200 rounded-lg w-full max-w-md mx-4 transform transition-all shadow-lg"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="p-4 border-b border-[#1f2937] flex items-center justify-between">
-              <h3 className="text-white text-lg font-medium">Add User</h3>
+            <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+              <h3 className="text-lg font-medium text-black">Add User</h3>
               <button 
                 onClick={handleAddCancel}
-                className="p-1 text-gray-400 hover:text-white rounded transition-colors"
+                className="p-1 text-black/50 hover:text-black rounded transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -551,35 +553,35 @@ export function UserManagement() {
             <div className="p-6 space-y-4">
               {/* User Name */}
               <div>
-                <label className="block text-sm text-gray-400 mb-2">User Name</label>
+                <label className="block text-sm text-black/60 mb-2">User Name</label>
                 <input
                   type="text"
                   value={addFormData.user_name}
                   onChange={(e) => setAddFormData({ ...addFormData, user_name: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#1f2937] rounded-lg text-white text-sm focus:outline-none focus:border-cyan-500/50 transition-colors"
+                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-black focus:outline-none focus:border-gray-400 transition-colors"
                   placeholder="e.g., admin_vishwas"
                 />
               </div>
 
               {/* Email */}
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Email</label>
+                <label className="block text-sm text-black/60 mb-2">Email</label>
                 <input
                   type="email"
                   value={addFormData.email}
                   onChange={(e) => setAddFormData({ ...addFormData, email: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#1f2937] rounded-lg text-white text-sm focus:outline-none focus:border-cyan-500/50 transition-colors"
+                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-black focus:outline-none focus:border-gray-400 transition-colors"
                   placeholder="user@company.com"
                 />
               </div>
 
               {/* Role */}
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Role</label>
+                <label className="block text-sm text-black/60 mb-2">Role</label>
                 <select
                   value={addFormData.role}
                   onChange={(e) => setAddFormData({ ...addFormData, role: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#1f2937] rounded-lg text-white text-sm focus:outline-none focus:border-cyan-500/50 transition-colors"
+                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-black focus:outline-none focus:border-gray-400 transition-colors"
                 >
                   <option value="administrator">Administrator</option>
                   <option value="supervisor">Supervisor</option>
@@ -591,11 +593,11 @@ export function UserManagement() {
 
               {/* Status */}
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Status</label>
+                <label className="block text-sm text-black/60 mb-2">Status</label>
                 <select
                   value={addFormData.status}
                   onChange={(e) => setAddFormData({ ...addFormData, status: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#1f2937] rounded-lg text-white text-sm focus:outline-none focus:border-cyan-500/50 transition-colors"
+                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-black focus:outline-none focus:border-gray-400 transition-colors"
                 >
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
@@ -604,18 +606,18 @@ export function UserManagement() {
             </div>
 
             {/* Modal Footer */}
-            <div className="p-4 border-t border-[#1f2937] flex items-center justify-end gap-3">
+            <div className="p-4 border-t border-gray-200 flex items-center justify-end gap-3">
               <button
                 onClick={handleAddCancel}
                 disabled={adding}
-                className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-4 py-2 bg-gray-200 text-black rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleAddSave}
                 disabled={adding}
-                className="px-4 py-2 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+                className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2 text-sm"
               >
                 {adding ? (
                   <>
@@ -638,15 +640,15 @@ export function UserManagement() {
       {editingUser && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50" onClick={handleCancel}>
           <div 
-            className="bg-[#0d1117] border border-[#1f2937] rounded-lg w-full max-w-md mx-4 transform transition-all"
+            className="bg-white border border-gray-200 rounded-lg w-full max-w-md mx-4 transform transition-all shadow-lg"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="p-4 border-b border-[#1f2937] flex items-center justify-between">
-              <h3 className="text-white text-lg font-medium">Edit User</h3>
+            <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+              <h3 className="text-lg font-medium text-black">Edit User</h3>
               <button 
                 onClick={handleCancel}
-                className="p-1 text-gray-400 hover:text-white rounded transition-colors"
+                className="p-1 text-black/50 hover:text-black rounded transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -656,35 +658,35 @@ export function UserManagement() {
             <div className="p-6 space-y-4">
               {/* User Name */}
               <div>
-                <label className="block text-sm text-gray-400 mb-2">User Name</label>
+                <label className="block text-sm text-black/60 mb-2">User Name</label>
                 <input
                   type="text"
                   value={editFormData.user_name || ''}
                   onChange={(e) => setEditFormData({ ...editFormData, user_name: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#1f2937] rounded-lg text-white text-sm focus:outline-none focus:border-cyan-500/50 transition-colors"
+                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-black focus:outline-none focus:border-gray-400 transition-colors"
                   placeholder="user_name"
                 />
               </div>
 
               {/* Email */}
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Email</label>
+                <label className="block text-sm text-black/60 mb-2">Email</label>
                 <input
                   type="email"
                   value={editFormData.email || ''}
                   onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#1f2937] rounded-lg text-white text-sm focus:outline-none focus:border-cyan-500/50 transition-colors"
+                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-black focus:outline-none focus:border-gray-400 transition-colors"
                   placeholder="email@example.com"
                 />
               </div>
 
               {/* Role */}
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Role</label>
+                <label className="block text-sm text-black/60 mb-2">Role</label>
                 <select
                   value={editFormData.role || ''}
                   onChange={(e) => setEditFormData({ ...editFormData, role: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#1f2937] rounded-lg text-white text-sm focus:outline-none focus:border-cyan-500/50 transition-colors"
+                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-black focus:outline-none focus:border-gray-400 transition-colors"
                 >
                   <option value="administrator">Administrator</option>
                   <option value="supervisor">Supervisor</option>
@@ -696,11 +698,11 @@ export function UserManagement() {
 
               {/* Status */}
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Status</label>
+                <label className="block text-sm text-black/60 mb-2">Status</label>
                 <select
                   value={editFormData.status || ''}
                   onChange={(e) => setEditFormData({ ...editFormData, status: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#1f2937] rounded-lg text-white text-sm focus:outline-none focus:border-cyan-500/50 transition-colors"
+                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-black focus:outline-none focus:border-gray-400 transition-colors"
                 >
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
@@ -709,18 +711,18 @@ export function UserManagement() {
             </div>
 
             {/* Modal Footer */}
-            <div className="p-4 border-t border-[#1f2937] flex items-center justify-end gap-3">
+            <div className="p-4 border-t border-gray-200 flex items-center justify-end gap-3">
               <button
                 onClick={handleCancel}
                 disabled={saving}
-                className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-4 py-2 bg-gray-200 text-black rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="px-4 py-2 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+                className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2 text-sm"
               >
                 {saving ? (
                   <>
@@ -743,21 +745,21 @@ export function UserManagement() {
       {userToDelete && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50" onClick={handleDeleteCancel}>
           <div 
-            className="bg-[#0d1117] border border-red-500/50 rounded-lg w-full max-w-md mx-4 transform transition-all"
+            className="bg-white border border-red-200 rounded-lg w-full max-w-md mx-4 transform transition-all shadow-lg"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="p-4 border-b border-[#1f2937] flex items-center gap-3">
-              <div className="w-10 h-10 bg-red-500/10 rounded-full flex items-center justify-center">
-                <AlertTriangle className="w-5 h-5 text-red-400" />
+            <div className="p-4 border-b border-gray-200 flex items-center gap-3">
+              <div className="w-10 h-10 bg-red-50 rounded-full flex items-center justify-center">
+                <AlertTriangle className="w-5 h-5 text-red-600" />
               </div>
               <div className="flex-1">
-                <h3 className="text-white text-lg font-medium">Delete User</h3>
-                <p className="text-gray-400 text-sm">This action cannot be undone</p>
+                <h3 className="text-lg font-medium text-black">Delete User</h3>
+                <p className="text-sm text-black/60">This action cannot be undone</p>
               </div>
               <button 
                 onClick={handleDeleteCancel}
-                className="p-1 text-gray-400 hover:text-white rounded transition-colors"
+                className="p-1 text-black/50 hover:text-black rounded transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -765,29 +767,29 @@ export function UserManagement() {
 
             {/* Modal Body */}
             <div className="p-6">
-              <p className="text-white text-sm mb-2">
+              <p className="text-sm text-black mb-2">
                 Are you sure you want to delete this user?
               </p>
-              <div className="bg-[#0a0e1a] border border-[#1f2937] rounded-lg p-4 mt-4">
-                <p className="text-gray-300 font-medium">{userToDelete.name}</p>
-                <p className="text-gray-400 text-sm mt-1">{userToDelete.email}</p>
-                <p className="text-gray-500 text-xs mt-2">Role: {userToDelete.role}</p>
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mt-4">
+                <p className="font-medium text-black">{userToDelete.name}</p>
+                <p className="text-sm text-black/70 mt-1">{userToDelete.email}</p>
+                <p className="text-xs text-black/60 mt-2">Role: {userToDelete.role}</p>
               </div>
             </div>
 
             {/* Modal Footer */}
-            <div className="p-4 border-t border-[#1f2937] flex items-center justify-end gap-3">
+            <div className="p-4 border-t border-gray-200 flex items-center justify-end gap-3">
               <button
                 onClick={handleDeleteCancel}
                 disabled={deleting}
-                className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-4 py-2 bg-gray-200 text-black rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleConfirmDelete}
                 disabled={deleting}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2 text-sm"
               >
                 {deleting ? (
                   <>

@@ -13,10 +13,10 @@ interface MetricCardProps {
 
 export function MetricCard({ label, value, icon: Icon, trend, status = 'neutral' }: MetricCardProps) {
   const statusColors = {
-    success: 'text-green-500 bg-green-500/10',
-    warning: 'text-yellow-500 bg-yellow-500/10',
-    danger: 'text-red-500 bg-red-500/10',
-    neutral: 'text-blue-500 bg-blue-500/10',
+    success: 'bg-green-500/10',
+    warning: 'bg-yellow-500/10',
+    danger: 'bg-red-500/10',
+    neutral: 'bg-blue-500/10',
   };
 
   return (
@@ -24,7 +24,8 @@ export function MetricCard({ label, value, icon: Icon, trend, status = 'neutral'
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <p className="text-sm text-muted-foreground mb-2">{label}</p>
-          <p className={`text-2xl font-semibold ${statusColors[status].split(' ')[0]}`}>{value}</p>
+          {/* Always use neutral text color so numbers appear black in light theme and bright in dark theme */}
+          <p className="text-2xl font-semibold text-white">{value}</p>
           {trend && (
             <div className="flex items-center gap-1 mt-2">
               <span className={`text-sm ${trend.positive ? 'text-green-500' : 'text-red-500'}`}>
@@ -34,7 +35,7 @@ export function MetricCard({ label, value, icon: Icon, trend, status = 'neutral'
             </div>
           )}
         </div>
-        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${statusColors[status].split(' ')[1]}`}>
+        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${statusColors[status]}`}>
           <Icon className="w-5 h-5 text-muted-foreground" />
         </div>
       </div>

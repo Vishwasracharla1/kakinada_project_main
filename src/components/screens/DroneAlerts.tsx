@@ -119,34 +119,34 @@ export function DroneAlerts({ onNavigate }: DroneAlertsProps) {
     <div className="p-6 space-y-6">
       {/* Header Stats */}
       <div className="grid grid-cols-4 gap-4">
-        <div className="bg-[#1a1f2e] border border-[#2a3441] p-4 rounded">
-          <div className="text-gray-400 text-xs uppercase tracking-wider mb-1">Total Alerts</div>
-          <div className="text-white text-2xl">{mockAlerts.length}</div>
+        <div className="bg-card border border-gray-200 p-4 rounded-xl shadow-sm">
+          <div className="text-xs uppercase tracking-wider mb-1 text-black/60">Total Alerts</div>
+          <div className="text-2xl font-semibold text-black">{mockAlerts.length}</div>
         </div>
-        <div className="bg-[#1a1f2e] border border-red-400/30 p-4 rounded">
-          <div className="text-gray-400 text-xs uppercase tracking-wider mb-1">Critical</div>
-          <div className="text-red-400 text-2xl">{criticalCount}</div>
+        <div className="bg-card border border-gray-200 p-4 rounded-xl shadow-sm">
+          <div className="text-xs uppercase tracking-wider mb-1 text-black/60">Critical</div>
+          <div className="text-2xl font-semibold text-black">{criticalCount}</div>
         </div>
-        <div className="bg-[#1a1f2e] border border-orange-400/30 p-4 rounded">
-          <div className="text-gray-400 text-xs uppercase tracking-wider mb-1">High Priority</div>
-          <div className="text-orange-400 text-2xl">{highCount}</div>
+        <div className="bg-card border border-gray-200 p-4 rounded-xl shadow-sm">
+          <div className="text-xs uppercase tracking-wider mb-1 text-black/60">High Priority</div>
+          <div className="text-2xl font-semibold text-black">{highCount}</div>
         </div>
-        <div className="bg-[#1a1f2e] border border-yellow-400/30 p-4 rounded">
-          <div className="text-gray-400 text-xs uppercase tracking-wider mb-1">Active</div>
-          <div className="text-yellow-400 text-2xl">{activeCount}</div>
+        <div className="bg-card border border-gray-200 p-4 rounded-xl shadow-sm">
+          <div className="text-xs uppercase tracking-wider mb-1 text-black/60">Active</div>
+          <div className="text-2xl font-semibold text-black">{activeCount}</div>
         </div>
       </div>
 
       {/* Filter Controls */}
       <div className="flex gap-4">
-        <select className="px-4 py-2 bg-[#1a1f2e] border border-[#2a3441] text-white rounded">
+        <select className="px-4 py-2 bg-white border border-gray-200 text-sm text-black rounded-lg">
           <option>All Severities</option>
           <option>Critical</option>
           <option>High</option>
           <option>Medium</option>
           <option>Low</option>
         </select>
-        <select className="px-4 py-2 bg-[#1a1f2e] border border-[#2a3441] text-white rounded">
+        <select className="px-4 py-2 bg-white border border-gray-200 text-sm text-black rounded-lg">
           <option>All Types</option>
           <option>Crowd Surge</option>
           <option>Vehicle Congestion</option>
@@ -154,7 +154,7 @@ export function DroneAlerts({ onNavigate }: DroneAlertsProps) {
           <option>Human Clustering</option>
           <option>Perimeter Intrusion</option>
         </select>
-        <select className="px-4 py-2 bg-[#1a1f2e] border border-[#2a3441] text-white rounded">
+        <select className="px-4 py-2 bg-white border border-gray-200 text-sm text-black rounded-lg">
           <option>All Status</option>
           <option>Active</option>
           <option>Escalated</option>
@@ -170,44 +170,44 @@ export function DroneAlerts({ onNavigate }: DroneAlertsProps) {
           return (
             <div
               key={alert.id}
-              className={`bg-[#1a1f2e] border rounded p-4 hover:border-cyan-400/50 transition-all cursor-pointer ${getSeverityColor(alert.severity)}`}
+              className="bg-card border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-gray-400 transition-all cursor-pointer"
             >
               <div className="flex items-start justify-between">
                 {/* Left: Alert Info */}
                 <div className="flex gap-4 flex-1">
-                  <div className={`w-12 h-12 rounded flex items-center justify-center ${getSeverityColor(alert.severity)}`}>
-                    <TypeIcon className="w-6 h-6" />
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center bg-gray-100">
+                    <TypeIcon className="w-6 h-6 text-black/70" />
                   </div>
 
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <span className="text-white">{alert.type}</span>
-                      <span className={`text-xs px-2 py-1 rounded ${getSeverityColor(alert.severity)}`}>
+                      <span className="font-medium text-black">{alert.type}</span>
+                      <span className={`text-xs px-2 py-1 rounded-full text-black ${getSeverityColor(alert.severity)}`}>
                         {alert.severity}
                       </span>
-                      <span className={`text-xs px-2 py-1 rounded ${getStatusColor(alert.status)}`}>
+                      <span className={`text-xs px-2 py-1 rounded-full text-black ${getStatusColor(alert.status)}`}>
                         {alert.status}
                       </span>
                     </div>
 
-                    <p className="text-gray-400 text-sm mb-3">{alert.description}</p>
+                    <p className="text-sm text-black/70 mb-3">{alert.description}</p>
 
                     <div className="grid grid-cols-4 gap-4 text-xs">
-                      <div className="flex items-center gap-2 text-gray-400">
-                        <span className="text-cyan-400">Alert ID:</span>
-                        <span>{alert.id}</span>
+                      <div className="flex items-center gap-2 text-xs text-black/60">
+                        <span className="font-medium text-black">Alert ID:</span>
+                        <span className="text-black">{alert.id}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-gray-400">
+                      <div className="flex items-center gap-2 text-xs text-black/60">
                         <MapPin className="w-3 h-3" />
                         <span>{alert.location}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-gray-400">
+                      <div className="flex items-center gap-2 text-xs text-black/60">
                         <Clock className="w-3 h-3" />
                         <span>{alert.timestamp}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-gray-400">
-                        <span>Drone: </span>
-                        <span className="text-cyan-400">{alert.droneId}</span>
+                      <div className="flex items-center gap-2 text-xs text-black/60">
+                        <span>Drone:</span>
+                        <span className="text-black font-medium">{alert.droneId}</span>
                       </div>
                     </div>
                   </div>
@@ -216,9 +216,9 @@ export function DroneAlerts({ onNavigate }: DroneAlertsProps) {
                 {/* Right: Confidence & Actions */}
                 <div className="text-right space-y-3">
                   <div>
-                    <div className="text-xs text-gray-400 mb-1">Confidence</div>
-                    <div className="text-white text-xl">{alert.confidence}%</div>
-                    <div className="text-xs text-gray-500">{alert.aiModel}</div>
+                    <div className="text-xs text-black/60 mb-1">Confidence</div>
+                    <div className="text-xl font-semibold text-black">{alert.confidence}%</div>
+                    <div className="text-xs text-black/50">{alert.aiModel}</div>
                   </div>
 
                   <div className="flex gap-2">
@@ -227,7 +227,7 @@ export function DroneAlerts({ onNavigate }: DroneAlertsProps) {
                         e.stopPropagation();
                         onNavigate('drone-missions', { alertId: alert.id });
                       }}
-                      className="px-3 py-1 bg-cyan-500/20 border border-cyan-400 text-cyan-400 rounded hover:bg-cyan-500/30 transition-colors text-xs flex items-center gap-1"
+                      className="px-3 py-1 bg-white text-black border border-gray-300 rounded hover:bg-gray-100 transition-colors text-xs flex items-center gap-1"
                     >
                       <Eye className="w-3 h-3" />
                       View Feed

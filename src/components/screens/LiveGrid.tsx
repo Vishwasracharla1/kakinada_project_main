@@ -108,12 +108,12 @@ export function LiveGrid({ onViewCamera }: LiveGridProps) {
     <div className="p-6">
       {/* Filters */}
       <div className="flex items-center gap-4 mb-6">
-        <div className="flex items-center gap-3 px-4 py-2 bg-[#0d1117] border border-[#1f2937] rounded-lg">
+        <div className="flex items-center gap-3 px-4 py-2 bg-card border border-border rounded-lg">
           <Filter className="w-4 h-4 text-gray-500" />
           <select
             value={selectedZone}
             onChange={(e) => setSelectedZone(e.target.value)}
-            className="bg-black text-sm text-white outline-none"
+            className="bg-white text-sm text-black outline-none rounded px-2 py-1"
           >
             {zones.map((z) => (
               <option key={z} value={z}>

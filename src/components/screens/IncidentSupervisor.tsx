@@ -55,28 +55,30 @@ export function IncidentSupervisor({ onBack, onNavigate }: IncidentSupervisorPro
   ];
 
   const getStatusColor = (status: string) => {
+    // Pastel chips with black text
     switch (status) {
       case 'pending_classification':
-        return 'bg-red-500/20 text-red-400 border-red-500/50';
+        return 'bg-red-100 border border-red-200';
       case 'pending_approval':
-        return 'bg-orange-500/20 text-orange-400 border-orange-500/50';
+        return 'bg-orange-100 border border-orange-200';
       case 'under_review':
-        return 'bg-cyan-500/20 text-cyan-400 border-cyan-500/50';
+        return 'bg-blue-100 border border-blue-200';
       default:
-        return 'bg-gray-500/20 text-gray-400 border-gray-500/50';
+        return 'bg-gray-100 border border-gray-200';
     }
   };
 
   const getPriorityColor = (priority: string) => {
+    // Subtle text colors just to hint priority
     switch (priority) {
       case 'high':
-        return 'text-red-400';
+        return 'text-red-600';
       case 'medium':
-        return 'text-orange-400';
+        return 'text-amber-600';
       case 'low':
-        return 'text-green-400';
+        return 'text-green-600';
       default:
-        return 'text-gray-400';
+        return 'text-gray-500';
     }
   };
 
@@ -84,37 +86,37 @@ export function IncidentSupervisor({ onBack, onNavigate }: IncidentSupervisorPro
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <button onClick={onBack} className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-3">
+          <button onClick={onBack} className="flex items-center gap-2 text-black/60 hover:text-black transition-colors mb-3">
             <ArrowLeft className="w-5 h-5" />
             Back to Dashboard
           </button>
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
-              <Shield className="w-6 h-6 text-green-400" />
+            <div className="p-3 bg-green-100 border border-green-200 rounded-lg">
+              <Shield className="w-6 h-6 text-black/70" />
             </div>
             <div>
-              <h1 className="text-white text-2xl">Incident Management – Supervisor</h1>
-              <p className="text-gray-400 text-sm">Review, classify, approve, and close escalated incidents</p>
+              <h1 className="text-2xl font-semibold text-black">Incident Management – Supervisor</h1>
+              <p className="text-sm text-black/60">Review, classify, approve, and close escalated incidents</p>
             </div>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="px-4 py-2 bg-red-500/20 border border-red-500/50 rounded-lg">
-            <p className="text-xs text-gray-400">Pending Classification</p>
-            <p className="text-red-400 text-xl font-bold">
+          <div className="px-4 py-2 bg-red-50 border border-red-200 rounded-lg text-right">
+            <p className="text-xs text-black/60">Pending Classification</p>
+            <p className="text-xl font-semibold text-black">
               {escalatedIncidents.filter((i) => i.status === 'pending_classification').length}
             </p>
           </div>
-          <div className="px-4 py-2 bg-orange-500/20 border border-orange-500/50 rounded-lg">
-            <p className="text-xs text-gray-400">Pending Approval</p>
-            <p className="text-orange-400 text-xl font-bold">
+          <div className="px-4 py-2 bg-orange-50 border border-orange-200 rounded-lg text-right">
+            <p className="text-xs text-black/60">Pending Approval</p>
+            <p className="text-xl font-semibold text-black">
               {escalatedIncidents.filter((i) => i.status === 'pending_approval').length}
             </p>
           </div>
           <button
             onClick={() => onNavigate('evidence-console')}
-            className="px-4 py-2 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 flex items-center gap-2"
+            className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-900 flex items-center gap-2 text-sm"
           >
             <Eye className="w-4 h-4" />
             Evidence Console
@@ -126,8 +128,8 @@ export function IncidentSupervisor({ onBack, onNavigate }: IncidentSupervisorPro
         {escalatedIncidents.map((incident) => (
           <div
             key={incident.id}
-            className={`bg-[#0d1117] border-2 rounded-xl overflow-hidden transition-all cursor-pointer ${
-              selectedIncident === incident.id ? 'border-green-500' : 'border-[#1f2937] hover:border-green-500/50'
+            className={`bg-card border rounded-xl overflow-hidden transition-all cursor-pointer ${
+              selectedIncident === incident.id ? 'border-gray-800 shadow-md' : 'border-gray-200 hover:border-gray-400 hover:shadow-sm'
             }`}
             onClick={() => setSelectedIncident(selectedIncident === incident.id ? null : incident.id)}
           >
@@ -167,20 +169,20 @@ export function IncidentSupervisor({ onBack, onNavigate }: IncidentSupervisorPro
               <div className="grid grid-cols-3 gap-6 mb-5">
                 <div className="col-span-2 space-y-4">
                   <div>
-                    <p className="text-xs text-gray-500 mb-2 uppercase tracking-wider">Operator Notes</p>
-                    <div className="bg-[#0a0e1a] border border-[#1f2937] rounded-lg p-4">
-                      <p className="text-white text-sm italic">&quot;{incident.operatorNotes}&quot;</p>
+                    <p className="text-xs text-black/50 mb-2 uppercase tracking-wider">Operator Notes</p>
+                    <div className="bg-white border border-gray-200 rounded-lg p-4">
+                      <p className="text-sm text-black italic">&quot;{incident.operatorNotes}&quot;</p>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-3 gap-3">
                     <div>
-                      <p className="text-xs text-gray-500 mb-1">Tagged Cameras</p>
+                      <p className="text-xs text-black/50 mb-1">Tagged Cameras</p>
                       <div className="space-y-1">
                         {incident.cameras.map((cam) => (
                           <button
                             key={cam}
-                            className="w-full px-2 py-1 bg-cyan-500/20 text-cyan-400 border border-cyan-500/50 rounded text-xs hover:bg-cyan-500/30 flex items-center gap-1"
+                            className="w-full px-2 py-1 bg-gray-100 border border-gray-300 rounded text-xs hover:bg-gray-200 flex items-center gap-1 text-black"
                             onClick={(e) => e.stopPropagation()}
                           >
                             <Camera className="w-3 h-3" />
@@ -190,24 +192,24 @@ export function IncidentSupervisor({ onBack, onNavigate }: IncidentSupervisorPro
                       </div>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500 mb-1">Linked Alerts</p>
-                      <p className="text-orange-400 text-lg font-bold">{incident.linkedAlerts}</p>
+                      <p className="text-xs text-black/50 mb-1">Linked Alerts</p>
+                      <p className="text-lg font-semibold text-black">{incident.linkedAlerts}</p>
                       <button 
-                        className="text-xs text-cyan-400 hover:text-cyan-300"
+                        className="text-xs text-black hover:underline"
                         onClick={(e) => e.stopPropagation()}
                       >
                         View Alerts →
                       </button>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500 mb-1">Evidence Clips</p>
-                      <p className="text-cyan-400 text-lg font-bold">{incident.evidenceCount}</p>
+                      <p className="text-xs text-black/50 mb-1">Evidence Clips</p>
+                      <p className="text-lg font-semibold text-black">{incident.evidenceCount}</p>
                       <button 
                         onClick={(e) => {
                           e.stopPropagation();
                           onNavigate('evidence-console');
                         }} 
-                        className="text-xs text-cyan-400 hover:text-cyan-300"
+                        className="text-xs text-black hover:underline"
                       >
                         Open Console →
                       </button>
@@ -216,14 +218,14 @@ export function IncidentSupervisor({ onBack, onNavigate }: IncidentSupervisorPro
                 </div>
 
                 <div className="space-y-3">
-                  <p className="text-xs text-gray-500 uppercase tracking-wider">Supervisor Actions</p>
+                  <p className="text-xs text-black/50 uppercase tracking-wider">Supervisor Actions</p>
 
                   {incident.status === 'pending_classification' && (
-                    <div className="bg-gradient-to-br from-green-500/5 to-blue-500/5 border border-green-500/30 rounded-lg p-4 space-y-3">
+                    <div className="bg-white border border-gray-200 rounded-lg p-4 space-y-3">
                       <div>
-                        <label className="text-xs text-gray-500 block mb-2">Classify Incident Type *</label>
+                        <label className="text-xs text-black/50 block mb-2">Classify Incident Type *</label>
                         <select 
-                          className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#1f2937] rounded-lg text-white text-sm"
+                          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-black"
                           onClick={(e) => e.stopPropagation()}
                           onChange={(e) => e.stopPropagation()}
                         >
@@ -237,9 +239,9 @@ export function IncidentSupervisor({ onBack, onNavigate }: IncidentSupervisorPro
                         </select>
                       </div>
                       <div>
-                        <label className="text-xs text-gray-500 block mb-2">Severity Level *</label>
+                        <label className="text-xs text-black/50 block mb-2">Severity Level *</label>
                         <select 
-                          className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#1f2937] rounded-lg text-white text-sm"
+                          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-black"
                           onClick={(e) => e.stopPropagation()}
                           onChange={(e) => e.stopPropagation()}
                         >
@@ -251,7 +253,7 @@ export function IncidentSupervisor({ onBack, onNavigate }: IncidentSupervisorPro
                         </select>
                       </div>
                       <button 
-                        className="w-full py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center justify-center gap-2"
+                        className="w-full py-2 bg-black text-white rounded-lg hover:bg-gray-900 flex items-center justify-center gap-2 text-sm"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <CheckCircle className="w-4 h-4" />
@@ -261,13 +263,13 @@ export function IncidentSupervisor({ onBack, onNavigate }: IncidentSupervisorPro
                   )}
 
                   {incident.status === 'pending_approval' && (
-                    <div className="bg-gradient-to-br from-green-500/5 to-blue-500/5 border border-green-500/30 rounded-lg p-4 space-y-3">
-                      <div className="bg-cyan-500/10 border border-cyan-500/30 rounded p-3">
-                        <p className="text-xs text-gray-500">Suggested Classification</p>
-                        <p className="text-white font-medium capitalize">{incident.suggestedClassification?.replace('_', ' ')}</p>
+                    <div className="bg-white border border-gray-200 rounded-lg p-4 space-y-3">
+                      <div className="bg-gray-50 border border-gray-200 rounded p-3">
+                        <p className="text-xs text-black/50">Suggested Classification</p>
+                        <p className="font-medium capitalize text-black">{incident.suggestedClassification?.replace('_', ' ')}</p>
                       </div>
                       <button 
-                        className="w-full py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center justify-center gap-2"
+                        className="w-full py-2 bg-black text-white rounded-lg hover:bg-gray-900 flex items-center justify-center gap-2 text-sm"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <CheckCircle className="w-4 h-4" />
@@ -278,26 +280,26 @@ export function IncidentSupervisor({ onBack, onNavigate }: IncidentSupervisorPro
                 </div>
               </div>
 
-              <div className="border-t border-[#1f2937] pt-4">
-                <p className="text-xs text-gray-500 mb-3">Supervisor Actions</p>
+              <div className="border-t border-gray-200 pt-4">
+                <p className="text-xs text-black/50 mb-3">Supervisor Actions</p>
 
                 <div className="grid grid-cols-2 gap-3 mb-3">
                   <div>
-                    <label className="text-xs text-gray-500 block mb-2">Supervisor Remarks</label>
+                    <label className="text-xs text-black/50 block mb-2">Supervisor Remarks</label>
                     <textarea
                       placeholder="Add your assessment, decision rationale, or instructions..."
                       rows={3}
-                      className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#1f2937] rounded-lg text-white text-sm resize-none"
+                      className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-black resize-none"
                       onClick={(e) => e.stopPropagation()}
                       onFocus={(e) => e.stopPropagation()}
                     />
                   </div>
                   <div>
-                    <label className="text-xs text-gray-500 block mb-2">Field Unit Instructions (Optional)</label>
+                    <label className="text-xs text-black/50 block mb-2">Field Unit Instructions (Optional)</label>
                     <textarea
                       placeholder="Instructions for patrol units..."
                       rows={3}
-                      className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#1f2937] rounded-lg text-white text-sm resize-none"
+                      className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-black resize-none"
                       onClick={(e) => e.stopPropagation()}
                       onFocus={(e) => e.stopPropagation()}
                     />
@@ -310,34 +312,34 @@ export function IncidentSupervisor({ onBack, onNavigate }: IncidentSupervisorPro
                       e.stopPropagation();
                       onNavigate('evidence-console');
                     }} 
-                    className="py-2 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 flex items-center justify-center gap-2 text-sm"
+                    className="py-2 bg-black text-white rounded-lg hover:bg-gray-900 flex items-center justify-center gap-2 text-sm"
                   >
                     <Eye className="w-4 h-4" />
                     Evidence Timeline
                   </button>
                   <button 
-                    className="py-2 bg-blue-500/20 text-blue-400 border border-blue-500/50 rounded-lg hover:bg-blue-500/30 flex items-center justify-center gap-2 text-sm"
+                    className="py-2 bg-gray-50 text-black border border-gray-300 rounded-lg hover:bg-gray-100 flex items-center justify-center gap-2 text-sm"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <Camera className="w-4 h-4" />
                     Request Footage
                   </button>
                   <button 
-                    className="py-2 bg-purple-500/20 text-purple-400 border border-purple-500/50 rounded-lg hover:bg-purple-500/30 flex items-center justify-center gap-2 text-sm"
+                    className="py-2 bg-gray-50 text-black border border-gray-300 rounded-lg hover:bg-gray-100 flex items-center justify-center gap-2 text-sm"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <Merge className="w-4 h-4" />
                     Merge Incidents
                   </button>
                   <button 
-                    className="py-2 bg-orange-500/20 text-orange-400 border border-orange-500/50 rounded-lg hover:bg-orange-500/30 flex items-center justify-center gap-2 text-sm"
+                    className="py-2 bg-gray-50 text-black border border-gray-300 rounded-lg hover:bg-gray-100 flex items-center justify-center gap-2 text-sm"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <Lock className="w-4 h-4" />
                     Lock Evidence
                   </button>
                   <button 
-                    className="py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center justify-center gap-2 text-sm"
+                    className="py-2 bg-black text-white rounded-lg hover:bg-gray-900 flex items-center justify-center gap-2 text-sm"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <CheckCircle className="w-4 h-4" />
@@ -348,17 +350,17 @@ export function IncidentSupervisor({ onBack, onNavigate }: IncidentSupervisorPro
             </div>
             )}
 
-            <div className="px-5 py-3 bg-[#0a0e1a] border-t border-[#1f2937] flex items-center justify-between text-xs">
+            <div className="px-5 py-3 bg-white border-t border-gray-200 flex items-center justify-between text-xs">
               <div className="flex items-center gap-4">
-                <span className="text-gray-500">
-                  Created by: <span className="text-white">{incident.createdBy}</span>
+                <span className="text-black/60">
+                  Created by: <span className="text-black">{incident.createdBy}</span>
                 </span>
-                <span className="text-gray-500">
-                  Status: <span className="text-orange-400">{incident.status.replace(/_/g, ' ').toUpperCase()}</span>
+                <span className="text-black/60">
+                  Status: <span className="font-semibold text-black">{incident.status.replace(/_/g, ' ').toUpperCase()}</span>
                 </span>
               </div>
               <button 
-                className="text-cyan-400 hover:text-cyan-300"
+                className="text-black hover:underline"
                 onClick={(e) => {
                   e.stopPropagation();
                   // Handle view full history
@@ -371,34 +373,34 @@ export function IncidentSupervisor({ onBack, onNavigate }: IncidentSupervisorPro
         ))}
       </div>
 
-      <div className="mt-6 bg-green-500/10 border border-green-500/30 rounded-lg p-5">
-        <h4 className="text-white mb-3 flex items-center gap-2">
-          <Shield className="w-5 h-5 text-green-400" />
+      <div className="mt-6 bg-gray-50 border border-gray-200 rounded-lg p-5">
+        <h4 className="mb-3 flex items-center gap-2 text-black">
+          <Shield className="w-5 h-5 text-black/70" />
           Supervisor Role – Full Incident Management Authority
         </h4>
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 gap-6 text-sm text-black/70">
           <div>
-            <p className="text-sm text-green-400 mb-2">✅ Supervisor Capabilities:</p>
-            <ul className="text-xs text-gray-400 space-y-1">
-              <li>• Approve incident classification</li>
-              <li>• Merge related incidents</li>
-              <li>• Request additional footage from any camera</li>
-              <li>• Build evidence timeline (Evidence Console)</li>
-              <li>• Add final assessment notes</li>
-              <li>• Close incident</li>
-              <li>• Lock evidence for legal proceedings</li>
+            <p className="mb-2 font-medium text-black">✅ Supervisor Capabilities</p>
+            <ul className="text-xs space-y-1 list-disc list-inside">
+              <li>Approve incident classification</li>
+              <li>Merge related incidents</li>
+              <li>Request additional footage from any camera</li>
+              <li>Build evidence timeline (Evidence Console)</li>
+              <li>Add final assessment notes</li>
+              <li>Close incident</li>
+              <li>Lock evidence for legal proceedings</li>
             </ul>
           </div>
           <div>
-            <p className="text-sm text-cyan-400 mb-2">📋 Standard Operating Procedure:</p>
-            <ul className="text-xs text-gray-400 space-y-1">
-              <li>1. Review operator notes and tagged cameras</li>
-              <li>2. Classify incident type and severity</li>
-              <li>3. Build evidence timeline if needed</li>
-              <li>4. Add supervisor assessment</li>
-              <li>5. Issue field unit instructions if required</li>
-              <li>6. Lock evidence before closing</li>
-              <li>7. Close incident with final remarks</li>
+            <p className="mb-2 font-medium text-black">📋 Standard Operating Procedure</p>
+            <ul className="text-xs space-y-1 list-decimal list-inside">
+              <li>Review operator notes and tagged cameras</li>
+              <li>Classify incident type and severity</li>
+              <li>Build evidence timeline if needed</li>
+              <li>Add supervisor assessment</li>
+              <li>Issue field unit instructions if required</li>
+              <li>Lock evidence before closing</li>
+              <li>Close incident with final remarks</li>
             </ul>
           </div>
         </div>

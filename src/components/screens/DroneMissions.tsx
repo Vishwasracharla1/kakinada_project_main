@@ -46,11 +46,11 @@ function MissionCard({ mission, videoSource, getStatusColor, getBatteryColor }: 
   }, [videoSource]);
 
   return (
-    <div className="bg-[#1a1f2e] border border-[#2a3441] rounded p-4 hover:border-cyan-400/50 transition-all">
+    <div className="bg-card border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-gray-400 transition-all">
       <div className="grid grid-cols-3 gap-6">
         {/* Left: Video Feed */}
         <div className="col-span-1">
-          <div className="bg-black aspect-video rounded border border-[#2a3441] relative overflow-hidden">
+          <div className="bg-black aspect-video rounded-lg border border-gray-300 relative overflow-hidden">
             <video
               ref={videoRef}
               autoPlay
@@ -58,7 +58,7 @@ function MissionCard({ mission, videoSource, getStatusColor, getBatteryColor }: 
               loop
               className="w-full h-full object-cover"
             />
-            <div className="absolute top-2 left-2 text-xs bg-red-500 text-white px-2 py-1 rounded flex items-center gap-1 z-10">
+            <div className="absolute top-2 left-2 text-xs bg-red-600 text-white px-2 py-1 rounded flex items-center gap-1 z-10">
               <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
               LIVE
             </div>
@@ -72,13 +72,13 @@ function MissionCard({ mission, videoSource, getStatusColor, getBatteryColor }: 
 
           {/* Camera Controls */}
           <div className="mt-2 flex gap-2">
-            <button className="flex-1 px-3 py-2 bg-[#2a3441] text-gray-300 rounded text-xs hover:bg-[#3a4451] transition-colors">
+            <button className="flex-1 px-3 py-2 bg-gray-100 text-black rounded text-xs hover:bg-gray-200 transition-colors">
               RGB
             </button>
-            <button className="flex-1 px-3 py-2 bg-[#2a3441] text-gray-300 rounded text-xs hover:bg-[#3a4451] transition-colors">
+            <button className="flex-1 px-3 py-2 bg-gray-100 text-black rounded text-xs hover:bg-gray-200 transition-colors">
               Zoom
             </button>
-            <button className="flex-1 px-3 py-2 bg-[#2a3441] text-gray-300 rounded text-xs hover:bg-[#3a4451] transition-colors">
+            <button className="flex-1 px-3 py-2 bg-gray-100 text-black rounded text-xs hover:bg-gray-200 transition-colors">
               Thermal
             </button>
           </div>
@@ -87,65 +87,65 @@ function MissionCard({ mission, videoSource, getStatusColor, getBatteryColor }: 
         {/* Middle: Telemetry */}
         <div className="col-span-1 space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-gray-400 text-sm">Mission ID</span>
-            <span className="text-white">{mission.id}</span>
+            <span className="text-sm text-black/60">Mission ID</span>
+            <span className="text-sm text-black">{mission.id}</span>
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-gray-400 text-sm">Status</span>
-            <span className={`text-xs px-2 py-1 rounded ${getStatusColor(mission.status)}`}>
+            <span className="text-sm text-black/60">Status</span>
+            <span className={`text-xs px-2 py-1 rounded-full text-black ${getStatusColor(mission.status)}`}>
               {mission.status}
             </span>
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-gray-400 text-sm flex items-center gap-2">
+            <span className="text-sm text-black/60 flex items-center gap-2">
               <Plane className="w-4 h-4" />
               Drone ID
             </span>
-            <span className="text-cyan-400">{mission.droneId}</span>
+            <span className="text-sm font-medium text-black">{mission.droneId}</span>
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-gray-400 text-sm flex items-center gap-2">
+            <span className="text-sm text-black/60 flex items-center gap-2">
               <Radio className="w-4 h-4" />
               Operator
             </span>
-            <span className="text-white text-xs">{mission.operator}</span>
+            <span className="text-xs text-black">{mission.operator}</span>
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-gray-400 text-sm flex items-center gap-2">
+            <span className="text-sm text-black/60 flex items-center gap-2">
               <Eye className="w-4 h-4" />
               Mission
             </span>
-            <span className="text-white text-xs">{mission.mission}</span>
+            <span className="text-xs text-black">{mission.mission}</span>
           </div>
 
-          <div className="border-t border-[#2a3441] pt-3 mt-3 space-y-2">
+          <div className="border-t border-gray-200 pt-3 mt-3 space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-gray-400 text-sm flex items-center gap-2">
+              <span className="text-sm text-black/60 flex items-center gap-2">
                 <Gauge className="w-4 h-4" />
                 Altitude
               </span>
-              <span className="text-cyan-400">{mission.altitude}m</span>
+              <span className="text-sm font-medium text-black">{mission.altitude}m</span>
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-gray-400 text-sm flex items-center gap-2">
+              <span className="text-sm text-black/60 flex items-center gap-2">
                 <Wind className="w-4 h-4" />
                 Speed
               </span>
-              <span className="text-white">{mission.speed} km/h</span>
+              <span className="text-sm text-black">{mission.speed} km/h</span>
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-gray-400 text-sm">Heading</span>
-              <span className="text-white">{mission.heading}</span>
+              <span className="text-sm text-black/60">Heading</span>
+              <span className="text-sm text-black">{mission.heading}</span>
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="text-gray-400 text-sm">Battery</span>
+              <span className="text-sm text-black/60">Battery</span>
               <span className={getBatteryColor(mission.battery)}>{mission.battery}%</span>
             </div>
           </div>
@@ -154,7 +154,7 @@ function MissionCard({ mission, videoSource, getStatusColor, getBatteryColor }: 
         {/* Right: Map & AI Detections */}
         <div className="col-span-1 space-y-3">
           {/* GPS Map */}
-          <div className="bg-black aspect-square rounded border border-[#2a3441] relative overflow-hidden">
+          <div className="bg-black aspect-square rounded-lg border border-gray-300 relative overflow-hidden">
             <DroneMap 
               lat={mission.gps.lat} 
               lng={mission.gps.lng} 
@@ -167,15 +167,15 @@ function MissionCard({ mission, videoSource, getStatusColor, getBatteryColor }: 
           </div>
 
           {/* AI Detections */}
-          <div className="bg-[#0d1117] border border-yellow-400/30 rounded p-3">
+          <div className="bg-gray-50 border border-gray-200 rounded p-3">
             <div className="flex items-center gap-2 mb-2">
-              <Thermometer className="w-4 h-4 text-yellow-400" />
-              <span className="text-white text-sm">AI Detections</span>
+              <Thermometer className="w-4 h-4 text-black/70" />
+              <span className="text-sm font-medium text-black">AI Detections</span>
             </div>
             <div className="space-y-1">
               {mission.detections.map((detection, idx) => (
-                <div key={idx} className="text-xs text-yellow-400 bg-yellow-400/10 px-2 py-1 rounded">
-                  • {detection}
+                <div key={idx} className="text-xs text-black bg-white border border-gray-200 px-2 py-1 rounded">
+                  {detection}
                 </div>
               ))}
             </div>
@@ -183,10 +183,10 @@ function MissionCard({ mission, videoSource, getStatusColor, getBatteryColor }: 
 
           {/* Mission Controls */}
           <div className="space-y-2">
-            <button className="w-full px-3 py-2 bg-yellow-500/20 border border-yellow-400 text-yellow-400 rounded hover:bg-yellow-500/30 transition-colors text-sm">
+            <button className="w-full px-3 py-2 bg-white text-black border border-gray-300 rounded hover:bg-gray-100 transition-colors text-sm">
               Return to Home
             </button>
-            <button className="w-full px-3 py-2 bg-cyan-500/20 border border-cyan-400 text-cyan-400 rounded hover:bg-cyan-500/30 transition-colors text-sm">
+            <button className="w-full px-3 py-2 bg-black text-white rounded hover:bg-gray-900 transition-colors text-sm">
               Capture Snapshot
             </button>
           </div>
@@ -247,28 +247,28 @@ const mockMissions = [
 export function DroneMissions({ onNavigate }: DroneMissionsProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Active': return 'text-green-400 bg-green-400/10';
-      case 'RTH': return 'text-yellow-400 bg-yellow-400/10';
-      case 'Completed': return 'text-blue-400 bg-blue-400/10';
-      default: return 'text-gray-400 bg-gray-400/10';
+      case 'Active': return 'bg-green-100 border border-green-200';
+      case 'RTH': return 'bg-yellow-100 border border-yellow-200';
+      case 'Completed': return 'bg-blue-100 border border-blue-200';
+      default: return 'bg-gray-100 border border-gray-200';
     }
   };
 
   const getBatteryColor = (battery: number) => {
-    if (battery > 60) return 'text-green-400';
-    if (battery > 30) return 'text-yellow-400';
-    return 'text-red-400';
+    if (battery > 60) return 'text-green-700';
+    if (battery > 30) return 'text-amber-700';
+    return 'text-red-700';
   };
 
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-4">
         <div>
-          <h2 className="text-white text-xl">Live Drone Missions</h2>
-          <p className="text-gray-400 text-sm mt-1">{mockMissions.length} active mission(s)</p>
+          <h2 className="text-xl font-semibold text-black">Live Drone Missions</h2>
+          <p className="text-sm text-black/60 mt-1">{mockMissions.length} active mission(s)</p>
         </div>
-        <button className="px-4 py-2 bg-cyan-500 text-black rounded hover:bg-cyan-400 transition-colors">
+        <button className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-900 transition-colors text-sm">
           Launch New Mission
         </button>
       </div>
