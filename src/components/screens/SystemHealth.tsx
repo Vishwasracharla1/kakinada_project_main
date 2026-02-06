@@ -32,18 +32,24 @@ const systemMetrics = {
 export function SystemHealth() {
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Online': return 'text-green-400 bg-green-400/10';
-      case 'Warning': return 'text-yellow-400 bg-yellow-400/10';
-      case 'Critical': return 'text-red-400 bg-red-400/10';
-      case 'Offline': return 'text-gray-400 bg-gray-400/10';
-      default: return 'text-gray-400 bg-gray-400/10';
+      case 'Online': return 'text-black bg-green-100 border border-green-200';
+      case 'Warning': return 'text-black bg-yellow-100 border border-yellow-200';
+      case 'Critical': return 'text-black bg-red-100 border border-red-200';
+      case 'Offline': return 'text-black bg-gray-100 border border-gray-200';
+      default: return 'text-black bg-gray-100 border border-gray-200';
     }
   };
 
   const getMetricColor = (value: number) => {
-    if (value < 70) return 'text-green-400';
-    if (value < 85) return 'text-yellow-400';
-    return 'text-red-400';
+    if (value < 70) return 'text-green-700';
+    if (value < 85) return 'text-amber-700';
+    return 'text-red-700';
+  };
+
+  const getProgressBarColor = (value: number) => {
+    if (value < 70) return 'bg-green-500';
+    if (value < 85) return 'bg-amber-500';
+    return 'bg-red-500';
   };
 
   const onlineServers = systemMetrics.servers.filter(s => s.status === 'Online').length;
@@ -55,84 +61,84 @@ export function SystemHealth() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-white text-xl">System Health Monitor</h2>
-          <p className="text-gray-400 text-sm mt-1">Real-time system performance and health metrics</p>
+          <h2 className="text-black text-xl font-semibold">System Health Monitor</h2>
+          <p className="text-black/60 text-sm mt-1">Real-time system performance and health metrics</p>
         </div>
-        <div className="flex items-center gap-2 px-4 py-2 bg-green-400/10 border border-green-400 rounded">
-          <CheckCircle className="w-5 h-5 text-green-400" />
-          <span className="text-green-400">All Systems Operational</span>
+        <div className="flex items-center gap-2 px-4 py-2 bg-green-100 border border-green-200 rounded-lg">
+          <CheckCircle className="w-5 h-5 text-green-700" />
+          <span className="text-green-700 font-medium">All Systems Operational</span>
         </div>
       </div>
 
       {/* Overview Stats */}
       <div className="grid grid-cols-5 gap-4">
-        <div className="bg-[#1a1f2e] border border-green-400/30 p-4 rounded">
-          <div className="text-gray-400 text-xs uppercase tracking-wider mb-1">Servers Online</div>
-          <div className="text-green-400 text-2xl">{onlineServers}/{systemMetrics.servers.length}</div>
+        <div className="bg-card border border-gray-200 p-4 rounded-xl shadow-sm">
+          <div className="text-black/60 text-xs uppercase tracking-wider mb-1">Servers Online</div>
+          <div className="text-black text-2xl font-semibold">{onlineServers}/{systemMetrics.servers.length}</div>
         </div>
-        <div className="bg-[#1a1f2e] border border-green-400/30 p-4 rounded">
-          <div className="text-gray-400 text-xs uppercase tracking-wider mb-1">Databases</div>
-          <div className="text-green-400 text-2xl">{systemMetrics.databases.length}</div>
+        <div className="bg-card border border-gray-200 p-4 rounded-xl shadow-sm">
+          <div className="text-black/60 text-xs uppercase tracking-wider mb-1">Databases</div>
+          <div className="text-black text-2xl font-semibold">{systemMetrics.databases.length}</div>
         </div>
-        <div className="bg-[#1a1f2e] border border-green-400/30 p-4 rounded">
-          <div className="text-gray-400 text-xs uppercase tracking-wider mb-1">Network Links</div>
-          <div className="text-green-400 text-2xl">{systemMetrics.network.length}</div>
+        <div className="bg-card border border-gray-200 p-4 rounded-xl shadow-sm">
+          <div className="text-black/60 text-xs uppercase tracking-wider mb-1">Network Links</div>
+          <div className="text-black text-2xl font-semibold">{systemMetrics.network.length}</div>
         </div>
-        <div className="bg-[#1a1f2e] border border-green-400/30 p-4 rounded">
-          <div className="text-gray-400 text-xs uppercase tracking-wider mb-1">AI Services</div>
-          <div className="text-green-400 text-2xl">{onlineServices}</div>
+        <div className="bg-card border border-gray-200 p-4 rounded-xl shadow-sm">
+          <div className="text-black/60 text-xs uppercase tracking-wider mb-1">AI Services</div>
+          <div className="text-black text-2xl font-semibold">{onlineServices}</div>
         </div>
-        <div className="bg-[#1a1f2e] border border-yellow-400/30 p-4 rounded">
-          <div className="text-gray-400 text-xs uppercase tracking-wider mb-1">Warnings</div>
-          <div className="text-yellow-400 text-2xl">{warningServers}</div>
+        <div className="bg-card border border-gray-200 p-4 rounded-xl shadow-sm">
+          <div className="text-black/60 text-xs uppercase tracking-wider mb-1">Warnings</div>
+          <div className="text-red-700 text-2xl font-semibold">{warningServers}</div>
         </div>
       </div>
 
       {/* Servers */}
-      <div className="bg-[#1a1f2e] border border-[#2a3441] rounded p-4">
+      <div className="bg-card border border-gray-200 rounded-xl p-4 shadow-sm">
         <div className="flex items-center gap-2 mb-4">
-          <Server className="w-5 h-5 text-cyan-400" />
-          <h3 className="text-white">Server Infrastructure</h3>
+          <Server className="w-5 h-5 text-black/70" />
+          <h3 className="text-black font-semibold">Server Infrastructure</h3>
         </div>
         <div className="space-y-3">
           {systemMetrics.servers.map((server, idx) => (
-            <div key={idx} className="bg-[#0d1117] border border-[#2a3441] rounded p-3">
-              <div className="flex items-center justify-between mb-2">
+            <div key={idx} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
-                  <span className="text-white">{server.name}</span>
-                  <span className={`text-xs px-2 py-1 rounded ${getStatusColor(server.status)}`}>
+                  <span className="text-black font-medium">{server.name}</span>
+                  <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(server.status)}`}>
                     {server.status}
                   </span>
-                  <span className="text-gray-400 text-xs">{server.location}</span>
+                  <span className="text-black/60 text-xs">{server.location}</span>
                 </div>
-                <span className="text-gray-400 text-xs">Uptime: {server.uptime}</span>
+                <span className="text-black/60 text-xs">Uptime: {server.uptime}</span>
               </div>
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <div className="flex items-center justify-between text-xs mb-1">
-                    <span className="text-gray-400">CPU</span>
-                    <span className={getMetricColor(server.cpu)}>{server.cpu}%</span>
+                    <span className="text-black/60">CPU</span>
+                    <span className={`font-medium ${getMetricColor(server.cpu)}`}>{server.cpu}%</span>
                   </div>
-                  <div className="w-full bg-gray-700 h-1.5 rounded">
-                    <div className={`h-1.5 rounded ${getMetricColor(server.cpu) === 'text-green-400' ? 'bg-green-400' : getMetricColor(server.cpu) === 'text-yellow-400' ? 'bg-yellow-400' : 'bg-red-400'}`} style={{ width: `${server.cpu}%` }} />
-                  </div>
-                </div>
-                <div>
-                  <div className="flex items-center justify-between text-xs mb-1">
-                    <span className="text-gray-400">Memory</span>
-                    <span className={getMetricColor(server.memory)}>{server.memory}%</span>
-                  </div>
-                  <div className="w-full bg-gray-700 h-1.5 rounded">
-                    <div className={`h-1.5 rounded ${getMetricColor(server.memory) === 'text-green-400' ? 'bg-green-400' : getMetricColor(server.memory) === 'text-yellow-400' ? 'bg-yellow-400' : 'bg-red-400'}`} style={{ width: `${server.memory}%` }} />
+                  <div className="w-full bg-gray-200 h-2 rounded-full">
+                    <div className={`h-2 rounded-full ${getProgressBarColor(server.cpu)}`} style={{ width: `${server.cpu}%` }} />
                   </div>
                 </div>
                 <div>
                   <div className="flex items-center justify-between text-xs mb-1">
-                    <span className="text-gray-400">Disk</span>
-                    <span className={getMetricColor(server.disk)}>{server.disk}%</span>
+                    <span className="text-black/60">Memory</span>
+                    <span className={`font-medium ${getMetricColor(server.memory)}`}>{server.memory}%</span>
                   </div>
-                  <div className="w-full bg-gray-700 h-1.5 rounded">
-                    <div className={`h-1.5 rounded ${getMetricColor(server.disk) === 'text-green-400' ? 'bg-green-400' : getMetricColor(server.disk) === 'text-yellow-400' ? 'bg-yellow-400' : 'bg-red-400'}`} style={{ width: `${server.disk}%` }} />
+                  <div className="w-full bg-gray-200 h-2 rounded-full">
+                    <div className={`h-2 rounded-full ${getProgressBarColor(server.memory)}`} style={{ width: `${server.memory}%` }} />
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-center justify-between text-xs mb-1">
+                    <span className="text-black/60">Disk</span>
+                    <span className={`font-medium ${getMetricColor(server.disk)}`}>{server.disk}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 h-2 rounded-full">
+                    <div className={`h-2 rounded-full ${getProgressBarColor(server.disk)}`} style={{ width: `${server.disk}%` }} />
                   </div>
                 </div>
               </div>
@@ -144,25 +150,25 @@ export function SystemHealth() {
       {/* Databases & Network */}
       <div className="grid grid-cols-2 gap-4">
         {/* Databases */}
-        <div className="bg-[#1a1f2e] border border-[#2a3441] rounded p-4">
+        <div className="bg-card border border-gray-200 rounded-xl p-4 shadow-sm">
           <div className="flex items-center gap-2 mb-4">
-            <Database className="w-5 h-5 text-cyan-400" />
-            <h3 className="text-white">Databases</h3>
+            <Database className="w-5 h-5 text-black/70" />
+            <h3 className="text-black font-semibold">Databases</h3>
           </div>
           <div className="space-y-3">
             {systemMetrics.databases.map((db, idx) => (
-              <div key={idx} className="bg-[#0d1117] border border-[#2a3441] rounded p-3">
+              <div key={idx} className="bg-white border border-gray-200 rounded-lg p-3 hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-white">{db.name}</span>
-                  <span className={`text-xs px-2 py-1 rounded ${getStatusColor(db.status)}`}>
+                  <span className="text-black font-medium">{db.name}</span>
+                  <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(db.status)}`}>
                     {db.status}
                   </span>
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className="text-gray-400">Connections: <span className="text-white">{db.connections}</span></div>
-                  <div className="text-gray-400">Queries: <span className="text-white">{db.queries}</span></div>
-                  <div className="text-gray-400">Size: <span className="text-white">{db.size}</span></div>
-                  <div className="text-gray-400">Replication: <span className="text-green-400">{db.replication}</span></div>
+                  <div className="text-black/60">Connections: <span className="text-black font-medium">{db.connections}</span></div>
+                  <div className="text-black/60">Queries: <span className="text-black font-medium">{db.queries}</span></div>
+                  <div className="text-black/60">Size: <span className="text-black font-medium">{db.size}</span></div>
+                  <div className="text-black/60">Replication: <span className="text-green-700 font-medium">{db.replication}</span></div>
                 </div>
               </div>
             ))}
@@ -170,25 +176,25 @@ export function SystemHealth() {
         </div>
 
         {/* Network */}
-        <div className="bg-[#1a1f2e] border border-[#2a3441] rounded p-4">
+        <div className="bg-card border border-gray-200 rounded-xl p-4 shadow-sm">
           <div className="flex items-center gap-2 mb-4">
-            <Wifi className="w-5 h-5 text-cyan-400" />
-            <h3 className="text-white">Network Status</h3>
+            <Wifi className="w-5 h-5 text-black/70" />
+            <h3 className="text-black font-semibold">Network Status</h3>
           </div>
           <div className="space-y-3">
             {systemMetrics.network.map((net, idx) => (
-              <div key={idx} className="bg-[#0d1117] border border-[#2a3441] rounded p-3">
+              <div key={idx} className="bg-white border border-gray-200 rounded-lg p-3 hover:shadow-md transition-shadow">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-white">{net.name}</span>
-                  <span className={`text-xs px-2 py-1 rounded ${getStatusColor(net.status)}`}>
+                  <span className="text-black font-medium">{net.name}</span>
+                  <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(net.status)}`}>
                     {net.status}
                   </span>
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className="text-gray-400">Bandwidth: <span className="text-white">{net.bandwidth}</span></div>
-                  <div className="text-gray-400">Usage: <span className={getMetricColor(net.usage)}>{net.usage}%</span></div>
-                  <div className="text-gray-400">Latency: <span className="text-green-400">{net.latency}</span></div>
-                  <div className="text-gray-400">Packets: <span className="text-green-400">{net.packets}</span></div>
+                  <div className="text-black/60">Bandwidth: <span className="text-black font-medium">{net.bandwidth}</span></div>
+                  <div className="text-black/60">Usage: <span className={`font-medium ${getMetricColor(net.usage)}`}>{net.usage}%</span></div>
+                  <div className="text-black/60">Latency: <span className="text-green-700 font-medium">{net.latency}</span></div>
+                  <div className="text-black/60">Packets: <span className="text-green-700 font-medium">{net.packets}</span></div>
                 </div>
               </div>
             ))}
@@ -197,24 +203,24 @@ export function SystemHealth() {
       </div>
 
       {/* AI Services */}
-      <div className="bg-[#1a1f2e] border border-[#2a3441] rounded p-4">
+      <div className="bg-card border border-gray-200 rounded-xl p-4 shadow-sm">
         <div className="flex items-center gap-2 mb-4">
-          <Cpu className="w-5 h-5 text-cyan-400" />
-          <h3 className="text-white">AI Services</h3>
+          <Cpu className="w-5 h-5 text-black/70" />
+          <h3 className="text-black font-semibold">AI Services</h3>
         </div>
         <div className="grid grid-cols-2 gap-3">
           {systemMetrics.services.map((service, idx) => (
-            <div key={idx} className="bg-[#0d1117] border border-[#2a3441] rounded p-3">
+            <div key={idx} className="bg-white border border-gray-200 rounded-lg p-3 hover:shadow-md transition-shadow">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-white">{service.name}</span>
-                <span className={`text-xs px-2 py-1 rounded ${getStatusColor(service.status)}`}>
+                <span className="text-black font-medium">{service.name}</span>
+                <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(service.status)}`}>
                   {service.status}
                 </span>
               </div>
               <div className="grid grid-cols-3 gap-2 text-xs">
-                <div className="text-gray-400">Load: <span className={getMetricColor(service.load)}>{service.load}%</span></div>
-                <div className="text-gray-400">Requests: <span className="text-white">{service.requests}</span></div>
-                <div className="text-gray-400">Errors: <span className="text-green-400">{service.errors}</span></div>
+                <div className="text-black/60">Load: <span className={`font-medium ${getMetricColor(service.load)}`}>{service.load}%</span></div>
+                <div className="text-black/60">Requests: <span className="text-black font-medium">{service.requests}</span></div>
+                <div className="text-black/60">Errors: <span className="text-green-700 font-medium">{service.errors}</span></div>
               </div>
             </div>
           ))}

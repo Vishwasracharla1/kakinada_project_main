@@ -122,7 +122,7 @@ export function EvidenceConsole({ onBack, userRole }: EvidenceConsoleProps) {
                           </div>
                           <div
                             className={`h-8 rounded px-3 flex items-center justify-between ${
-                              clip.status === 'added' ? 'bg-gray-800 text-white' : 'bg-gray-100 text-black border border-gray-300'
+                              clip.status === 'added' ? 'bg-gray-200 text-white' : 'bg-gray-100 text-black border border-gray-300'
                             }`}
                             style={{ width: '200px' }}
                           >
