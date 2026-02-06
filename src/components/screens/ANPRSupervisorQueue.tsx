@@ -85,11 +85,11 @@ export function ANPRSupervisorQueue({ onBack, supervisorName = 'Administrator' }
   const getSeverityBadge = (severity: string) => {
     switch (severity) {
       case 'critical':
-        return 'bg-red-500/20 text-red-400 border-red-500/50';
+        return 'bg-red-100 border border-red-200';
       case 'high':
-        return 'bg-orange-500/20 text-orange-400 border-orange-500/50';
+        return 'bg-orange-100 border border-orange-200';
       default:
-        return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50';
+        return 'bg-yellow-100 border border-yellow-200';
     }
   };
 
@@ -157,31 +157,31 @@ export function ANPRSupervisorQueue({ onBack, supervisorName = 'Administrator' }
         <div>
           <button
             onClick={onBack}
-            className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-3"
+            className="flex items-center gap-2 text-black/60 hover:text-black transition-colors mb-3"
           >
             <ArrowLeft className="w-5 h-5" />
             Back to ANPR List
           </button>
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
-              <Shield className="w-6 h-6 text-red-400" />
+            <div className="p-3 bg-red-100 border border-red-200 rounded-lg">
+              <Shield className="w-6 h-6 text-black/70" />
             </div>
             <div>
-              <h1 className="text-white text-2xl">Supervisor Escalation Queue</h1>
-              <p className="text-gray-400 text-sm">
+              <h1 className="text-2xl font-semibold text-black">Supervisor Escalation Queue</h1>
+              <p className="text-sm text-black/60">
                 Critical & high-severity violations requiring immediate supervisor decision
               </p>
             </div>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <div className="px-4 py-2 bg-red-500/20 border border-red-500/50 rounded-lg">
-            <p className="text-xs text-gray-400">Critical Pending</p>
-            <p className="text-red-400 text-xl">2</p>
+          <div className="px-4 py-2 bg-red-100 border border-red-200 rounded-lg text-right">
+            <p className="text-xs text-black/60">Critical Pending</p>
+            <p className="text-xl font-semibold text-black">2</p>
           </div>
-          <div className="px-4 py-2 bg-orange-500/20 border border-orange-500/50 rounded-lg">
-            <p className="text-xs text-gray-400">High Priority</p>
-            <p className="text-orange-400 text-xl">2</p>
+          <div className="px-4 py-2 bg-orange-100 border border-orange-200 rounded-lg text-right">
+            <p className="text-xs text-black/60">High Priority</p>
+            <p className="text-xl font-semibold text-black">2</p>
           </div>
         </div>
       </div>
@@ -190,33 +190,35 @@ export function ANPRSupervisorQueue({ onBack, supervisorName = 'Administrator' }
         {escalatedViolations.map((violation) => (
           <div
             key={violation.id}
-            className="bg-[#0d1117] border border-[#1f2937] rounded-xl overflow-hidden transition-all hover:border-[#2a3441]"
+            className="bg-card border border-border rounded-xl overflow-hidden transition-all hover:shadow-md"
           >
             <div
-              className={`p-4 border-b border-[#1f2937] ${
-                violation.severity === 'critical' ? 'bg-gradient-to-r from-red-500/10 to-red-500/5' : 'bg-gradient-to-r from-orange-500/10 to-orange-500/5'
+              className={`p-4 border-b border-border/60 ${
+                violation.severity === 'critical'
+                  ? 'bg-gradient-to-r from-red-50 to-white'
+                  : 'bg-gradient-to-r from-orange-50 to-white'
               }`}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <AlertTriangle
-                    className={`w-6 h-6 ${violation.severity === 'critical' ? 'text-red-400' : 'text-orange-400'}`}
+                    className="w-6 h-6 text-black/70"
                   />
                   <div>
-                    <p className="text-white text-lg">{violation.violation}</p>
-                    <p className="text-xs text-gray-500">Violation ID: {violation.id}</p>
+                    <p className="text-lg font-semibold text-black">{violation.violation}</p>
+                    <p className="text-xs text-black/50">Violation ID: {violation.id}</p>
                   </div>
                 </div>
-                <div className={`px-4 py-2 border-2 rounded-lg ${getSeverityBadge(violation.severity)}`}>
+                <div className={`px-4 py-2 rounded-lg text-xs font-medium uppercase tracking-wider text-black ${getSeverityBadge(violation.severity)}`}>
                   <p className="text-xs uppercase tracking-wider">{violation.severity}</p>
                 </div>
               </div>
             </div>
 
             <div className="grid grid-cols-3 gap-4 p-4">
-                <div className="space-y-3">
-                <p className="text-xs text-gray-500 uppercase tracking-wider">Vehicle Snapshot</p>
-                <div className="h-48 bg-[#050816] border border-[#1f2937] rounded-lg overflow-hidden relative">
+              <div className="space-y-3">
+                <p className="text-xs text-black/50 uppercase tracking-wider">Vehicle Snapshot</p>
+                <div className="h-48 bg-[#111827] border border-border/60 rounded-lg overflow-hidden relative">
                   {(violation as any).image ? (
                     // Show ANPR image
                     <img 
@@ -237,8 +239,8 @@ export function ANPRSupervisorQueue({ onBack, supervisorName = 'Administrator' }
                           <ImageOff className="w-10 h-10 text-gray-600 mx-auto" />
                           <AlertCircle className="w-4 h-4 text-orange-400 absolute -top-0.5 -right-0.5" fill="currentColor" />
                         </div>
-                        <p className="text-gray-400 text-xs font-medium mb-1">Snapshot Unavailable</p>
-                        <p className="text-gray-600 text-[10px] mb-3">Image not available at this time</p>
+                        <p className="text-black/70 text-xs font-medium mb-1">Snapshot Unavailable</p>
+                        <p className="text-black/50 text-[10px] mb-3">Image not available at this time</p>
                         <p className="text-white font-mono text-lg tracking-wider">{violation.plate}</p>
                       </div>
                     </div>
@@ -246,91 +248,91 @@ export function ANPRSupervisorQueue({ onBack, supervisorName = 'Administrator' }
                 </div>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-500">AI Confidence</span>
-                    <span className="text-cyan-400 font-semibold">{violation.confidence}%</span>
+                    <span className="text-black/60">AI Confidence</span>
+                    <span className="font-semibold text-black">{violation.confidence}%</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Detection Time</span>
-                    <span className="text-white font-mono">{violation.time}</span>
+                    <span className="text-black/60">Detection Time</span>
+                    <span className="font-mono text-black">{violation.time}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Location</span>
-                    <span className="text-white">{violation.location}</span>
+                    <span className="text-black/60">Location</span>
+                    <span className="text-black">{violation.location}</span>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-3">
-                <p className="text-xs text-gray-500 uppercase tracking-wider">Escalation Information</p>
-                <div className="bg-[#0a0e1a] border border-[#1f2937] rounded-lg p-4 space-y-3">
+                <p className="text-xs text-black/50 uppercase tracking-wider">Escalation Information</p>
+                <div className="bg-white border border-border/60 rounded-lg p-4 space-y-3">
                   <div>
-                    <p className="text-xs text-gray-500">Escalated By</p>
-                    <p className="text-white">{violation.escalatedBy}</p>
+                    <p className="text-xs text-black/50">Escalated By</p>
+                    <p className="text-sm text-black">{violation.escalatedBy}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Escalation Time</p>
-                    <p className="text-white font-mono">{violation.escalatedTime}</p>
+                    <p className="text-xs text-black/50">Escalation Time</p>
+                    <p className="text-sm font-mono text-black">{violation.escalatedTime}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Escalation Reason</p>
-                    <p className="text-orange-400">{violation.reason}</p>
+                    <p className="text-xs text-black/50">Escalation Reason</p>
+                    <p className="text-sm text-black">{violation.reason}</p>
                   </div>
-                  <div className="pt-3 border-t border-[#1f2937]">
-                    <p className="text-xs text-gray-500 mb-2">Operator Notes</p>
-                    <p className="text-sm text-gray-300 italic">"{violation.operatorNotes}"</p>
+                  <div className="pt-3 border-t border-border/60">
+                    <p className="text-xs text-black/50 mb-2">Operator Notes</p>
+                    <p className="text-sm text-black/70 italic">"{violation.operatorNotes}"</p>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-3">
-                <p className="text-xs text-gray-500 uppercase tracking-wider">Supervisor Decision</p>
+                <p className="text-xs text-black/50 uppercase tracking-wider">Supervisor Decision</p>
                 {decisions[violation.id] ? (
                   // Show decision result
-                  <div className={`border border-[#1f2937] rounded-lg p-4 space-y-3 ${
+                  <div className={`border border-border/60 rounded-lg p-4 space-y-3 ${
                     decisions[violation.id].action === 'approved' 
-                      ? 'bg-green-500/5 border-green-500/30' 
-                      : 'bg-red-500/5 border-red-500/30'
+                      ? 'bg-emerald-50 border-emerald-200' 
+                      : 'bg-red-50 border-red-200'
                   }`}>
                     <div className="flex items-center gap-2 mb-3">
                       {decisions[violation.id].action === 'approved' ? (
-                        <CheckCircle className="w-5 h-5 text-green-400" />
+                        <CheckCircle className="w-5 h-5 text-black/70" />
                       ) : (
-                        <XCircle className="w-5 h-5 text-red-400" />
+                        <XCircle className="w-5 h-5 text-black/70" />
                       )}
                       <p className={`text-sm font-semibold ${
-                        decisions[violation.id].action === 'approved' ? 'text-green-400' : 'text-red-400'
+                        decisions[violation.id].action === 'approved' ? 'text-black' : 'text-black'
                       }`}>
                         {decisions[violation.id].action === 'approved' ? 'APPROVED' : 'REJECTED'}
                       </p>
                     </div>
                     <div className="space-y-2 text-sm">
                       <div>
-                        <p className="text-xs text-gray-500">Processed By</p>
-                        <p className="text-white">{decisions[violation.id].processedBy}</p>
+                        <p className="text-xs text-black/50">Processed By</p>
+                        <p className="text-sm text-black">{decisions[violation.id].processedBy}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500">Decision</p>
-                        <p className="text-white">{decisions[violation.id].decision}</p>
+                        <p className="text-xs text-black/50">Decision</p>
+                        <p className="text-sm text-black">{decisions[violation.id].decision}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500">Remarks</p>
-                        <p className="text-gray-300">{decisions[violation.id].remarks}</p>
+                        <p className="text-xs text-black/50">Remarks</p>
+                        <p className="text-sm text-black/70">{decisions[violation.id].remarks}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500">Processed At</p>
-                        <p className="text-white font-mono">{decisions[violation.id].processedAt}</p>
+                        <p className="text-xs text-black/50">Processed At</p>
+                        <p className="text-sm font-mono text-black">{decisions[violation.id].processedAt}</p>
                       </div>
                     </div>
                   </div>
                 ) : (
                   // Show decision form
-                  <div className="bg-gradient-to-br from-green-500/5 to-blue-500/5 border border-[#1f2937] rounded-lg p-4 space-y-3">
+                  <div className="bg-white border border-border/60 rounded-lg p-4 space-y-3">
                     <div>
-                      <label className="text-xs text-gray-500 block mb-2">Decision</label>
+                      <label className="text-xs text-black/50 block mb-2">Decision</label>
                       <select 
                         value={formData[violation.id]?.decision || 'Select Action'}
                         onChange={(e) => handleDecisionChange(violation.id, e.target.value)}
-                        className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#1f2937] rounded-lg text-white text-sm focus:border-cyan-500 focus:outline-none"
+                        className="w-full px-3 py-2 bg-white border border-border/60 rounded-lg text-sm text-black focus:border-blue-400 focus:outline-none"
                       >
                         <option>Select Action</option>
                         <option>Approve Violation</option>
@@ -340,26 +342,26 @@ export function ANPRSupervisorQueue({ onBack, supervisorName = 'Administrator' }
                       </select>
                     </div>
                     <div>
-                      <label className="text-xs text-gray-500 block mb-2">Supervisor Remarks (Mandatory)</label>
+                      <label className="text-xs text-black/50 block mb-2">Supervisor Remarks (Mandatory)</label>
                       <textarea
                         value={formData[violation.id]?.remarks || ''}
                         onChange={(e) => handleRemarksChange(violation.id, e.target.value)}
-                        className="w-full px-3 py-2 bg-[#0a0e1a] border border-[#1f2937] rounded-lg text-white text-sm resize-none focus:border-cyan-500 focus:outline-none"
+                        className="w-full px-3 py-2 bg-white border border-border/60 rounded-lg text-sm text-black resize-none focus:border-blue-400 focus:outline-none"
                         rows={4}
                         placeholder="Add your decision rationale and any additional observations..."
                       />
                     </div>
-                    <div className="pt-3 border-t border-[#1f2937] space-y-2">
+                    <div className="pt-3 border-t border-border/60 space-y-2">
                       <button 
                         onClick={() => handleApprove(violation.id)}
-                        className="w-full py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center justify-center gap-2 transition-colors"
+                        className="w-full py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 flex items-center justify-center gap-2 transition-colors"
                       >
                         <CheckCircle className="w-4 h-4" />
                         Approve & Process
                       </button>
                       <button 
                         onClick={() => handleReject(violation.id)}
-                        className="w-full py-2 bg-red-500/20 text-red-400 border border-red-500/50 rounded-lg hover:bg-red-500/30 flex items-center justify-center gap-2 transition-colors"
+                        className="w-full py-2 bg-white text-black border border-red-300 rounded-lg hover:bg-red-50 flex items-center justify-center gap-2 transition-colors"
                       >
                         <XCircle className="w-4 h-4" />
                         Reject Violation
@@ -370,14 +372,14 @@ export function ANPRSupervisorQueue({ onBack, supervisorName = 'Administrator' }
               </div>
             </div>
 
-            <div className="px-6 py-3 bg-[#0a0e1a] border-t border-[#1f2937] flex items-center justify-between text-xs text-gray-500">
+            <div className="px-6 py-3 bg-white border-t border-border/60 flex items-center justify-between text-xs text-black/60">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4" />
                   <span>Pending for: {Math.floor((Date.now() - new Date().setHours(9, 40, 0)) / 60000)} minutes</span>
                 </div>
               </div>
-              <button className="text-cyan-400 hover:text-cyan-300">View Full Vehicle History →</button>
+              <button className="font-medium text-black hover:underline">View Full Vehicle History →</button>
             </div>
           </div>
         ))}
@@ -385,9 +387,9 @@ export function ANPRSupervisorQueue({ onBack, supervisorName = 'Administrator' }
 
       {escalatedViolations.length === 0 && (
         <div className="text-center py-16">
-          <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />
-          <p className="text-white text-lg">No Escalated Violations</p>
-          <p className="text-gray-500 text-sm mt-2">All critical violations have been processed</p>
+          <CheckCircle className="w-16 h-16 text-black/60 mx-auto mb-4" />
+          <p className="text-lg font-semibold text-black">No Escalated Violations</p>
+          <p className="text-sm text-black/60 mt-2">All critical violations have been processed</p>
         </div>
       )}
     </div>

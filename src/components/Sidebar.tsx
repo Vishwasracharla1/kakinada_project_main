@@ -1,29 +1,28 @@
-import { 
-  LayoutDashboard, 
-  Camera, 
-  Video, 
-  Car, 
-  AlertTriangle, 
-  FileText, 
-  AlertCircle, 
-  Cpu, 
-  FolderOpen, 
-  GitBranch, 
-  BarChart3, 
+import {
+  LayoutDashboard,
+  Camera,
+  Video,
+  Car,
+  AlertTriangle,
+  FileText,
+  AlertCircle,
+
+  FolderOpen,
+  GitBranch,
+  BarChart3,
   Target,
   Grid3x3,
   CheckCircle,
   Plane,
   Radio,
-  Eye,
-  TrendingUp,
+
   Users,
   Activity,
   Sun,
   Moon
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import {  Clock } from 'lucide-react';
+import { Clock } from 'lucide-react';
 
 import apPoliceLogo from "../assets/ap-police-logo.png";
 
@@ -48,8 +47,9 @@ interface NavSection {
 export function Sidebar({ activeScreen, onNavigate, userRole }: SidebarProps) {
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     const saved = localStorage.getItem('kkn_theme');
-    return saved === 'light' ? 'light' : 'dark';
+    return saved === 'dark' ? 'dark' : 'light';
   });
+  const isLightTheme = theme === 'light';
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -63,14 +63,14 @@ export function Sidebar({ activeScreen, onNavigate, userRole }: SidebarProps) {
         { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, roles: ['operator', 'supervisor', 'admin'] },
         { id: 'analytics-home', label: 'Analytics Dashboard', icon: BarChart3, roles: ['operator', 'supervisor', 'admin'] },
       ]
-      
+
     },
     {
       title: 'Surveillance Intelligence',
       items: [
         { id: 'surveillance-grid', label: 'Live Camera Grid', icon: Camera, roles: ['operator', 'supervisor', 'admin'] },
         { id: 'cross-camera-tracking', label: 'Multi-Camera Tracking', icon: Target, roles: ['operator', 'supervisor', 'admin'] },
-        { id: 'multi-grid-viewer', label: 'Multi-Grid Viewer', icon: Grid3x3, roles: ['operator', 'supervisor', 'admin'] },
+        // { id: 'multi-grid-viewer', label: 'Multi-Grid Viewer', icon: Grid3x3, roles: ['operator', 'supervisor', 'admin'] },
       ]
     },
     {
@@ -104,7 +104,7 @@ export function Sidebar({ activeScreen, onNavigate, userRole }: SidebarProps) {
         { id: 'drone-alerts', label: 'Drone Alerts', icon: AlertTriangle, roles: ['operator', 'supervisor', 'admin'] },
       ]
     },
-   
+
     // {
     //   title: 'Detection Engine',
     //   items: [
@@ -148,60 +148,67 @@ export function Sidebar({ activeScreen, onNavigate, userRole }: SidebarProps) {
     .filter(section => section.items.length > 0);
 
   const getRoleTitle = () => {
-    switch(userRole) {
+    switch (userRole) {
       case 'operator': return 'Control Room Operator';
       case 'supervisor': return 'Supervisor';
       case 'admin': return 'System Administrator';
     }
   };
-   const [currentTime, setCurrentTime] = useState(new Date());
-   useEffect(() => {
+  const [currentTime, setCurrentTime] = useState(new Date());
+  useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
 
-  return (
-    <div className="w-64 bg-[#0d1117] border-r border-[#1f2937] flex flex-col">
-      <div className="p-6 border-b border-[#1f2937]">
-        
-        <div className="flex items-center gap-2">
-  <img 
-    src={apPoliceLogo} 
-    alt="AP Police Logo" 
-    className="w-12 h-13 object-contain"
-  />
-  <h1 className="text-cyan-400 tracking-wide">KAKINADA POLICE</h1>
-</div>
+  const sidebarClasses = isLightTheme
+    ? 'w-64 bg-[#f5f7fb] border-r border-border flex flex-col'
+    : 'w-64 bg-card border-r border-border flex flex-col';
 
-        <p className="text-[10px] text-gray-500 mt-1 tracking-widest uppercase">Command & Control</p>
-  
-         <div className="flex items-center gap-2 text-slate-400">
-            <Clock className="w-4 h-4" />
-            <span className="text-sm">
-              {currentTime.toLocaleTimeString('en-IN', { 
-                hour: '2-digit', 
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false 
-              })} IST
-            </span>
-            <div className="text-slate-200">|</div>
-            <div className="text-sm text-slate-400">
-            {currentTime.toLocaleDateString('en-IN', { 
+  return (
+    <div className={sidebarClasses}>
+      <div className="p-6 border-b border-border/60">
+
+        <div className="flex items-center gap-2">
+          <img
+            src={apPoliceLogo}
+            alt="AP Police Logo"
+            className="w-12 h-13 object-contain drop-shadow-sm"
+          />
+          <div>
+            <h1 className="text-base font-semibold text-black tracking-wide">KAKINADA POLICE</h1>
+            <p className="text-[11px] text-black/50 uppercase tracking-[0.18em]">
+              Command & Control
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-4 flex items-center gap-2 text-black/60 text-xs rounded-lg bg-white/60 px-3 py-2">
+          <Clock className="w-4 h-4" />
+          <span className="text-sm">
+            {currentTime.toLocaleTimeString('en-IN', {
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: false
+            })} IST
+          </span>
+          <div className="text-slate-300">|</div>
+          <div className="text-sm">
+            {currentTime.toLocaleDateString('en-IN', {
               day: '2-digit',
               month: 'short',
               year: 'numeric'
             })}
           </div>
-          </div>      
+        </div>
       </div>
 
-    <nav className="flex-1 overflow-y-auto py-4">
+      <nav className="flex-1 overflow-y-auto py-4">
         {filteredSections.map((section, sectionIndex) => (
           <div key={section.title} className={sectionIndex > 0 ? 'mt-4' : ''}>
             {section.title && (
-              <p className="text-xs text-gray-500 px-6 mb-2 uppercase tracking-wider">
+              <p className="text-xs text-black/40 px-6 mb-2 uppercase tracking-wider">
                 {section.title}
               </p>
             )}
@@ -211,44 +218,48 @@ export function Sidebar({ activeScreen, onNavigate, userRole }: SidebarProps) {
                 item.id.startsWith('anpr')
                   ? activeScreen.startsWith('anpr')
                   : item.id.startsWith('alerts')
-                  ? activeScreen.startsWith('alerts')
-                  : item.id.startsWith('incidents')
-                  ? activeScreen.startsWith('incident')
-                  : item.id.startsWith('evidence')
-                  ? activeScreen.startsWith('evidence')
-                  : item.id.startsWith('explainability')
-                  ? activeScreen.startsWith('explainability')
-                  : activeScreen.startsWith(item.id);
+                    ? activeScreen.startsWith('alerts')
+                    : item.id.startsWith('incidents')
+                      ? activeScreen.startsWith('incident')
+                      : item.id.startsWith('evidence')
+                        ? activeScreen.startsWith('evidence')
+                        : item.id.startsWith('explainability')
+                          ? activeScreen.startsWith('explainability')
+                          : activeScreen.startsWith(item.id);
               return (
                 <button
                   key={item.id}
                   onClick={() => onNavigate(item.id)}
-                  className={`w-full flex items-center gap-3 px-6 py-3 transition-colors ${
+                  className={`w-full flex items-center gap-3 px-5 py-3 transition-all rounded-xl ${
                     isActive
-                      ? 'bg-cyan-500/10 text-cyan-400 border-r-2 border-cyan-400'
-                      : 'text-gray-400 hover:text-white hover:bg-white/5'
+                      ? isLightTheme
+                        ? 'bg-white text-black shadow-sm border border-blue-200 border-l-4 border-l-blue-500'
+                        : 'bg-gray-800 text-gray-100 border-l-4 border-l-cyan-500'
+                      : isLightTheme
+                        ? 'text-black/60 hover:text-black hover:bg-white hover:shadow-sm'
+                        : 'text-gray-400 hover:text-white hover:bg-white/5'
                   }`}
                 >
                   <Icon className="w-5 h-5" />
-                  <span className="text-sm">{item.label}</span>
+                  <span className="text-sm font-medium">{item.label}</span>
                 </button>
               );
             })}
           </div>
         ))}
       </nav>
-      <div className="p-4 border-t border-[#1f2937]">
-        <div className="mb-3 pb-3 border-b border-[#1f2937]">
-          <p className="text-xs text-gray-500">Logged in as:</p>
-          <p className="text-xs text-cyan-400 mt-0.5">{getRoleTitle()}</p>
+      <div className="p-4 border-t border-border/60 bg-white/70">
+        <div className="mb-3 pb-3 border-b border-border/60">
+          <p className="text-xs text-black/50">Logged in as</p>
+          <p className="text-xs font-medium text-black mt-0.5">{getRoleTitle()}</p>
         </div>
         <div className="flex items-center justify-between gap-3">
           <button
             type="button"
-            className="flex-1 text-left text-[10px] text-gray-600 border border-[#1f2937] bg-[#0a0e1a] rounded-lg px-3 py-2 hover:bg-white/5 transition-colors"
+            className="flex-1 text-left text-[10px] text-black border border-border bg-white rounded-lg px-3 py-2 hover:bg-gray-50 transition-colors shadow-sm"
           >
             <div>
-              System Status: <span className="text-green-400">ONLINE</span>
+              System Status: <span className="font-semibold text-emerald-500">ONLINE</span>
             </div>
             <div>v2.1.3 • {new Date().toLocaleDateString()}</div>
           </button>

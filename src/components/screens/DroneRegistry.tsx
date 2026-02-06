@@ -90,10 +90,10 @@ const mockDroneRegistry = [
 export function DroneRegistry() {
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Active': return 'text-green-400 bg-green-400/10';
-      case 'Maintenance': return 'text-yellow-400 bg-yellow-400/10';
-      case 'Retired': return 'text-red-400 bg-red-400/10';
-      default: return 'text-gray-400 bg-gray-400/10';
+      case 'Active': return 'bg-green-100 border border-green-200';
+      case 'Maintenance': return 'bg-yellow-100 border border-yellow-200';
+      case 'Retired': return 'bg-red-100 border border-red-200';
+      default: return 'bg-gray-100 border border-gray-200';
     }
   };
 
@@ -109,10 +109,10 @@ export function DroneRegistry() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-white text-xl">Drone Registry</h2>
-          <p className="text-gray-400 text-sm mt-1">{mockDroneRegistry.length} drones registered</p>
+          <h2 className="text-xl font-semibold text-black">Drone Registry</h2>
+          <p className="text-sm text-black/60 mt-1">{mockDroneRegistry.length} drones registered</p>
         </div>
-        <button className="px-4 py-2 bg-cyan-500 text-black rounded hover:bg-cyan-400 transition-colors flex items-center gap-2">
+        <button className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-900 transition-colors flex items-center gap-2 text-sm">
           <Plus className="w-4 h-4" />
           Register New Drone
         </button>
@@ -120,85 +120,85 @@ export function DroneRegistry() {
 
       {/* Stats */}
       <div className="grid grid-cols-4 gap-4">
-        <div className="bg-[#1a1f2e] border border-[#2a3441] p-4 rounded">
-          <div className="text-gray-400 text-xs uppercase tracking-wider mb-1">Total Drones</div>
-          <div className="text-white text-2xl">{mockDroneRegistry.length}</div>
+        <div className="bg-card border border-gray-200 p-4 rounded-xl shadow-sm">
+          <div className="text-xs uppercase tracking-wider mb-1 text-black/60">Total Drones</div>
+          <div className="text-2xl font-semibold text-black">{mockDroneRegistry.length}</div>
         </div>
-        <div className="bg-[#1a1f2e] border border-green-400/30 p-4 rounded">
-          <div className="text-gray-400 text-xs uppercase tracking-wider mb-1">Active</div>
-          <div className="text-green-400 text-2xl">
+        <div className="bg-card border border-gray-200 p-4 rounded-xl shadow-sm">
+          <div className="text-xs uppercase tracking-wider mb-1 text-black/60">Active</div>
+          <div className="text-2xl font-semibold text-black">
             {mockDroneRegistry.filter(d => d.status === 'Active').length}
           </div>
         </div>
-        <div className="bg-[#1a1f2e] border border-yellow-400/30 p-4 rounded">
-          <div className="text-gray-400 text-xs uppercase tracking-wider mb-1">Maintenance</div>
-          <div className="text-yellow-400 text-2xl">
+        <div className="bg-card border border-gray-200 p-4 rounded-xl shadow-sm">
+          <div className="text-xs uppercase tracking-wider mb-1 text-black/60">Maintenance</div>
+          <div className="text-2xl font-semibold text-black">
             {mockDroneRegistry.filter(d => d.status === 'Maintenance').length}
           </div>
         </div>
-        <div className="bg-[#1a1f2e] border border-orange-400/30 p-4 rounded">
-          <div className="text-gray-400 text-xs uppercase tracking-wider mb-1">Service Due</div>
-          <div className="text-orange-400 text-2xl">
+        <div className="bg-card border border-gray-200 p-4 rounded-xl shadow-sm">
+          <div className="text-xs uppercase tracking-wider mb-1 text-black/60">Service Due</div>
+          <div className="text-2xl font-semibold text-black">
             {mockDroneRegistry.filter(d => isMaintenanceDue(d.nextMaintenance)).length}
           </div>
         </div>
       </div>
 
       {/* Table */}
-      <div className="bg-[#1a1f2e] border border-[#2a3441] rounded overflow-hidden">
+      <div className="bg-card border border-gray-200 rounded-xl overflow-hidden shadow-sm">
         <table className="w-full">
-          <thead className="bg-[#0d1117] border-b border-[#2a3441]">
+          <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
-              <th className="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider">Drone ID</th>
-              <th className="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider">Model</th>
-              <th className="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider">Serial Number</th>
-              <th className="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider">Status</th>
-              <th className="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider">Flight Hours</th>
-              <th className="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider">Next Maintenance</th>
-              <th className="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider">Operator</th>
-              <th className="px-4 py-3 text-left text-xs text-gray-400 uppercase tracking-wider">Actions</th>
+              <th className="px-4 py-3 text-left text-xs text-black/60 uppercase tracking-wider">Drone ID</th>
+              <th className="px-4 py-3 text-left text-xs text-black/60 uppercase tracking-wider">Model</th>
+              <th className="px-4 py-3 text-left text-xs text-black/60 uppercase tracking-wider">Serial Number</th>
+              <th className="px-4 py-3 text-left text-xs text-black/60 uppercase tracking-wider">Status</th>
+              <th className="px-4 py-3 text-left text-xs text-black/60 uppercase tracking-wider">Flight Hours</th>
+              <th className="px-4 py-3 text-left text-xs text-black/60 uppercase tracking-wider">Next Maintenance</th>
+              <th className="px-4 py-3 text-left text-xs text-black/60 uppercase tracking-wider">Operator</th>
+              <th className="px-4 py-3 text-left text-xs text-black/60 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#2a3441]">
+          <tbody className="divide-y divide-gray-100">
             {mockDroneRegistry.map((drone) => (
-              <tr key={drone.id} className="hover:bg-white/5 transition-colors">
+              <tr key={drone.id} className="hover:bg-gray-50 transition-colors">
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
-                    <Plane className="w-4 h-4 text-cyan-400" />
-                    <span className="text-white">{drone.id}</span>
+                    <Plane className="w-4 h-4 text-black/70" />
+                    <span className="text-sm font-medium text-black">{drone.id}</span>
                   </div>
                 </td>
-                <td className="px-4 py-3 text-gray-300 text-sm">{drone.model}</td>
-                <td className="px-4 py-3 text-gray-400 text-sm">{drone.serialNumber}</td>
+                <td className="px-4 py-3 text-sm text-black">{drone.model}</td>
+                <td className="px-4 py-3 text-sm text-black/70">{drone.serialNumber}</td>
                 <td className="px-4 py-3">
-                  <span className={`text-xs px-2 py-1 rounded ${getStatusColor(drone.status)}`}>
+                  <span className={`text-xs px-2 py-1 rounded-full text-black ${getStatusColor(drone.status)}`}>
                     {drone.status}
                   </span>
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
-                    <Battery className="w-4 h-4 text-gray-400" />
-                    <span className="text-white text-sm">{drone.flightHours}h</span>
+                    <Battery className="w-4 h-4 text-black/60" />
+                    <span className="text-sm text-black">{drone.flightHours}h</span>
                   </div>
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
-                    <Wrench className={`w-4 h-4 ${isMaintenanceDue(drone.nextMaintenance) ? 'text-orange-400' : 'text-gray-400'}`} />
-                    <span className={`text-sm ${isMaintenanceDue(drone.nextMaintenance) ? 'text-orange-400' : 'text-gray-400'}`}>
+                    <Wrench className={`w-4 h-4 ${isMaintenanceDue(drone.nextMaintenance) ? 'text-amber-700' : 'text-black/60'}`} />
+                    <span className={`text-sm ${isMaintenanceDue(drone.nextMaintenance) ? 'text-amber-700' : 'text-black/70'}`}>
                       {drone.nextMaintenance}
                     </span>
                   </div>
                 </td>
-                <td className="px-4 py-3 text-gray-300 text-sm">
+                <td className="px-4 py-3 text-sm text-black">
                   {drone.assignedOperator}
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex gap-2">
-                    <button className="p-1 hover:bg-cyan-400/10 rounded transition-colors" title="Edit">
-                      <Edit className="w-4 h-4 text-cyan-400" />
+                    <button className="p-1 hover:bg-gray-100 rounded transition-colors" title="Edit">
+                      <Edit className="w-4 h-4 text-black/70" />
                     </button>
-                    <button className="p-1 hover:bg-red-400/10 rounded transition-colors" title="Delete">
-                      <Trash2 className="w-4 h-4 text-red-400" />
+                    <button className="p-1 hover:bg-red-50 rounded transition-colors" title="Delete">
+                      <Trash2 className="w-4 h-4 text-red-600" />
                     </button>
                   </div>
                 </td>
