@@ -7,10 +7,78 @@ interface ANPRHomeProps {
 
 export function ANPRHome({ onNavigate, userRole }: ANPRHomeProps) {
   const stats = [
-    { label: 'Total Today', value: '2,341', change: '+127', icon: Car },
-    { label: 'Pending Review', value: '23', change: '+5', icon: Clock },
-    { label: 'Violations', value: '87', change: '+12', icon: AlertTriangle },
-    { label: 'Verified', value: '2,254', change: '+115', icon: CheckCircle },
+    {
+      id: "detections_today",
+      label: "ANPR Detections",
+      subLabel: "Today",
+      value: 2341,
+      change: "+182",
+      changeType: "increase",
+      icon: Car,
+      color: "blue"
+    },
+    {
+      id: "violations_detected",
+      label: "Violations Generated",
+      subLabel: "Today",
+      value: 87,
+      change: "+12",
+      changeType: "increase",
+      icon: AlertTriangle,
+      color: "orange"
+    },
+    {
+      id: "pending_review",
+      label: "Pending Review",
+      subLabel: "Action Required",
+      value: 23,
+      change: "+5",
+      changeType: "increase",
+      icon: Clock,
+      color: "amber",
+      priority: true
+    },
+    {
+      id: "critical_alerts",
+      label: "Critical Alerts",
+      subLabel: "Stolen / Blacklist",
+      value: 8,
+      change: "+2",
+      changeType: "increase",
+      icon: AlertTriangle,
+      color: "red",
+      priority: true
+    },
+    {
+      id: "verified_cases",
+      label: "Verified",
+      subLabel: "Approved by Officers",
+      value: 180,
+      change: "+75",
+      changeType: "increase",
+      icon: CheckCircle,
+      color: "green"
+    },
+    {
+      id: "rejected_cases",
+      label: "Rejected",
+      subLabel: "False Positives",
+      value: 14,
+      change: "-3",
+      changeType: "decrease",
+      icon: AlertTriangle,
+      color: "gray"
+    },
+    {
+      id: "challans_issued",
+      label: "Challans Issued",
+      subLabel: "Completed",
+      value: 156,
+      change: "+48",
+      changeType: "increase",
+      icon: CheckCircle,
+      color: "green"
+    }
   ];
 
   const quickActions =
@@ -40,7 +108,7 @@ export function ANPRHome({ onNavigate, userRole }: ANPRHomeProps) {
     <div className="h-full bg-background overflow-auto">
       <div className="max-w-[1600px] mx-auto p-8 space-y-6">
         <div>
-          <h1 className="text-2xl font-semibold">ANPR</h1>
+          <h1 className="text-2xl font-semibold">Traffic Violation Management</h1>
           <p className="text-muted-foreground mt-1">
             Automatic Number Plate Recognition and violation management
           </p>

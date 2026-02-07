@@ -23,8 +23,8 @@ import { AlertsOperator } from './components/screens/AlertsOperator';
 import { AlertsSupervisor } from './components/screens/AlertsSupervisor';
 import { AlertsAdmin } from './components/screens/AlertsAdmin';
 import { SOPCompliance } from './components/screens/SOPCompliance';
-import { IncidentsHome } from './components/screens/IncidentsHome';
 import { IncidentsList } from './components/screens/IncidentsList';
+import { AllIncidents } from './components/screens/AllIncidents';
 import { IncidentDetail } from './components/screens/IncidentDetail';
 import { IncidentOperator } from './components/screens/IncidentOperator';
 import { IncidentSupervisor } from './components/screens/IncidentSupervisor';
@@ -80,8 +80,8 @@ const pathToScreen: Record<string, string> = {
   '/alerts/admin': 'alerts-admin',
   '/alerts/sop': 'sop',
 
-  '/incidents': 'incidents-home',
   '/incidents/list': 'incidents-list',
+  '/incidents/all': 'all-incidents',
   '/incidents/operator': 'incident-operator',
   '/incidents/operator/create': 'incident-operator-create',
   '/incidents/supervisor': 'incident-supervisor',
@@ -271,7 +271,7 @@ export default function App() {
           <AlertsOperator
             onBack={() => navigateScreen('alerts-home')}
             onViewCamera={() => navigateScreen('camera-detail')}
-            onCreateIncident={() => navigateScreen('incidents-list')}
+            onCreateIncident={() => navigateScreen('incident-operator-create')}
           />
         );
 
@@ -299,13 +299,19 @@ export default function App() {
           />
         );
 
-      case 'incidents-home':
-        return <IncidentsHome onNavigate={navigateScreen} userRole={user!.role} />;
+      case 'all-incidents':
+        return (
+          <AllIncidents
+            onBack={() => navigateScreen('alerts-home')}
+            onNavigate={navigateScreen}
+            userRole={user!.role}
+          />
+        );
 
       case 'incident-operator':
         return (
           <IncidentOperator
-            onBack={() => navigateScreen('incidents-home')}
+            onBack={() => navigateScreen('alerts-home')}
             onNavigate={navigateScreen}
             startMode="list"
           />
@@ -314,7 +320,7 @@ export default function App() {
       case 'incident-operator-create':
         return (
           <IncidentOperator
-            onBack={() => navigateScreen('incidents-home')}
+            onBack={() => navigateScreen('alerts-home')}
             onNavigate={navigateScreen}
             startMode="create"
           />
@@ -323,7 +329,7 @@ export default function App() {
       case 'incident-supervisor':
         return (
           <IncidentSupervisor
-            onBack={() => navigateScreen('incidents-home')}
+            onBack={() => navigateScreen('alerts-home')}
             onNavigate={navigateScreen}
           />
         );
@@ -332,7 +338,8 @@ export default function App() {
         return (
           <IncidentDetail
             userRole={user!.role}
-            onBack={() => navigateScreen('incidents-home')}
+            onBack={() => navigateScreen('all-incidents')}
+            isClosed={true}
           />
         );
 
@@ -399,6 +406,7 @@ export default function App() {
             userRole={user!.role}
             onViewCameraHealth={() => navigateScreen('analytics-camera-health')}
             onViewViolations={() => navigateScreen('analytics-violations')}
+            onViewAlerts={() => navigateScreen('alerts-admin')}
           />
         );
 
