@@ -5,14 +5,10 @@ import {
   Car,
   AlertTriangle,
   FileText,
-  AlertCircle,
-
   FolderOpen,
   GitBranch,
   BarChart3,
   Target,
-  Grid3x3,
-  CheckCircle,
   Plane,
   Radio,
 
@@ -80,20 +76,17 @@ export function Sidebar({ activeScreen, onNavigate, userRole }: SidebarProps) {
       ]
     },
     {
-      title: 'ANPR Module',
+      title: 'Traffic Violations',
       items: [
-        { id: 'anpr-home', label: 'ANPR', icon: Car, roles: ['operator', 'supervisor', 'admin'] },
-        { id: 'anpr-list', label: 'Violations List', icon: Car, roles: ['operator', 'supervisor', 'admin'] },
-        { id: 'anpr-approval', label: 'Approval / Escalations', icon: CheckCircle, roles: ['operator', 'supervisor', 'admin'] },
+        { id: 'anpr-home', label: 'Traffic Violation ', icon: Car, roles: ['operator', 'supervisor', 'admin'] },
+        { id: 'anpr-list', label: 'Validation List', icon: Car, roles: ['operator', 'supervisor', 'admin'] },
+        // { id: 'anpr-approval', label: 'Approval / Escalations', icon: CheckCircle, roles: ['operator', 'supervisor', 'admin'] },
       ]
     },
     {
-      title: 'Alerts & incidents management',
+      title: 'Incidents Management',
       items: [
-        { id: 'alerts-home', label: 'Anomaly Alerts', icon: AlertTriangle, roles: ['operator', 'supervisor', 'admin'] },
-        { id: 'sop', label: 'AI SOP Compliance', icon: FileText, roles: ['operator', 'supervisor', 'admin'] },
-        { id: 'incidents-home', label: 'Incident Management', icon: AlertCircle, roles: ['operator', 'supervisor', 'admin'] },
-
+        { id: 'alerts-home', label: 'Incident Management', icon: AlertTriangle, roles: ['operator', 'supervisor', 'admin'] }
       ]
     },
     {
@@ -135,6 +128,7 @@ export function Sidebar({ activeScreen, onNavigate, userRole }: SidebarProps) {
         { id: 'admin-users', label: 'User Management', icon: Users, roles: ['admin'] },
         { id: 'admin-system', label: 'System Health', icon: Activity, roles: ['admin'] },
         //{ id: 'admin-ai-models', label: 'AI Model Manager', icon: Cpu, roles: ['admin'] },
+        { id: 'sop', label: 'AI SOP Compliance', icon: FileText, roles: ['operator', 'supervisor', 'admin'] },
       ]
     }
   ];
@@ -218,10 +212,8 @@ export function Sidebar({ activeScreen, onNavigate, userRole }: SidebarProps) {
                 item.id.startsWith('anpr')
                   ? activeScreen.startsWith('anpr')
                   : item.id.startsWith('alerts')
-                    ? activeScreen.startsWith('alerts')
-                    : item.id.startsWith('incidents')
-                      ? activeScreen.startsWith('incident')
-                      : item.id.startsWith('evidence')
+                    ? activeScreen.startsWith('alerts') || activeScreen.startsWith('incident')
+                    : item.id.startsWith('evidence')
                         ? activeScreen.startsWith('evidence')
                         : item.id.startsWith('explainability')
                           ? activeScreen.startsWith('explainability')
@@ -264,7 +256,7 @@ export function Sidebar({ activeScreen, onNavigate, userRole }: SidebarProps) {
             <div>v2.1.3 • {new Date().toLocaleDateString()}</div>
           </button>
 
-          <button
+          {/* <button
             type="button"
             onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
             className="kkn-theme-toggle"
@@ -277,7 +269,7 @@ export function Sidebar({ activeScreen, onNavigate, userRole }: SidebarProps) {
             <span className={`kkn-theme-toggle__icon ${theme === 'dark' ? 'is-active' : ''}`}>
               <Moon className="w-4 h-4" />
             </span>
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

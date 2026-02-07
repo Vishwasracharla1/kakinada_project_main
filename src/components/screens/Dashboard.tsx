@@ -1,7 +1,7 @@
 import { MetricCard } from '../MetricCard';
 import { Camera, CameraOff, AlertTriangle, Car, FileX, AlertCircle, MapPin } from 'lucide-react';
 import { useEffect, useMemo, useState } from "react";
-import { Bell, ShieldAlert } from "lucide-react";
+import { Bell } from "lucide-react";
 import { fetchActivityHeatmapPoints, type ActivityPoint } from '../../api/cohorts';
 import LeafletHeatmap from '../LeafletHeatmap';
 import { useNavigate } from 'react-router-dom';
@@ -162,68 +162,6 @@ export function Dashboard({ userRole }: DashboardProps) {
   }, []);
 
 
-  const [activeAlerts, setActiveAlerts] = useState(0);
-  useEffect(() => {
-    async function fetchActiveAlerts() {
-      try {
-        const response = await fetch(
-          "https://ig.gov-cloud.ai/pi-cohorts-service-dbaas/v1.0/cohorts/adhoc?size=2000",
-          {
-            method: "POST", // POST because you are sending a payload
-            headers: {
-              "Authorization": `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              type: "TIDB",
-              definition: "SELECT COUNT(*) AS active_alerts FROM t_6928433fb9bad705b353b2db_t WHERE violation_type <> 'No Violation';"
-            })
-          }
-        );
-
-        const data = await response.json();
-        const count = data?.data?.[0]?.active_alerts || 0;
-        setActiveAlerts(count);
-
-      } catch (err) {
-        console.error("API Error (Active Alerts):", err);
-      }
-    }
-
-    fetchActiveAlerts();
-  }, []);
-
-
-  const [anprViolations, setAnprViolations] = useState(0);
-  useEffect(() => {
-    async function fetchAnprViolations() {
-      try {
-        const response = await fetch(
-          "https://ig.gov-cloud.ai/pi-cohorts-service-dbaas/v1.0/cohorts/adhoc?size=2000",
-          {
-            method: "POST",
-            headers: {
-              "Authorization": `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              type: "TIDB",
-              definition: "SELECT COUNT(*) AS anpr_violations FROM t_6928433fb9bad705b353b2db_t WHERE anpr_confidence > 80 AND violation_type <> 'No Violation';"
-            })
-          }
-        );
-
-        const data = await response.json();
-        const count = data?.data?.[0]?.anpr_violations || 0;
-        setAnprViolations(count);
-
-      } catch (err) {
-        console.error("API Error (ANPR Violations):", err);
-      }
-    }
-
-    fetchAnprViolations();
-  }, []);
 
 
   const [recentEvents, setRecentEvents] = useState([]);
@@ -303,37 +241,6 @@ export function Dashboard({ userRole }: DashboardProps) {
   }, [token]);
 
 
-  const [weaponAlerts, setWeaponAlerts] = useState(0);
-  useEffect(() => {
-    async function fetchWeaponAlerts() {
-      try {
-        const response = await fetch(
-          "https://ig.gov-cloud.ai/pi-cohorts-service-dbaas/v1.0/cohorts/adhoc?size=2000",
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              type: "TIDB",
-              definition:
-                "SELECT COUNT(*) AS weapon_alerts FROM t_69284385b9bad705b353b2de_t WHERE weapon_detected = true OR fight_detected = true;"
-            }),
-          }
-        );
-
-        const data = await response.json();
-        const count = data?.data?.[0]?.weapon_alerts || 0;
-        setWeaponAlerts(count);
-
-      } catch (err) {
-        console.error("API Error (Weapon Alerts):", err);
-      }
-    }
-
-    fetchWeaponAlerts();
-  }, []);
 
 
   const [Alerts, setAlerts] = useState([]);
@@ -388,7 +295,7 @@ export function Dashboard({ userRole }: DashboardProps) {
 
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 w-full">
       {/* Role Banner */}
       <div className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 rounded-lg p-4">
         <div className="flex items-center justify-between">
@@ -455,7 +362,7 @@ export function Dashboard({ userRole }: DashboardProps) {
       </div>
 
       {/* Top Metrics */}
-      <div className="grid grid-cols-6 gap-4">
+      <div className="grid grid-cols-5 gap-3">
         {/* <MetricCard
           label="Active Cameras"
           value="208"
@@ -495,32 +402,17 @@ export function Dashboard({ userRole }: DashboardProps) {
         /> */}
          <MetricCard
           label="Traffic Violations"
-          value={anprViolations.toString()}
+          value="87"
           icon={Car}
           status="warning"
         />
 
         <MetricCard
-          label="Active Alerts"
-          value={activeAlerts.toString()}
-          icon={AlertTriangle}
+          label="Total Incidents"
+          value="8"
+          icon={FileX}
           status="warning"
         />
-
-        {/* <MetricCard
-          label="ANPR Violations"
-          value="18"
-          icon={Car}
-          status="warning"
-        /> */}
-       
-        <MetricCard
-          label="Weapon Alerts"
-          value={weaponAlerts.toString()}
-          icon={ShieldAlert}   // better icon for weapon/fight alerts
-          status="warning"
-        />
-
 
         <MetricCard
           label="Active Incidents"
@@ -531,7 +423,7 @@ export function Dashboard({ userRole }: DashboardProps) {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-3 gap-4">
         {/* GIS Heatmap */}
         <div className="col-span-2 bg-card border border-border rounded-lg overflow-hidden card-shadow">
           <div className="p-4 border-b border-[#1f2937] flex items-center justify-between">
@@ -679,7 +571,7 @@ export function Dashboard({ userRole }: DashboardProps) {
       </div>
 
       {/* Bottom Grid */}
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-2 gap-4">
         {/* Events Overview */}
         <div className="bg-[#0d1117] border border-[#1f2937] rounded-lg overflow-hidden flex flex-col">
           <div className="p-4 border-b border-[#1f2937] flex-shrink-0">

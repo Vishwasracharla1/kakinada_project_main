@@ -9,6 +9,7 @@ interface AnalyticsHomeProps {
   userRole: 'operator' | 'supervisor' | 'admin';
   onViewCameraHealth: () => void;
   onViewViolations: () => void;
+  onViewAlerts?: () => void;
 }
 
 // ============================================
@@ -288,7 +289,7 @@ function OperatorAnalytics() {
       {/* Primary Operator Work Queue - Police Focus */}
       <div className="grid grid-cols-4 gap-4">
         <div className="bg-card border border-gray-200 p-4 rounded-xl shadow-sm">
-          <div className="text-xs uppercase tracking-wider mb-1 text-black/60">ANPR Violations Pending</div>
+          <div className="text-xs uppercase tracking-wider mb-1 text-black/60">Traffic Violations Pending</div>
           <div className="text-2xl font-semibold text-blue-700">{operatorMetrics.anprViolationsPending}</div>
           <div className="text-xs text-black/60 mt-1">Oldest: {operatorMetrics.oldestAnprViolation}</div>
         </div>
@@ -727,7 +728,7 @@ function SupervisorAnalytics() {
 // ============================================
 // ADMIN ANALYTICS DASHBOARD (System Health)
 // ============================================
-function AdminAnalytics({ onViewCameraHealth, onViewViolations }: { onViewCameraHealth: () => void; onViewViolations: () => void }) {
+function AdminAnalytics({ onViewCameraHealth, onViewViolations, onViewAlerts }: { onViewCameraHealth: () => void; onViewViolations: () => void; onViewAlerts?: () => void }) {
   const uptimeData = [
     { day: 'Mon', uptime: 99.2 },
     { day: 'Tue', uptime: 98.8 },
@@ -985,6 +986,41 @@ function AdminAnalytics({ onViewCameraHealth, onViewViolations }: { onViewCamera
         </button>
       </div>
 
+      {/* AI Analytics and Alert Trends Cards */}
+      {onViewAlerts && (
+        <div className="grid grid-cols-2 gap-4">
+          <button
+            type="button"
+            onClick={onViewAlerts}
+            className="bg-card border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all text-left flex items-center justify-between group"
+          >
+            <div>
+              <p className="text-xs uppercase tracking-wide text-purple-500 mb-1">AI Analytics</p>
+              <h3 className="text-lg font-semibold text-black mb-1">Performance metrics and patterns</h3>
+              <p className="text-sm text-black/60">AI reasoning patterns, engine health, and performance metrics.</p>
+            </div>
+            <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-purple-500/10 group-hover:bg-purple-500/20">
+              <TrendingUp className="w-6 h-6 text-purple-500" />
+            </div>
+          </button>
+
+          <button
+            type="button"
+            onClick={onViewAlerts}
+            className="bg-card border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all text-left flex items-center justify-between group"
+          >
+            <div>
+              <p className="text-xs uppercase tracking-wide text-purple-500 mb-1">Alert Trends</p>
+              <h3 className="text-lg font-semibold text-black mb-1">Analytics and patterns</h3>
+              <p className="text-sm text-black/60">View insights into alert trends and anomaly detection patterns.</p>
+            </div>
+            <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-purple-500/10 group-hover:bg-purple-500/20">
+              <TrendingUp className="w-6 h-6 text-purple-500" />
+            </div>
+          </button>
+        </div>
+      )}
+
       {/* Charts Grid */}
       <div className="grid grid-cols-2 gap-6">
         <div className="bg-card border border-gray-200 rounded-xl p-4 shadow-sm">
@@ -1049,13 +1085,13 @@ function AdminAnalytics({ onViewCameraHealth, onViewViolations }: { onViewCamera
 // ============================================
 // MAIN COMPONENT
 // ============================================
-export function AnalyticsHome({ userRole, onViewCameraHealth, onViewViolations }: AnalyticsHomeProps) {
+export function AnalyticsHome({ userRole, onViewCameraHealth, onViewViolations, onViewAlerts }: AnalyticsHomeProps) {
   // Render persona-specific view
   if (userRole === 'operator') {
     return <OperatorAnalytics />;
   } else if (userRole === 'supervisor') {
     return <SupervisorAnalytics />;
   } else {
-    return <AdminAnalytics onViewCameraHealth={onViewCameraHealth} onViewViolations={onViewViolations} />;
+    return <AdminAnalytics onViewCameraHealth={onViewCameraHealth} onViewViolations={onViewViolations} onViewAlerts={onViewAlerts} />;
   }
 }
