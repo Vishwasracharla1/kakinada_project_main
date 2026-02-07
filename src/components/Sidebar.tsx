@@ -13,9 +13,7 @@ import {
   Radio,
 
   Users,
-  Activity,
-  Sun,
-  Moon
+  Activity
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Clock } from 'lucide-react';
@@ -41,7 +39,7 @@ interface NavSection {
 }
 
 export function Sidebar({ activeScreen, onNavigate, userRole }: SidebarProps) {
-  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+  const [theme] = useState<'dark' | 'light'>(() => {
     const saved = localStorage.getItem('kkn_theme');
     return saved === 'dark' ? 'dark' : 'light';
   });
@@ -225,8 +223,8 @@ export function Sidebar({ activeScreen, onNavigate, userRole }: SidebarProps) {
                   className={`w-full flex items-center gap-3 px-5 py-3 transition-all rounded-xl ${
                     isActive
                       ? isLightTheme
-                        ? 'bg-white text-black shadow-sm border border-blue-200 border-l-4 border-l-blue-500'
-                        : 'bg-gray-800 text-gray-100 border-l-4 border-l-cyan-500'
+                        ? 'bg-white text-black shadow-sm border border-blue-200'
+                        : 'bg-gray-800 text-gray-100'
                       : isLightTheme
                         ? 'text-black/60 hover:text-black hover:bg-white hover:shadow-sm'
                         : 'text-gray-400 hover:text-white hover:bg-white/5'
